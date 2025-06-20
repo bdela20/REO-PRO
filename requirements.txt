@@ -5,6 +5,9 @@ certifi==2025.4.26
 charset-normalizer==3.4.2
 click==8.2.1
 fastapi==0.115.12
+flask==3.0.0
+flask-sqlalchemy==3.1.1
+flask-cors==4.0.0
 h11==0.16.0
 idna==3.10
 iniconfig==2.1.0
@@ -34,11 +37,3 @@ typing_extensions==4.14.0
 tzdata==2025.2
 urllib3==2.4.0
 uvicorn==0.34.3
-# Create a requirements.txt file for easy setup later
-cat > requirements.txt << 'EOF'
-flask==3.0.0
-flask-sqlalchemy==3.1.1
-flask-cors==4.0.0
-python-dotenv==1.0.0
-requests==2.31.0
-EOF
