@@ -1,0 +1,1508 @@
+{% extends "base.html" %}
+
+{% block title %}Property Management - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .property-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    /* Header Section */
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .page-header h1 {
+        color: #1e293b;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .stats-row {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+    
+    /* Saved Properties Section */
+    .saved-properties-section {
+        background: linear-gradient(135deg, #f6f9fc 0%, #e9f3ff 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .saved-properties-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    
+    .saved-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .saved-header h2 {
+        font-size: 1.5rem;
+        color: #1e293b;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .saved-icon {
+        width: 32px;
+        height: 32px;
+        background: #2563eb;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    
+    .saved-count-badge {
+        background: white;
+        color: #2563eb;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .saved-properties-carousel {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .saved-properties-wrapper {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding-bottom: 0.5rem;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 #f1f5f9;
+    }
+    
+    .saved-properties-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .saved-properties-wrapper::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 3px;
+    }
+    
+    .saved-properties-wrapper::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+    
+    .saved-properties-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+    
+    .saved-property-card {
+        flex: 0 0 280px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .saved-property-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+    
+    .saved-property-image {
+        height: 160px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .saved-property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .unsave-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .unsave-btn:hover {
+        background: #fee2e2;
+        transform: scale(1.1);
+    }
+    
+    .saved-property-info {
+        padding: 1rem;
+    }
+    
+    .saved-property-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .saved-property-address {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .saved-property-details {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+    
+    .saved-empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #64748b;
+    }
+    
+    .saved-empty-state svg {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .view-all-saved {
+        background: white;
+        color: #2563eb;
+        padding: 0.5rem 1.25rem;
+        border: 2px solid #2563eb;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.875rem;
+    }
+    
+    .view-all-saved:hover {
+        background: #2563eb;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    /* Carousel Navigation */
+    .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        z-index: 2;
+    }
+    
+    .carousel-nav:hover {
+        background: #f8fafc;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .carousel-nav.prev {
+        left: -18px;
+    }
+    
+    .carousel-nav.next {
+        right: -18px;
+    }
+    
+    .carousel-nav.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    /* Search and Filter Section */
+    .search-filter-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .search-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    /* Filter Tags */
+    .filter-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .filter-select {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        background: white;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .filter-select:hover {
+        border-color: #2563eb;
+    }
+    
+    .filter-select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .active-filters {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .filter-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .filter-tag button {
+        background: none;
+        border: none;
+        color: #2563eb;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* View Toggle */
+    .view-toggle {
+        display: flex;
+        gap: 0.5rem;
+        background: #f1f5f9;
+        padding: 0.25rem;
+        border-radius: 8px;
+    }
+    
+    .view-btn {
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .view-btn.active {
+        background: white;
+        color: #1e293b;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Property Tabs */
+    .property-tabs {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e2e8f0;
+        background: white;
+        padding: 0 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .tab-btn {
+        padding: 1rem 0;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: 600;
+        color: #64748b;
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .tab-btn:hover {
+        color: #2563eb;
+    }
+    
+    .tab-btn.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+    }
+    
+    .tab-count {
+        display: inline-block;
+        margin-left: 0.5rem;
+        padding: 0.125rem 0.5rem;
+        background: #f1f5f9;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .tab-btn.active .tab-count {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    
+    /* Property Grid */
+    .properties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .property-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .property-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .property-image {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+        background: #f1f5f9;
+    }
+    
+    .property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .property-status {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        padding: 0.375rem 0.875rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .status-active {
+        background: #10b981;
+        color: white;
+    }
+    
+    .status-pending {
+        background: #f59e0b;
+        color: white;
+    }
+    
+    .status-sold {
+        background: #6366f1;
+        color: white;
+    }
+    
+    .property-favorite {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+    
+    .property-favorite:hover {
+        transform: scale(1.1);
+    }
+    
+    .property-favorite.saved {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .property-content {
+        padding: 1.5rem;
+    }
+    
+    .property-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .property-address {
+        font-size: 1rem;
+        color: #475569;
+        margin-bottom: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .property-features {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+    
+    .property-feature {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .property-actions {
+        display: flex;
+        gap: 0.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .property-actions button {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+    
+    .property-actions button:hover {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    /* List View */
+    .properties-list {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        display: none;
+    }
+    
+    .list-header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 150px;
+        padding: 1rem 1.5rem;
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .list-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 150px;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    
+    .list-item:hover {
+        background: #f8fafc;
+    }
+    
+    .list-address {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #64748b;
+    }
+    
+    .empty-state svg {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Add Property Modal */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 2rem;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+    }
+    
+    .modal {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+    }
+    
+    .modal h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .header-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .properties-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+        
+        .list-header,
+        .list-item {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .saved-properties-section {
+            padding: 1.5rem 1rem;
+        }
+        
+        .saved-property-card {
+            flex: 0 0 240px;
+        }
+        
+        .carousel-nav {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="property-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Property Management</h1>
+        <div class="header-actions">
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-value" id="total-properties">0</span>
+                    <span class="stat-label">Total Properties</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="active-listings">0</span>
+                    <span class="stat-label">Active Listings</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="saved-properties">0</span>
+                    <span class="stat-label">Saved</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="showAddPropertyModal()">
+                + Add New Property
+            </button>
+        </div>
+    </div>
+    
+    <!-- Saved Properties Section -->
+    <div class="saved-properties-section" id="saved-properties-section">
+        <div class="saved-header">
+            <h2>
+                <div class="saved-icon">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                    </svg>
+                </div>
+                Saved Properties
+                <span class="saved-count-badge" id="saved-count-badge">0</span>
+            </h2>
+            <button class="view-all-saved" onclick="setTab('saved')">View All Saved</button>
+        </div>
+        
+        <div class="saved-properties-carousel">
+            <button class="carousel-nav prev" id="carousel-prev" onclick="scrollCarousel('prev')">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </button>
+            
+            <div class="saved-properties-wrapper" id="saved-properties-wrapper">
+                <!-- Saved properties will be loaded here -->
+            </div>
+            
+            <button class="carousel-nav next" id="carousel-next" onclick="scrollCarousel('next')">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 0 0 .708L10.293 8l-5.647 5.646a.5.5 0 0 0 .708.708l6 6a.5.5 0 0 0 0-.708l-6-6a.5.5 0 0 0-.708 0z"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="saved-empty-state" id="saved-empty-state" style="display: none;">
+            <svg fill="currentColor" viewBox="0 0 16 16">
+                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+            </svg>
+            <h3>No Saved Properties Yet</h3>
+            <p>Start saving properties you're interested in to see them here</p>
+        </div>
+    </div>
+    
+    <!-- Search and Filters -->
+    <div class="search-filter-section">
+        <div class="search-bar">
+            <input type="text" 
+                   class="search-input" 
+                   id="property-search" 
+                   placeholder="Search by address, city, ZIP, or MLS#...">
+            <button class="btn btn-primary" onclick="searchProperties()">Search</button>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="setView('grid')">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                    </svg>
+                    Grid
+                </button>
+                <button class="view-btn" onclick="setView('list')">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                    List
+                </button>
+            </div>
+        </div>
+        
+        <div class="filter-row">
+            <div class="filter-group">
+                <select class="filter-select" id="price-filter">
+                    <option value="">Any Price</option>
+                    <option value="0-200000">Under $200k</option>
+                    <option value="200000-400000">$200k - $400k</option>
+                    <option value="400000-600000">$400k - $600k</option>
+                    <option value="600000-800000">$600k - $800k</option>
+                    <option value="800000-1000000">$800k - $1M</option>
+                    <option value="1000000+">$1M+</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <select class="filter-select" id="beds-filter">
+                    <option value="">Any Beds</option>
+                    <option value="1">1+ Bed</option>
+                    <option value="2">2+ Beds</option>
+                    <option value="3">3+ Beds</option>
+                    <option value="4">4+ Beds</option>
+                    <option value="5">5+ Beds</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <select class="filter-select" id="baths-filter">
+                    <option value="">Any Baths</option>
+                    <option value="1">1+ Bath</option>
+                    <option value="2">2+ Baths</option>
+                    <option value="3">3+ Baths</option>
+                    <option value="4">4+ Baths</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <select class="filter-select" id="type-filter">
+                    <option value="">All Types</option>
+                    <option value="single-family">Single Family</option>
+                    <option value="condo">Condo</option>
+                    <option value="townhouse">Townhouse</option>
+                    <option value="multi-family">Multi-Family</option>
+                    <option value="land">Land</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+        </div>
+        
+        <div class="active-filters" id="active-filters" style="margin-top: 1rem; display: none;">
+            <!-- Active filter tags will appear here -->
+        </div>
+    </div>
+    
+    <!-- Property Tabs -->
+    <div class="property-tabs">
+        <button class="tab-btn active" onclick="setTab('all')">
+            All Properties
+            <span class="tab-count" id="all-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('active')">
+            Active
+            <span class="tab-count" id="active-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('pending')">
+            Pending
+            <span class="tab-count" id="pending-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('sold')">
+            Sold
+            <span class="tab-count" id="sold-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('saved')">
+            Saved
+            <span class="tab-count" id="saved-count">0</span>
+        </button>
+    </div>
+    
+    <!-- Properties Display -->
+    <div id="properties-container">
+        <!-- Grid View -->
+        <div class="properties-grid" id="properties-grid">
+            <!-- Properties will be loaded here -->
+        </div>
+        
+        <!-- List View -->
+        <div class="properties-list" id="properties-list">
+            <div class="list-header">
+                <div>Address</div>
+                <div>Price</div>
+                <div>Beds/Baths</div>
+                <div>Sq Ft</div>
+                <div>Status</div>
+                <div>Actions</div>
+            </div>
+            <div id="list-items">
+                <!-- List items will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <svg fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
+            </svg>
+            <h3>No properties found</h3>
+            <p>Try adjusting your filters or search for properties in a different area</p>
+            <button class="btn btn-primary" style="margin-top: 1rem;" onclick="showAddPropertyModal()">
+                Add Your First Property
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Property Modal -->
+<div class="modal-overlay" id="add-property-modal">
+    <div class="modal">
+        <button class="close-modal" onclick="hideAddPropertyModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+        <h2>Add New Property</h2>
+        
+        <form id="add-property-form">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label" for="property-address">Property Address</label>
+                    <input type="text" id="property-address" class="form-input" placeholder="123 Main St, City, State ZIP" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="property-price">Price</label>
+                    <input type="number" id="property-price" class="form-input" placeholder="450000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="property-status">Status</label>
+                    <select id="property-status" class="form-input">
+                        <option value="active">Active</option>
+                        <option value="pending">Pending</option>
+                        <option value="sold">Sold</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="property-beds">Bedrooms</label>
+                    <input type="number" id="property-beds" class="form-input" placeholder="3" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="property-baths">Bathrooms</label>
+                    <input type="number" id="property-baths" class="form-input" step="0.5" placeholder="2.5" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="property-sqft">Square Feet</label>
+                    <input type="number" id="property-sqft" class="form-input" placeholder="2000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="property-type">Property Type</label>
+                    <select id="property-type" class="form-input">
+                        <option value="single-family">Single Family</option>
+                        <option value="condo">Condo</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="multi-family">Multi-Family</option>
+                        <option value="land">Land</option>
+                    </select>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label class="form-label" for="property-description">Description</label>
+                    <textarea id="property-description" class="form-input" rows="4" placeholder="Property description..."></textarea>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="button" class="btn btn-secondary" onclick="hideAddPropertyModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Property</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // State management
+    let properties = [];
+    let currentView = 'grid';
+    let currentTab = 'all';
+    let savedProperties = JSON.parse(localStorage.getItem('savedProperties') || '[]');
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProperties();
+        updateStats();
+        
+        // Add scroll event listener for carousel
+        const wrapper = document.getElementById('saved-properties-wrapper');
+        if (wrapper) {
+            wrapper.addEventListener('scroll', updateCarouselNav);
+        }
+    });
+    
+    // Load properties (from API or local storage)
+    async function loadProperties() {
+        try {
+            // Get from session storage if available (from search)
+            const searchResults = sessionStorage.getItem('lastSearchResults');
+            if (searchResults) {
+                const data = JSON.parse(searchResults);
+                properties = data.properties || [];
+            } else {
+                // Load sample properties or from API
+                properties = getSampleProperties();
+            }
+            
+            displayProperties();
+            displaySavedProperties();
+            updateStats();
+        } catch (error) {
+            console.error('Error loading properties:', error);
+        }
+    }
+    
+    // Sample properties for demo
+    function getSampleProperties() {
+        return [
+            {
+                id: '1',
+                address: '123 Main St, Orlando, FL 32801',
+                price: 450000,
+                beds: 3,
+                baths: 2,
+                sqft: 2000,
+                property_type: 'Single Family',
+                status: 'active',
+                photo_url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400',
+                year_built: 2015,
+                days_on_market: 15
+            },
+            {
+                id: '2',
+                address: '456 Oak Ave, Winter Park, FL 32789',
+                price: 675000,
+                beds: 4,
+                baths: 3,
+                sqft: 2800,
+                property_type: 'Single Family',
+                status: 'active',
+                photo_url: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400',
+                year_built: 2018,
+                days_on_market: 7
+            },
+            {
+                id: '3',
+                address: '789 Lake View Dr, Orlando, FL 32803',
+                price: 325000,
+                beds: 2,
+                baths: 2,
+                sqft: 1400,
+                property_type: 'Condo',
+                status: 'pending',
+                photo_url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400',
+                year_built: 2020,
+                days_on_market: 30
+            }
+        ];
+    }
+    
+    // Display properties based on current view and filters
+    function displayProperties() {
+        const filteredProperties = filterProperties();
+        
+        if (currentView === 'grid') {
+            displayGridView(filteredProperties);
+        } else {
+            displayListView(filteredProperties);
+        }
+        
+        // Show/hide empty state
+        document.getElementById('empty-state').style.display = 
+            filteredProperties.length === 0 ? 'block' : 'none';
+    }
+    
+    // Filter properties based on current tab and filters
+    function filterProperties() {
+        let filtered = [...properties];
+        
+        // Filter by tab
+        if (currentTab === 'active') {
+            filtered = filtered.filter(p => p.status === 'active');
+        } else if (currentTab === 'pending') {
+            filtered = filtered.filter(p => p.status === 'pending');
+        } else if (currentTab === 'sold') {
+            filtered = filtered.filter(p => p.status === 'sold');
+        } else if (currentTab === 'saved') {
+            filtered = filtered.filter(p => savedProperties.includes(p.id));
+        }
+        
+        // Apply additional filters
+        const priceFilter = document.getElementById('price-filter').value;
+        const bedsFilter = document.getElementById('beds-filter').value;
+        const bathsFilter = document.getElementById('baths-filter').value;
+        const typeFilter = document.getElementById('type-filter').value;
+        
+        if (priceFilter) {
+            const [min, max] = priceFilter.split('-').map(p => parseInt(p) || Infinity);
+            filtered = filtered.filter(p => p.price >= min && (max === Infinity || p.price <= max));
+        }
+        
+        if (bedsFilter) {
+            filtered = filtered.filter(p => p.beds >= parseInt(bedsFilter));
+        }
+        
+        if (bathsFilter) {
+            filtered = filtered.filter(p => p.baths >= parseInt(bathsFilter));
+        }
+        
+        if (typeFilter) {
+            filtered = filtered.filter(p => p.property_type.toLowerCase().replace(' ', '-') === typeFilter);
+        }
+        
+        return filtered;
+    }
+    
+    // Display grid view
+    function displayGridView(properties) {
+        const grid = document.getElementById('properties-grid');
+        grid.innerHTML = properties.map(property => `
+            <div class="property-card">
+                <div class="property-image">
+                    <img src="${property.photo_url}" alt="${property.address}">
+                    <span class="property-status status-${property.status}">${property.status}</span>
+                    <button class="property-favorite ${savedProperties.includes(property.id) ? 'saved' : ''}" 
+                            onclick="toggleSave('${property.id}')">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="property-content">
+                    <div class="property-price">$${property.price.toLocaleString()}</div>
+                    <div class="property-address">${property.address}</div>
+                    <div class="property-features">
+                        <div class="property-feature">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M3 2.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-11zm1 1v10h8v-10H4z"/>
+                                <path d="M3 0a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3V0z"/>
+                            </svg>
+                            ${property.beds} beds
+                        </div>
+                        <div class="property-feature">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M7 2a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM4.5 0a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zM1.713 1.515a.5.5 0 0 1 .091.58l-.671 1.341h9.734l-.67-1.34a.5.5 0 0 1 .81-.469l1.262 1.265a.5.5 0 0 1 .148.353v.431a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-.43a.5.5 0 0 1 .148-.354L1.41 1.627a.5.5 0 0 1 .303-.112z"/>
+                            </svg>
+                            ${property.baths} baths
+                        </div>
+                        <div class="property-feature">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+                            </svg>
+                            ${property.sqft.toLocaleString()} sqft
+                        </div>
+                    </div>
+                    <div class="property-actions">
+                        <button onclick="viewDetails('${property.id}')">View Details</button>
+                        <button onclick="editProperty('${property.id}')">Edit</button>
+                        <button onclick="shareProperty('${property.id}')">Share</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Display list view
+    function displayListView(properties) {
+        const list = document.getElementById('list-items');
+        list.innerHTML = properties.map(property => `
+            <div class="list-item">
+                <div class="list-address">${property.address}</div>
+                <div>$${property.price.toLocaleString()}</div>
+                <div>${property.beds} / ${property.baths}</div>
+                <div>${property.sqft.toLocaleString()}</div>
+                <div>
+                    <span class="property-status status-${property.status}">${property.status}</span>
+                </div>
+                <div class="property-actions">
+                    <button onclick="viewDetails('${property.id}')">View</button>
+                    <button onclick="editProperty('${property.id}')">Edit</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Display saved properties in the dedicated section
+    function displaySavedProperties() {
+        const savedPropertyIds = JSON.parse(localStorage.getItem('savedProperties') || '[]');
+        const savedPropertiesList = properties.filter(p => savedPropertyIds.includes(p.id));
+        
+        const wrapper = document.getElementById('saved-properties-wrapper');
+        const emptyState = document.getElementById('saved-empty-state');
+        const savedSection = document.getElementById('saved-properties-section');
+        
+        // Update count badge
+        document.getElementById('saved-count-badge').textContent = savedPropertiesList.length;
+        
+        if (savedPropertiesList.length === 0) {
+            wrapper.style.display = 'none';
+            emptyState.style.display = 'block';
+            document.querySelector('.carousel-nav.prev').style.display = 'none';
+            document.querySelector('.carousel-nav.next').style.display = 'none';
+        } else {
+            wrapper.style.display = 'flex';
+            emptyState.style.display = 'none';
+            
+            wrapper.innerHTML = savedPropertiesList.map(property => `
+                <div class="saved-property-card">
+                    <div class="saved-property-image">
+                        <img src="${property.photo_url}" alt="${property.address}">
+                        <button class="unsave-btn" onclick="toggleSave('${property.id}')" title="Remove from saved">
+                            <svg width="16" height="16" fill="#ef4444" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="saved-property-info">
+                        <div class="saved-property-price">$${property.price.toLocaleString()}</div>
+                        <div class="saved-property-address" title="${property.address}">${property.address}</div>
+                        <div class="saved-property-details">
+                            <span>${property.beds} beds</span>
+                            <span>${property.baths} baths</span>
+                            <span>${property.sqft.toLocaleString()} sqft</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update carousel navigation visibility
+            updateCarouselNav();
+        }
+    }
+    
+    // Scroll carousel
+    function scrollCarousel(direction) {
+        const wrapper = document.getElementById('saved-properties-wrapper');
+        const cardWidth = 280 + 16; // card width + gap
+        const scrollAmount = direction === 'prev' ? -cardWidth : cardWidth;
+        
+        wrapper.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+        
+        setTimeout(updateCarouselNav, 300);
+    }
+    
+    // Update carousel navigation buttons
+    function updateCarouselNav() {
+        const wrapper = document.getElementById('saved-properties-wrapper');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+        
+        if (wrapper.scrollLeft <= 0) {
+            prevBtn.classList.add('disabled');
+        } else {
+            prevBtn.classList.remove('disabled');
+        }
+        
+        if (wrapper.scrollLeft >= wrapper.scrollWidth - wrapper.clientWidth - 10) {
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.classList.remove('disabled');
+        }
+    }
+    
+    // Toggle save property
+    function toggleSave(propertyId) {
+        const index = savedProperties.indexOf(propertyId);
+        if (index === -1) {
+            savedProperties.push(propertyId);
+        } else {
+            savedProperties.splice(index, 1);
+        }
+        localStorage.setItem('savedProperties', JSON.stringify(savedProperties));
+        displayProperties();
+        displaySavedProperties();
+        updateStats();
+        syncSavedPropertiesWithDashboard();
+    }
+    
+    // Function to sync saved properties with dashboard
+    function syncSavedPropertiesWithDashboard() {
+        const savedPropertyIds = JSON.parse(localStorage.getItem('savedProperties') || '[]');
+        const savedPropertiesList = properties.filter(p => savedPropertyIds.includes(p.id));
+        
+        // Store in session storage for dashboard access
+        sessionStorage.setItem('dashboardSavedProperties', JSON.stringify({
+            count: savedPropertiesList.length,
+            properties: savedPropertiesList.slice(0, 5) // Send top 5 for dashboard preview
+        }));
+    }
+    
+    // Update statistics
+    function updateStats() {
+        document.getElementById('total-properties').textContent = properties.length;
+        document.getElementById('active-listings').textContent = properties.filter(p => p.status === 'active').length;
+        document.getElementById('saved-properties').textContent = savedProperties.length;
+        
+        // Update tab counts
+        document.getElementById('all-count').textContent = properties.length;
+        document.getElementById('active-count').textContent = properties.filter(p => p.status === 'active').length;
+        document.getElementById('pending-count').textContent = properties.filter(p => p.status === 'pending').length;
+        document.getElementById('sold-count').textContent = properties.filter(p => p.status === 'sold').length;
+        document.getElementById('saved-count').textContent = savedProperties.length;
+    }
+    
+    // Set view (grid/list)
+    function setView(view) {
+        currentView = view;
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(view));
+        });
+        
+        document.getElementById('properties-grid').style.display = view === 'grid' ? 'grid' : 'none';
+        document.getElementById('properties-list').style.display = view === 'list' ? 'block' : 'none';
+        
+        displayProperties();
+    }
+    
+    // Set tab
+    function setTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(tab));
+        });
+        displayProperties();
+    }
+    
+    // Search properties
+    async function searchProperties() {
+        const query = document.getElementById('property-search').value;
+        if (!query) return;
+        
+        // This would call your search API
+        // For now, just filter existing properties
+        properties = properties.filter(p => 
+            p.address.toLowerCase().includes(query.toLowerCase())
+        );
+        displayProperties();
+    }
+    
+    // Clear filters
+    function clearFilters() {
+        document.getElementById('price-filter').value = '';
+        document.getElementById('beds-filter').value = '';
+        document.getElementById('baths-filter').value = '';
+        document.getElementById('type-filter').value = '';
+        displayProperties();
+    }
+    
+    // View property details
+    function viewDetails(propertyId) {
+        window.location.href = `/property/${propertyId}`;
+    }
+    
+    // Edit property
+    function editProperty(propertyId) {
+        // Would open edit modal with property data
+        alert('Edit property: ' + propertyId);
+    }
+    
+    // Share property
+    function shareProperty(propertyId) {
+        const property = properties.find(p => p.id === propertyId);
+        if (navigator.share) {
+            navigator.share({
+                title: property.address,
+                text: `Check out this property: ${property.address} - $${property.price.toLocaleString()}`,
+                url: window.location.origin + `/property/${propertyId}`
+            });
+        } else {
+            // Fallback - copy to clipboard
+            alert('Share link copied to clipboard!');
+        }
+    }
+    
+    // Modal functions
+    function showAddPropertyModal() {
+        document.getElementById('add-property-modal').classList.add('active');
+    }
+    
+    function hideAddPropertyModal() {
+        document.getElementById('add-property-modal').classList.remove('active');
+        document.getElementById('add-property-form').reset();
+    }
+    
+    // Handle add property form
+    document.getElementById('add-property-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newProperty = {
+            id: Date.now().toString(),
+            address: document.getElementById('property-address').value,
+            price: parseInt(document.getElementById('property-price').value),
+            beds: parseInt(document.getElementById('property-beds').value),
+            baths: parseFloat(document.getElementById('property-baths').value),
+            sqft: parseInt(document.getElementById('property-sqft').value),
+            property_type: document.getElementById('property-type').value,
+            status: document.getElementById('property-status').value,
+            photo_url: 'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=400',
+            year_built: new Date().getFullYear(),
+            days_on_market: 0
+        };
+        
+        // Add to properties array
+        properties.unshift(newProperty);
+        
+        // Save to backend (when implemented)
+        // await saveProperty(newProperty);
+        
+        hideAddPropertyModal();
+        displayProperties();
+        displaySavedProperties();
+        updateStats();
+        
+        // Show success message
+        alert('Property added successfully!');
+    });
+    
+    // Filter change handlers
+    document.getElementById('price-filter').addEventListener('change', displayProperties);
+    document.getElementById('beds-filter').addEventListener('change', displayProperties);
+    document.getElementById('baths-filter').addEventListener('change', displayProperties);
+    document.getElementById('type-filter').addEventListener('change', displayProperties);
+</script>
+{% endblock %}

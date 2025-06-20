@@ -1,0 +1,738 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    /* Profile Header */
+    .profile-header {
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+    
+    .profile-header h1 {
+        color: #1e293b;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        font-weight: 700;
+    }
+    
+    /* Profile Avatar */
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        font-weight: 600;
+        margin: 0 auto 2rem;
+        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+    
+    .profile-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .profile-email {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .profile-badges {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Role Badge Styles */
+    .role-badge {
+        display: inline-block;
+        padding: 0.5rem 1.25rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    
+    /* Role-specific badge colors */
+    .role-badge.role-agent {
+        background: #dcfce7;
+        color: #166534;
+    }
+    
+    .role-badge.role-broker {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .role-badge.role-personal {
+        background: #e0e7ff;
+        color: #3730a3;
+    }
+    
+    /* Plan Badge */
+    .plan-badge {
+        display: inline-block;
+        padding: 0.5rem 1.25rem;
+        background: #f0f9ff;
+        color: #2563eb;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border: 1px solid #bfdbfe;
+    }
+    
+    .plan-badge.pro {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+    }
+    
+    .plan-badge.enterprise {
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .stat-item {
+        text-align: center;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    
+    /* Action Buttons */
+    .profile-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* Settings Section */
+    .settings-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .settings-section h2 {
+        color: #1e293b;
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        text-align: center;
+    }
+    
+    .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+    
+    .settings-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .settings-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+    
+    .settings-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 1rem;
+        background: #e0e7ff;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+    }
+    
+    .settings-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: #1e293b;
+        font-weight: 600;
+    }
+    
+    .settings-card p {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+    
+    /* Edit Profile Modal */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 2rem;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+    }
+    
+    .modal {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+    }
+    
+    .modal h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+        text-align: center;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .close-modal {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #64748b;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .close-modal:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    
+    /* Success Message */
+    .success-message {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: #10b981;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    .success-message.show {
+        display: flex;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    /* Button Styles */
+    .btn {
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-secondary {
+        background: white;
+        color: #6366f1;
+        border: 2px solid #e0e7ff;
+    }
+    
+    .btn-secondary:hover {
+        background: #f0f9ff;
+        border-color: #6366f1;
+    }
+    
+    .btn-outline {
+        background: transparent;
+        color: #6366f1;
+        border: 2px solid #6366f1;
+    }
+    
+    .btn-outline:hover {
+        background: #6366f1;
+        color: white;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .settings-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Main Profile Section -->
+    <div class="profile-header">
+        <h1>My Profile</h1>
+        
+        <div class="profile-avatar">
+            {{ (user.full_name or user.email)[0].upper() }}
+        </div>
+        
+        <h2 class="profile-name">{{ user.full_name or user.email.split('@')[0] }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        
+        <div class="profile-badges">
+            <span class="role-badge role-{{ user.role }}">
+                {% if user.role == 'agent' %}
+                    Real Estate Agent
+                {% elif user.role == 'broker' %}
+                    Real Estate Broker
+                {% elif user.role == 'personal' %}
+                    Personal Account
+                {% else %}
+                    {{ user.role|title }}
+                {% endif %}
+            </span>
+            <span class="plan-badge {% if user.plan != 'free' %}{{ user.plan }}{% endif %}">
+                {{ user.plan|upper }} PLAN
+            </span>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-label">Account Type</div>
+                <div class="stat-value">
+                    {% if user.role == 'agent' %}
+                        Agent
+                    {% elif user.role == 'broker' %}
+                        Broker
+                    {% elif user.role == 'personal' %}
+                        Personal
+                    {% else %}
+                        {{ user.role|title }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Searches Remaining</div>
+                <div class="stat-value">{{ user.searches_remaining|default(999999) }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Member Since</div>
+                <div class="stat-value">{{ user.created_at.strftime('%b %d, %Y') if user.created_at else 'Unknown' }}</div>
+            </div>
+        </div>
+        
+        <div class="profile-actions">
+            <button class="btn btn-primary" onclick="showEditModal()">
+                <svg width="16" height="16" fill="currentColor" style="display: inline-block; margin-right: 0.5rem;" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                </svg>
+                Edit Profile
+            </button>
+            {% if user.plan == 'free' %}
+            <button class="btn btn-outline" onclick="window.location.href='/pricing'">
+                Upgrade Plan
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Account Settings Section -->
+    <div class="settings-section">
+        <h2>Account Settings</h2>
+        <div class="settings-grid">
+            <div class="settings-card">
+                <div class="settings-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                </div>
+                <h3>Security</h3>
+                <p>Keep your account secure with a strong password</p>
+                <button class="btn btn-secondary" onclick="showChangePasswordModal()">Change Password</button>
+            </div>
+            
+            <div class="settings-card">
+                <div class="settings-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                    </svg>
+                </div>
+                <h3>Email Preferences</h3>
+                <p>Manage your email notifications and updates</p>
+                <button class="btn btn-secondary" onclick="alert('Email preferences coming soon!')">Email Settings</button>
+            </div>
+            
+            <div class="settings-card">
+                <div class="settings-icon">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+                    </svg>
+                </div>
+                <h3>Privacy</h3>
+                <p>Control your data and privacy preferences</p>
+                <button class="btn btn-secondary" onclick="alert('Privacy settings coming soon!')">Privacy Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="edit-modal">
+    <div class="modal">
+        <button class="close-modal" onclick="hideEditModal()">×</button>
+        <h3>Edit Profile</h3>
+        
+        <form id="edit-profile-form">
+            <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" class="form-input" value="{{ user.full_name or '' }}" placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideEditModal()" style="flex: 1;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="password-modal">
+    <div class="modal">
+        <button class="close-modal" onclick="hidePasswordModal()">×</button>
+        <h3>Change Password</h3>
+        
+        <form id="change-password-form">
+            <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" class="form-input" required>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hidePasswordModal()" style="flex: 1;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Update Password</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Success Message -->
+<div class="success-message" id="success-message">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </svg>
+    <span id="success-text">Profile updated successfully!</span>
+</div>
+
+<script>
+// Show/Hide Modals
+function showEditModal() {
+    document.getElementById('edit-modal').classList.add('active');
+}
+
+function hideEditModal() {
+    document.getElementById('edit-modal').classList.remove('active');
+}
+
+function showChangePasswordModal() {
+    document.getElementById('password-modal').classList.add('active');
+}
+
+function hidePasswordModal() {
+    document.getElementById('password-modal').classList.remove('active');
+}
+
+// Show success message
+function showSuccess(message) {
+    const successEl = document.getElementById('success-message');
+    document.getElementById('success-text').textContent = message;
+    successEl.classList.add('show');
+    
+    setTimeout(() => {
+        successEl.classList.remove('show');
+    }, 5000);
+}
+
+// Show error message
+function showError(message) {
+    alert('Error: ' + message);
+}
+
+// Handle edit profile form
+document.getElementById('edit-profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Get form values
+    const formData = {
+        full_name: document.getElementById('full-name').value.trim()
+    };
+    
+    // Validate required fields
+    if (!formData.full_name) {
+        showError('Full name is required');
+        return;
+    }
+    
+    try {
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Saving...';
+        submitBtn.disabled = true;
+        
+        const response = await fetch('/auth/profile/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            hideEditModal();
+            showSuccess(result.message);
+            
+            // Update UI with new values
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showError(result.message || 'Failed to update profile');
+        }
+        
+        // Restore button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
+    } catch (error) {
+        console.error('Profile update error:', error);
+        showError('Failed to update profile. Please try again.');
+        
+        // Restore button state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Save Changes';
+        submitBtn.disabled = false;
+    }
+});
+
+// Handle password change
+document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    
+    // Client-side validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        showError('All password fields are required');
+        return;
+    }
+    
+    if (newPassword.length < 6) {
+        showError('New password must be at least 6 characters');
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        showError('New passwords do not match');
+        return;
+    }
+    
+    try {
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Updating...';
+        submitBtn.disabled = true;
+        
+        const response = await fetch('/auth/profile/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword,
+                confirm_password: confirmPassword
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            hidePasswordModal();
+            showSuccess(result.message);
+            
+            // Clear form
+            document.getElementById('change-password-form').reset();
+        } else {
+            showError(result.message || 'Failed to change password');
+        }
+        
+        // Restore button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
+    } catch (error) {
+        console.error('Password change error:', error);
+        showError('Failed to change password. Please try again.');
+        
+        // Restore button state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Update Password';
+        submitBtn.disabled = false;
+    }
+});
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.classList.remove('active');
+        }
+    });
+});
+</script>
+{% endblock %}

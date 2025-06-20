@@ -1,0 +1,691 @@
+{% extends "base.html" %}
+
+{% block title %}Marketing Tools - Real Estate Office Pro{% endblock %}
+
+{% block content %}
+<!-- Font Awesome & Additional Libraries -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+    /* Main Layout */
+    #marketing-page {
+        min-height: calc(100vh - 56px);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+    }
+    
+    .marketing-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .marketing-header h1 {
+        color: white;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .marketing-header p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+    }
+    
+    /* Tools Grid */
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .tool-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .tool-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .tool-title {
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    
+    .tool-description {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+    
+    .tool-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .tool-features li {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 5px 0;
+        font-size: 0.9rem;
+    }
+    
+    .tool-features li:before {
+        content: "✓ ";
+        color: #4CAF50;
+        font-weight: bold;
+        margin-right: 5px;
+    }
+    
+    .tool-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        width: 100%;
+    }
+    
+    .tool-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Recent Campaigns */
+    .recent-section {
+        max-width: 1200px;
+        margin: 50px auto 0;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+    }
+    
+    .recent-header {
+        color: white;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    .campaigns-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .campaign-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .campaign-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .campaign-property {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .campaign-type {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    .campaign-date {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+    }
+    
+    /* Modal Styles */
+    .marketing-modal .modal-content {
+        background: rgba(30, 30, 50, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    
+    .marketing-modal .modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .marketing-modal .modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .marketing-modal .form-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .marketing-modal .form-control,
+    .marketing-modal .form-select {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    
+    .marketing-modal .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Flyer Preview */
+    #flyer-preview {
+        background: white;
+        color: black;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        min-height: 400px;
+    }
+    
+    /* QR Code Container */
+    #qr-code-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    /* Template Selection */
+    .template-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .template-option {
+        border: 2px solid transparent;
+        border-radius: 10px;
+        padding: 10px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .template-option:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .template-option.selected {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.2);
+    }
+    
+    .template-preview {
+        width: 100%;
+        height: 150px;
+        background: white;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+    }
+</style>
+
+<div id="marketing-page">
+    <!-- Header -->
+    <div class="marketing-header">
+        <h1>Marketing Tools</h1>
+        <p>Create professional marketing materials for your property listings</p>
+    </div>
+    
+    <!-- Marketing Tools Grid -->
+    <div class="tools-grid">
+        <!-- Property Flyer Generator -->
+        <div class="tool-card" onclick="openFlyerGenerator()">
+            <div class="tool-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3 class="tool-title">Property Flyer Generator</h3>
+            <p class="tool-description">Create stunning property flyers with customizable templates</p>
+            <ul class="tool-features">
+                <li>Multiple professional templates</li>
+                <li>Auto-populate property details</li>
+                <li>High-resolution PDF export</li>
+                <li>Custom branding options</li>
+            </ul>
+            <button class="tool-btn">Create Flyer</button>
+        </div>
+        
+        <!-- Social Media Templates -->
+        <div class="tool-card" onclick="openSocialTemplates()">
+            <div class="tool-icon">
+                <i class="fas fa-share-alt"></i>
+            </div>
+            <h3 class="tool-title">Social Media Templates</h3>
+            <p class="tool-description">Ready-to-use templates for all social platforms</p>
+            <ul class="tool-features">
+                <li>Instagram posts & stories</li>
+                <li>Facebook covers & posts</li>
+                <li>LinkedIn property showcases</li>
+                <li>Auto-resize for each platform</li>
+            </ul>
+            <button class="tool-btn">Browse Templates</button>
+        </div>
+        
+        <!-- QR Code Generator -->
+        <div class="tool-card" onclick="openQRGenerator()">
+            <div class="tool-icon">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <h3 class="tool-title">QR Code Generator</h3>
+            <p class="tool-description">Create QR codes for property listings and virtual tours</p>
+            <ul class="tool-features">
+                <li>Link to property details</li>
+                <li>Virtual tour access</li>
+                <li>Contact information</li>
+                <li>Custom branding & colors</li>
+            </ul>
+            <button class="tool-btn">Generate QR Code</button>
+        </div>
+        
+        <!-- Virtual Tour Integration -->
+        <div class="tool-card" onclick="openVirtualTours()">
+            <div class="tool-icon">
+                <i class="fas fa-vr-cardboard"></i>
+            </div>
+            <h3 class="tool-title">Virtual Tour Integration</h3>
+            <p class="tool-description">Embed 360° tours and walkthroughs in your marketing</p>
+            <ul class="tool-features">
+                <li>Matterport integration</li>
+                <li>360° photo uploads</li>
+                <li>Interactive floor plans</li>
+                <li>Mobile-friendly viewers</li>
+            </ul>
+            <button class="tool-btn">Setup Tour</button>
+        </div>
+        
+        <!-- Email Campaigns -->
+        <div class="tool-card" onclick="openEmailCampaigns()">
+            <div class="tool-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <h3 class="tool-title">Email Campaigns</h3>
+            <p class="tool-description">Design and send beautiful property newsletters</p>
+            <ul class="tool-features">
+                <li>Drag-and-drop editor</li>
+                <li>Property showcase templates</li>
+                <li>Client segmentation</li>
+                <li>Performance tracking</li>
+            </ul>
+            <button class="tool-btn">Create Campaign</button>
+        </div>
+        
+        <!-- Open House Kit -->
+        <div class="tool-card" onclick="openOpenHouseKit()">
+            <div class="tool-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <h3 class="tool-title">Open House Kit</h3>
+            <p class="tool-description">Everything you need for successful open houses</p>
+            <ul class="tool-features">
+                <li>Sign-in sheets</li>
+                <li>Property fact sheets</li>
+                <li>Directional signs</li>
+                <li>Follow-up templates</li>
+            </ul>
+            <button class="tool-btn">Prepare Kit</button>
+        </div>
+    </div>
+    
+    <!-- Recent Campaigns -->
+    <div class="recent-section">
+        <h2 class="recent-header">Recent Marketing Campaigns</h2>
+        <div class="campaigns-grid">
+            <div class="campaign-item">
+                <div class="campaign-property">123 Oak Street</div>
+                <div class="campaign-type">Property Flyer</div>
+                <div class="campaign-date">Created 2 hours ago</div>
+            </div>
+            <div class="campaign-item">
+                <div class="campaign-property">456 Maple Avenue</div>
+                <div class="campaign-type">Instagram Post</div>
+                <div class="campaign-date">Created yesterday</div>
+            </div>
+            <div class="campaign-item">
+                <div class="campaign-property">789 Pine Road</div>
+                <div class="campaign-type">Virtual Tour QR</div>
+                <div class="campaign-date">Created 3 days ago</div>
+            </div>
+            <div class="campaign-item">
+                <div class="campaign-property">Multiple Properties</div>
+                <div class="campaign-type">Email Newsletter</div>
+                <div class="campaign-date">Sent last week</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flyer Generator Modal -->
+<div class="modal fade marketing-modal" id="flyerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Property Flyer Generator</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="flyerForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Select Property</label>
+                                <select class="form-select" id="propertySelect">
+                                    <option>123 Oak Street - $450,000</option>
+                                    <option>456 Maple Avenue - $325,000</option>
+                                    <option>789 Pine Road - $580,000</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Template</label>
+                                <div class="template-grid">
+                                    <div class="template-option selected" data-template="modern">
+                                        <div class="template-preview">Modern</div>
+                                    </div>
+                                    <div class="template-option" data-template="classic">
+                                        <div class="template-preview">Classic</div>
+                                    </div>
+                                    <div class="template-option" data-template="luxury">
+                                        <div class="template-preview">Luxury</div>
+                                    </div>
+                                    <div class="template-option" data-template="minimal">
+                                        <div class="template-preview">Minimal</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Headline</label>
+                                <input type="text" class="form-control" value="Stunning Family Home">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" rows="3">Beautiful 3-bedroom home with recent renovations...</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Preview</label>
+                            <div id="flyer-preview">
+                                <h2 style="color: #667eea;">Stunning Family Home</h2>
+                                <p style="font-size: 24px; font-weight: bold;">$450,000</p>
+                                <p>123 Oak Street, Anytown USA</p>
+                                <hr>
+                                <p>3 Bedrooms | 2 Bathrooms | 2,500 sq ft</p>
+                                <p style="margin-top: 20px;">Beautiful 3-bedroom home with recent renovations...</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="generateFlyer()">Generate Flyer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Social Media Modal -->
+<div class="modal fade marketing-modal" id="socialModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Social Media Templates</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Platform</label>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action active">Instagram Post</a>
+                            <a href="#" class="list-group-item list-group-item-action">Instagram Story</a>
+                            <a href="#" class="list-group-item list-group-item-action">Facebook Post</a>
+                            <a href="#" class="list-group-item list-group-item-action">LinkedIn Post</a>
+                            <a href="#" class="list-group-item list-group-item-action">Twitter Post</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Select Template</label>
+                        <div class="template-grid">
+                            <div class="template-option selected">
+                                <div class="template-preview">Just Listed</div>
+                            </div>
+                            <div class="template-option">
+                                <div class="template-preview">Open House</div>
+                            </div>
+                            <div class="template-option">
+                                <div class="template-preview">Price Drop</div>
+                            </div>
+                            <div class="template-option">
+                                <div class="template-preview">Sold</div>
+                            </div>
+                            <div class="template-option">
+                                <div class="template-preview">Feature Property</div>
+                            </div>
+                            <div class="template-option">
+                                <div class="template-preview">Virtual Tour</div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label">Caption</label>
+                            <textarea class="form-control" rows="3">🏡 JUST LISTED! Check out this beautiful 3-bedroom home in the heart of downtown. Schedule your showing today! #RealEstate #JustListed #DreamHome</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Create Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal fade marketing-modal" id="qrModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">QR Code Generator</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">QR Code Type</label>
+                        <select class="form-select" id="qrType">
+                            <option value="listing">Property Listing Page</option>
+                            <option value="tour">Virtual Tour</option>
+                            <option value="contact">Contact Information</option>
+                            <option value="custom">Custom URL</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Property</label>
+                        <select class="form-select">
+                            <option>123 Oak Street</option>
+                            <option>456 Maple Avenue</option>
+                            <option>789 Pine Road</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="customUrlDiv" style="display: none;">
+                        <label class="form-label">Custom URL</label>
+                        <input type="url" class="form-control" placeholder="https://example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">QR Code Color</label>
+                        <input type="color" class="form-control form-control-color" value="#667eea">
+                    </div>
+                </form>
+                <div id="qr-code-container">
+                    <div id="qrcode"></div>
+                    <p class="mt-3">Scan to view property</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="downloadQR()">Download QR Code</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize QR Code
+let qrcode = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Generate initial QR code
+    generateQRCode();
+    
+    // Template selection
+    document.querySelectorAll('.template-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+    
+    // QR Type change
+    document.getElementById('qrType').addEventListener('change', function() {
+        document.getElementById('customUrlDiv').style.display = 
+            this.value === 'custom' ? 'block' : 'none';
+    });
+    
+    // Social platform selection
+    document.querySelectorAll('.list-group-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.list-group-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+});
+
+// Tool Functions
+function openFlyerGenerator() {
+    const modal = new bootstrap.Modal(document.getElementById('flyerModal'));
+    modal.show();
+}
+
+function openSocialTemplates() {
+    const modal = new bootstrap.Modal(document.getElementById('socialModal'));
+    modal.show();
+}
+
+function openQRGenerator() {
+    const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+    modal.show();
+    generateQRCode();
+}
+
+function openVirtualTours() {
+    alert('Virtual Tour Integration - Coming Soon!\nThis will integrate with Matterport, Zillow 3D Home, and other virtual tour platforms.');
+}
+
+function openEmailCampaigns() {
+    alert('Email Campaign Builder - Coming Soon!\nCreate beautiful property newsletters and track engagement.');
+}
+
+function openOpenHouseKit() {
+    alert('Open House Kit - Coming Soon!\nGenerate all materials needed for a successful open house.');
+}
+
+// Generate QR Code
+function generateQRCode() {
+    const container = document.getElementById('qrcode');
+    container.innerHTML = ''; // Clear existing QR code
+    
+    qrcode = new QRCode(container, {
+        text: "https://example.com/property/123-oak-street",
+        width: 200,
+        height: 200,
+        colorDark: document.querySelector('input[type="color"]').value,
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+// Download QR Code
+function downloadQR() {
+    const canvas = document.querySelector('#qrcode canvas');
+    const link = document.createElement('a');
+    link.download = 'property-qr-code.png';
+    link.href = canvas.toDataURL();
+    link.click();
+}
+
+// Generate Flyer
+function generateFlyer() {
+    const preview = document.getElementById('flyer-preview');
+    
+    // Use html2canvas to convert preview to image
+    html2canvas(preview).then(canvas => {
+        // Convert to PDF or download as image
+        const link = document.createElement('a');
+        link.download = 'property-flyer.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+    
+    // Show success message
+    alert('Flyer generated successfully! Check your downloads.');
+}
+
+// Real-time flyer preview update
+document.querySelectorAll('#flyerForm input, #flyerForm textarea').forEach(input => {
+    input.addEventListener('input', updateFlyerPreview);
+});
+
+function updateFlyerPreview() {
+    // Update preview based on form inputs
+    const headline = document.querySelector('input[type="text"]').value;
+    const description = document.querySelector('textarea').value;
+    
+    document.querySelector('#flyer-preview h2').textContent = headline;
+    document.querySelector('#flyer-preview p:last-child').textContent = description;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,730 @@
+{% extends "base.html" %}
+
+{% block title %}Education Center - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .education-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    /* Hero Section */
+    .education-hero {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .education-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .education-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .education-hero p {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Course Categories */
+    .category-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .category-tab {
+        padding: 0.75rem 1.5rem;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.3s;
+        font-weight: 600;
+        color: #64748b;
+    }
+    
+    .category-tab:hover {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .category-tab.active {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    /* Video Grid */
+    .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .video-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .video-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .video-thumbnail {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        background: #f1f5f9;
+        overflow: hidden;
+    }
+    
+    .video-thumbnail img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .video-duration {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+    
+    .play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    .video-card:hover .play-overlay {
+        background: #2563eb;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    
+    .play-icon {
+        width: 0;
+        height: 0;
+        border-left: 20px solid white;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        margin-left: 4px;
+    }
+    
+    .video-content {
+        padding: 1.5rem;
+    }
+    
+    .video-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+    
+    .video-description {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+    
+    .video-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+    
+    .video-badge {
+        background: #f0f9ff;
+        color: #2563eb;
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+    
+    /* Course Section */
+    .course-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .course-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .course-header h2 {
+        font-size: 1.75rem;
+        color: #1e293b;
+        margin: 0;
+    }
+    
+    .view-all-btn {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+    }
+    
+    .view-all-btn:hover {
+        gap: 0.75rem;
+    }
+    
+    /* Progress Tracking */
+    .progress-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .progress-info h3 {
+        font-size: 1.25rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        transition: width 0.3s;
+    }
+    
+    .achievement-badge {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    /* Video Modal */
+    .video-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 2rem;
+    }
+    
+    .video-modal.active {
+        display: flex;
+    }
+    
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        padding-bottom: 56.25%;
+    }
+    
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+    }
+    
+    .close-video {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        background: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    .close-video:hover {
+        background: #f1f5f9;
+        transform: scale(1.1);
+    }
+    
+    /* Resource Downloads */
+    .resources-section {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .resource-list {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .resource-item {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s;
+    }
+    
+    .resource-item:hover {
+        border-color: #2563eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .resource-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .resource-icon {
+        width: 40px;
+        height: 40px;
+        background: #eff6ff;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    
+    .download-btn {
+        padding: 0.5rem 1rem;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .download-btn:hover {
+        background: #1d4ed8;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .education-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .videos-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .category-tabs {
+            overflow-x: scroll;
+        }
+        
+        .progress-card {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="education-container">
+    <!-- Hero Section -->
+    <div class="education-hero">
+        <h1>Real Estate Education Center</h1>
+        <p>Master the art of real estate with our comprehensive video courses and resources</p>
+    </div>
+    
+    <!-- Progress Tracking -->
+    <div class="progress-card">
+        <div class="progress-info" style="flex: 1;">
+            <h3>Your Learning Progress</h3>
+            <p style="color: #64748b; margin-bottom: 0.5rem;">12 of 45 lessons completed</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 27%;"></div>
+            </div>
+        </div>
+        <div class="achievement-badge">🏆</div>
+    </div>
+    
+    <!-- Category Tabs -->
+    <div class="category-tabs">
+        <button class="category-tab active" onclick="filterVideos('all')">All Courses</button>
+        <button class="category-tab" onclick="filterVideos('getting-started')">Getting Started</button>
+        <button class="category-tab" onclick="filterVideos('marketing')">Marketing & Branding</button>
+        <button class="category-tab" onclick="filterVideos('sales')">Sales Techniques</button>
+        <button class="category-tab" onclick="filterVideos('technology')">Technology & Tools</button>
+        <button class="category-tab" onclick="filterVideos('legal')">Legal & Contracts</button>
+        <button class="category-tab" onclick="filterVideos('investment')">Investment Strategies</button>
+    </div>
+    
+    <!-- Featured Videos Section -->
+    <div class="course-section">
+        <div class="course-header">
+            <h2>Featured Courses</h2>
+            <a href="#" class="view-all-btn">View All <span>→</span></a>
+        </div>
+        
+        <div class="videos-grid">
+            <!-- Video 1 -->
+            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Getting Started in Real Estate">
+                    <div class="video-duration">15:30</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Getting Started as a Real Estate Agent</h3>
+                    <p class="video-description">Learn the fundamentals of starting your real estate career, from licensing to your first sale.</p>
+                    <div class="video-meta">
+                        <span>Beginner</span>
+                        <span class="video-badge">Free</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 2 -->
+            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Digital Marketing">
+                    <div class="video-duration">22:45</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Digital Marketing for Real Estate</h3>
+                    <p class="video-description">Master social media, SEO, and online advertising to generate more leads.</p>
+                    <div class="video-meta">
+                        <span>Intermediate</span>
+                        <span class="video-badge">Pro</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 3 -->
+            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Negotiation Skills">
+                    <div class="video-duration">18:20</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Advanced Negotiation Techniques</h3>
+                    <p class="video-description">Close more deals with proven negotiation strategies used by top agents.</p>
+                    <div class="video-meta">
+                        <span>Advanced</span>
+                        <span class="video-badge">Pro</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 4 -->
+            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Property Valuation">
+                    <div class="video-duration">25:10</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Property Valuation Masterclass</h3>
+                    <p class="video-description">Learn how to accurately value properties using comparative market analysis.</p>
+                    <div class="video-meta">
+                        <span>Intermediate</span>
+                        <span class="video-badge">Free</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 5 -->
+            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Client Management">
+                    <div class="video-duration">19:55</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Building Client Relationships</h3>
+                    <p class="video-description">Create lasting relationships that lead to referrals and repeat business.</p>
+                    <div class="video-meta">
+                        <span>Beginner</span>
+                        <span class="video-badge">Free</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 6 -->
+            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Legal Compliance">
+                    <div class="video-duration">30:40</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Real Estate Law & Compliance</h3>
+                    <p class="video-description">Stay compliant with the latest regulations and avoid legal pitfalls.</p>
+                    <div class="video-meta">
+                        <span>Advanced</span>
+                        <span class="video-badge">Pro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resources Section -->
+    <div class="resources-section">
+        <h2 style="font-size: 1.75rem; color: #1e293b; margin-bottom: 1rem;">Downloadable Resources</h2>
+        <p style="color: #64748b;">Templates, guides, and tools to support your learning journey</p>
+        
+        <div class="resource-list">
+            <div class="resource-item">
+                <div class="resource-info">
+                    <div class="resource-icon">📄</div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Listing Presentation Template</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Professional PowerPoint template</p>
+                    </div>
+                </div>
+                <button class="download-btn">Download</button>
+            </div>
+            
+            <div class="resource-item">
+                <div class="resource-info">
+                    <div class="resource-icon">📊</div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">CMA Worksheet</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Comparative Market Analysis Excel template</p>
+                    </div>
+                </div>
+                <button class="download-btn">Download</button>
+            </div>
+            
+            <div class="resource-item">
+                <div class="resource-info">
+                    <div class="resource-icon">📋</div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Buyer's Guide PDF</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Comprehensive guide for first-time buyers</p>
+                    </div>
+                </div>
+                <button class="download-btn">Download</button>
+            </div>
+            
+            <div class="resource-item">
+                <div class="resource-info">
+                    <div class="resource-icon">📝</div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Contract Checklist</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Never miss important contract details</p>
+                    </div>
+                </div>
+                <button class="download-btn">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div class="video-modal" id="video-modal">
+    <div class="video-container">
+        <button class="close-video" onclick="closeVideo()">×</button>
+        <iframe id="video-frame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    let currentCategory = 'all';
+    
+    // Filter videos by category
+    function filterVideos(category) {
+        currentCategory = category;
+        
+        // Update active tab
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // Here you would filter the videos based on category
+        // For now, we'll just show a loading animation
+        const videosGrid = document.querySelector('.videos-grid');
+        videosGrid.style.opacity = '0.5';
+        
+        setTimeout(() => {
+            videosGrid.style.opacity = '1';
+        }, 300);
+    }
+    
+    // Play video in modal
+    function playVideo(videoId) {
+        const modal = document.getElementById('video-modal');
+        const iframe = document.getElementById('video-frame');
+        
+        // Set YouTube video URL
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        
+        // Show modal
+        modal.classList.add('active');
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close video modal
+    function closeVideo() {
+        const modal = document.getElementById('video-modal');
+        const iframe = document.getElementById('video-frame');
+        
+        // Hide modal
+        modal.classList.remove('active');
+        
+        // Stop video
+        iframe.src = '';
+        
+        // Restore body scroll
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal on background click
+    document.getElementById('video-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeVideo();
+        }
+    });
+    
+    // Handle resource downloads
+    document.querySelectorAll('.download-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Simulate download
+            const originalText = this.textContent;
+            this.textContent = 'Downloading...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+                this.textContent = 'Downloaded!';
+                this.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = '';
+                    this.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+    });
+    
+    // Update progress as videos are watched
+    function updateProgress() {
+        // This would be connected to your backend to track actual progress
+        const progressFill = document.querySelector('.progress-fill');
+        const currentWidth = parseInt(progressFill.style.width) || 0;
+        const newWidth = Math.min(currentWidth + 5, 100);
+        progressFill.style.width = newWidth + '%';
+    }
+</script>
+{% endblock %}
