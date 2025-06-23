@@ -288,7 +288,8 @@ def google_callback():
         print(f"🔑 Using redirect_uri for token exchange: {redirect_uri}")
         
         # Get the authorization token with explicit redirect_uri
-        token = google.authorize_access_token(redirect_uri=redirect_uri)
+        # Get the authorization token
+        token = google.authorize_access_token() 
         print(f"Token received: {bool(token)}")
         print(f"Token keys: {list(token.keys()) if token else 'No token'}")
         
