@@ -1,0 +1,1095 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Real Estate Office Pro{% endblock %}
+
+{% block content %}
+<!-- Font Awesome & PDF.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+    /* Main Layout */
+    #documents-page {
+        min-height: calc(100vh - 56px);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+    }
+    
+    /* Header Section */
+    .documents-header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .header-title h1 {
+        color: white;
+        margin: 0;
+        font-size: 2rem;
+    }
+    
+    .header-title p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 5px 0 0 0;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .action-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Filter Tabs */
+    .filter-section {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-tab {
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-tab.active {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .filter-tab .badge {
+        background: rgba(255, 255, 255, 0.3);
+        padding: 2px 8px;
+        border-radius: 12px;
+        margin-left: 8px;
+        font-size: 0.85rem;
+    }
+    
+    /* Documents Grid */
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    
+    .document-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .document-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .document-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+    
+    .document-icon.pdf {
+        color: #dc3545;
+    }
+    
+    .document-icon.docx {
+        color: #0066cc;
+    }
+    
+    .document-icon.signed {
+        color: #28a745;
+    }
+    
+    .document-title {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    
+    .document-info {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .document-status {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+    
+    .status-draft {
+        background: rgba(108, 117, 125, 0.3);
+        color: white;
+    }
+    
+    .status-sent {
+        background: rgba(255, 193, 7, 0.3);
+        color: white;
+    }
+    
+    .status-signed {
+        background: rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+    
+    .status-expired {
+        background: rgba(220, 53, 69, 0.3);
+        color: white;
+    }
+    
+    .document-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .doc-action-btn {
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        color: white;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .doc-action-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+    }
+    
+    /* Templates Section */
+    .templates-section {
+        margin-top: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+    }
+    
+    .templates-header {
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .templates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .template-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+    
+    .template-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    .template-icon {
+        font-size: 2.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+    }
+    
+    .template-name {
+        color: white;
+        font-weight: 500;
+    }
+    
+    /* Modal Styles */
+    .document-modal .modal-content {
+        background: rgba(30, 30, 50, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    
+    .document-modal .modal-header,
+    .document-modal .modal-footer {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .document-modal .form-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .document-modal .form-control,
+    .document-modal .form-select {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    
+    .document-modal .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Signature Pad */
+    .signature-pad-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    #signature-pad {
+        border: 2px dashed #ccc;
+        border-radius: 5px;
+        width: 100%;
+        height: 200px;
+        cursor: crosshair;
+    }
+    
+    .signature-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    
+    /* Document Viewer */
+    #document-viewer {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        min-height: 500px;
+        color: black;
+    }
+    
+    /* Recipients List */
+    .recipients-list {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 15px;
+    }
+    
+    .recipient-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .recipient-info {
+        flex: 1;
+    }
+    
+    .recipient-name {
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+    
+    .recipient-email {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .recipient-status {
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+    
+    /* Upload Area */
+    .upload-area {
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        padding: 40px;
+        text-align: center;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-area.drag-over {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .upload-icon {
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 15px;
+    }
+    
+    .upload-text {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+    }
+    
+    .upload-button {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 10px 20px;
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<div id="documents-page">
+    <!-- Header -->
+    <div class="documents-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Document Management</h1>
+                <p>Manage contracts, agreements, and get signatures electronically</p>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" onclick="uploadDocument()">
+                    <i class="fas fa-upload"></i> Upload Document
+                </button>
+                <button class="action-btn" onclick="createFromTemplate()">
+                    <i class="fas fa-file-plus"></i> Create New
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filter Tabs -->
+    <div class="filter-section">
+        <div class="filter-tab active" data-filter="all">
+            All Documents <span class="badge">24</span>
+        </div>
+        <div class="filter-tab" data-filter="awaiting">
+            Awaiting Signature <span class="badge">5</span>
+        </div>
+        <div class="filter-tab" data-filter="signed">
+            Signed <span class="badge">15</span>
+        </div>
+        <div class="filter-tab" data-filter="draft">
+            Drafts <span class="badge">4</span>
+        </div>
+        <div class="filter-tab" data-filter="expired">
+            Expired <span class="badge">2</span>
+        </div>
+    </div>
+    
+    <!-- Documents Grid -->
+    <div class="documents-grid">
+        <!-- Awaiting Signature -->
+        <div class="document-card" onclick="viewDocument(1)">
+            <div class="document-icon pdf">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <h3 class="document-title">Purchase Agreement - 123 Oak St</h3>
+            <div class="document-info">
+                Client: Sarah Johnson<br>
+                Sent: 2 hours ago
+            </div>
+            <div class="document-status status-sent">Awaiting Signature</div>
+            <div class="document-actions">
+                <button class="doc-action-btn" onclick="event.stopPropagation(); sendReminder(1)">
+                    <i class="fas fa-bell"></i> Remind
+                </button>
+                <button class="doc-action-btn" onclick="event.stopPropagation(); viewDocument(1)">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </div>
+        </div>
+        
+        <!-- Signed Document -->
+        <div class="document-card" onclick="viewDocument(2)">
+            <div class="document-icon signed">
+                <i class="fas fa-file-contract"></i>
+            </div>
+            <h3 class="document-title">Listing Agreement - 456 Maple Ave</h3>
+            <div class="document-info">
+                Client: Mike Chen<br>
+                Signed: Yesterday at 3:45 PM
+            </div>
+            <div class="document-status status-signed">Completed</div>
+            <div class="document-actions">
+                <button class="doc-action-btn" onclick="event.stopPropagation(); downloadDocument(2)">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="doc-action-btn" onclick="event.stopPropagation(); viewDocument(2)">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </div>
+        </div>
+        
+        <!-- Draft Document -->
+        <div class="document-card" onclick="editDocument(3)">
+            <div class="document-icon docx">
+                <i class="fas fa-file-word"></i>
+            </div>
+            <h3 class="document-title">Buyer Representation Agreement</h3>
+            <div class="document-info">
+                Client: Emily Rodriguez<br>
+                Last edited: 3 days ago
+            </div>
+            <div class="document-status status-draft">Draft</div>
+            <div class="document-actions">
+                <button class="doc-action-btn" onclick="event.stopPropagation(); editDocument(3)">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="doc-action-btn" onclick="event.stopPropagation(); sendForSignature(3)">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+        </div>
+        
+        <!-- Another Awaiting -->
+        <div class="document-card" onclick="viewDocument(4)">
+            <div class="document-icon pdf">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <h3 class="document-title">Rental Agreement - Unit 205</h3>
+            <div class="document-info">
+                Client: David Park<br>
+                Sent: 5 days ago
+            </div>
+            <div class="document-status status-sent">Awaiting Signature</div>
+            <div class="document-actions">
+                <button class="doc-action-btn" onclick="event.stopPropagation(); sendReminder(4)">
+                    <i class="fas fa-bell"></i> Remind
+                </button>
+                <button class="doc-action-btn" onclick="event.stopPropagation(); viewDocument(4)">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </div>
+        </div>
+        
+        <!-- Expired Document -->
+        <div class="document-card" onclick="viewDocument(5)">
+            <div class="document-icon pdf">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <h3 class="document-title">Offer to Purchase - 789 Pine Rd</h3>
+            <div class="document-info">
+                Client: Lisa Thompson<br>
+                Expired: 2 days ago
+            </div>
+            <div class="document-status status-expired">Expired</div>
+            <div class="document-actions">
+                <button class="doc-action-btn" onclick="event.stopPropagation(); resendDocument(5)">
+                    <i class="fas fa-redo"></i> Resend
+                </button>
+                <button class="doc-action-btn" onclick="event.stopPropagation(); viewDocument(5)">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </div>
+        </div>
+        
+        <!-- More Signed -->
+        <div class="document-card" onclick="viewDocument(6)">
+            <div class="document-icon signed">
+                <i class="fas fa-file-contract"></i>
+            </div>
+            <h3 class="document-title">Disclosure Statement - 321 Elm St</h3>
+            <div class="document-info">
+                Client: Robert Williams<br>
+                Signed: Last week
+            </div>
+            <div class="document-status status-signed">Completed</div>
+            <div class="document-actions">
+                <button class="doc-action-btn" onclick="event.stopPropagation(); downloadDocument(6)">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="doc-action-btn" onclick="event.stopPropagation(); viewDocument(6)">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Templates Section -->
+    <div class="templates-section">
+        <h2 class="templates-header">Document Templates</h2>
+        <div class="templates-grid">
+            <div class="template-item" onclick="useTemplate('purchase_agreement')">
+                <div class="template-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="template-name">Purchase Agreement</div>
+            </div>
+            <div class="template-item" onclick="useTemplate('listing_agreement')">
+                <div class="template-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="template-name">Listing Agreement</div>
+            </div>
+            <div class="template-item" onclick="useTemplate('rental_agreement')">
+                <div class="template-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="template-name">Rental Agreement</div>
+            </div>
+            <div class="template-item" onclick="useTemplate('buyer_representation')">
+                <div class="template-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="template-name">Buyer Representation</div>
+            </div>
+            <div class="template-item" onclick="useTemplate('disclosure')">
+                <div class="template-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="template-name">Property Disclosure</div>
+            </div>
+            <div class="template-item" onclick="useTemplate('addendum')">
+                <div class="template-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="template-name">Addendum</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Document Modal -->
+<div class="modal fade document-modal" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Document</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Drag and drop your document here</div>
+                    <div>or</div>
+                    <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                        Browse Files
+                    </button>
+                    <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx">
+                </div>
+                
+                <form id="uploadForm" style="display: none;">
+                    <div class="mb-3">
+                        <label class="form-label">Document Title</label>
+                        <input type="text" class="form-control" id="docTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Document Type</label>
+                        <select class="form-select" id="docType">
+                            <option>Purchase Agreement</option>
+                            <option>Listing Agreement</option>
+                            <option>Rental Agreement</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Associated Property (Optional)</label>
+                        <select class="form-select">
+                            <option>Select property...</option>
+                            <option>123 Oak Street</option>
+                            <option>456 Maple Avenue</option>
+                            <option>789 Pine Road</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="completeUpload()">Upload Document</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Send for Signature Modal -->
+<div class="modal fade document-modal" id="signatureModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send for Signature</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Document</label>
+                        <input type="text" class="form-control" value="Purchase Agreement - 123 Oak St" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Recipients</label>
+                        <div class="input-group mb-2">
+                            <input type="email" class="form-control" placeholder="Enter email address">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addRecipient()">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                        <div class="recipients-list">
+                            <div class="recipient-item">
+                                <div class="recipient-info">
+                                    <div class="recipient-name">Sarah Johnson</div>
+                                    <div class="recipient-email">sarah.johnson@email.com</div>
+                                </div>
+                                <div class="recipient-status status-draft">Buyer</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" rows="3">Please review and sign the attached purchase agreement for 123 Oak Street. Let me know if you have any questions.</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Signature Requirements</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="requireAll" checked>
+                            <label class="form-check-label" for="requireAll">
+                                Require all recipients to sign
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="signOrder">
+                            <label class="form-check-label" for="signOrder">
+                                Recipients must sign in order
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Expiration</label>
+                        <select class="form-select">
+                            <option>7 days</option>
+                            <option selected>14 days</option>
+                            <option>30 days</option>
+                            <option>No expiration</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendForSignatures()">
+                    <i class="fas fa-paper-plane"></i> Send for Signature
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Document Viewer Modal -->
+<div class="modal fade document-modal" id="viewerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Document Viewer</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-light me-2" onclick="downloadDocument()">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn btn-sm btn-outline-light me-2" onclick="printDocument()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="document-viewer">
+                    <!-- PDF viewer will be rendered here -->
+                    <canvas id="pdf-canvas"></canvas>
+                </div>
+                
+                <!-- Signature Section (for signing) -->
+                <div class="signature-pad-container" id="signatureSection" style="display: none;">
+                    <h5 style="color: #333;">Please sign below</h5>
+                    <canvas id="signature-pad"></canvas>
+                    <div class="signature-actions">
+                        <button class="btn btn-secondary" onclick="clearSignature()">Clear</button>
+                        <button class="btn btn-primary" onclick="saveSignature()">Sign Document</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create from Template Modal -->
+<div class="modal fade document-modal" id="templateModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Document from Template</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Template</label>
+                                <select class="form-select" id="templateSelect">
+                                    <option>Purchase Agreement</option>
+                                    <option>Listing Agreement</option>
+                                    <option>Rental Agreement</option>
+                                    <option>Buyer Representation</option>
+                                    <option>Property Disclosure</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Property</label>
+                                <select class="form-select">
+                                    <option>123 Oak Street - $450,000</option>
+                                    <option>456 Maple Avenue - $325,000</option>
+                                    <option>789 Pine Road - $580,000</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Client Name</label>
+                                <input type="text" class="form-control" placeholder="Enter client name">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Client Email</label>
+                                <input type="email" class="form-control" placeholder="Enter client email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Additional Fields</label>
+                            <div id="template-fields">
+                                <!-- Dynamic fields based on template -->
+                                <div class="mb-3">
+                                    <label class="form-label">Purchase Price</label>
+                                    <input type="text" class="form-control" value="$450,000">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Closing Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Earnest Money</label>
+                                    <input type="text" class="form-control" value="$10,000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="generateDocument()">Generate Document</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize variables
+let currentDocument = null;
+let signaturePad = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize signature pad
+    const canvas = document.getElementById('signature-pad');
+    signaturePad = new SignaturePad(canvas);
+    
+    // Filter functionality
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            filterDocuments(this.dataset.filter);
+        });
+    });
+    
+    // Drag and drop functionality
+    const uploadArea = document.getElementById('uploadArea');
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('drag-over');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    // File input change
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+});
+
+// Document Management Functions
+function uploadDocument() {
+    const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+    modal.show();
+}
+
+function createFromTemplate() {
+    const modal = new bootstrap.Modal(document.getElementById('templateModal'));
+    modal.show();
+}
+
+function viewDocument(docId) {
+    currentDocument = docId;
+    const modal = new bootstrap.Modal(document.getElementById('viewerModal'));
+    modal.show();
+    
+    // In production, load actual PDF
+    // For demo, show placeholder
+    const canvas = document.getElementById('pdf-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 600;
+    canvas.height = 800;
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#333';
+    ctx.font = '20px Arial';
+    ctx.fillText('Purchase Agreement', 50, 100);
+    ctx.font = '16px Arial';
+    ctx.fillText('Property: 123 Oak Street', 50, 150);
+    ctx.fillText('Buyer: Sarah Johnson', 50, 180);
+    ctx.fillText('Price: $450,000', 50, 210);
+}
+
+function editDocument(docId) {
+    // Open document editor
+    alert('Document editor would open here');
+}
+
+function sendForSignature(docId) {
+    currentDocument = docId;
+    const modal = new bootstrap.Modal(document.getElementById('signatureModal'));
+    modal.show();
+}
+
+function sendReminder(docId) {
+    // Send reminder API call
+    alert('Reminder sent to client!');
+}
+
+function downloadDocument(docId) {
+    // In production, download actual document
+    alert('Document download started');
+}
+
+function resendDocument(docId) {
+    // Resend document for signature
+    sendForSignature(docId);
+}
+
+function handleFiles(files) {
+    if (files.length > 0) {
+        const file = files[0];
+        if (file.type === 'application/pdf' || file.type.includes('word')) {
+            // Show form
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('uploadForm').style.display = 'block';
+            document.getElementById('docTitle').value = file.name.replace(/\.[^/.]+$/, '');
+        } else {
+            alert('Please upload a PDF or Word document');
+        }
+    }
+}
+
+function completeUpload() {
+    // Upload document API call
+    alert('Document uploaded successfully!');
+    bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+    location.reload(); // Refresh to show new document
+}
+
+function useTemplate(templateType) {
+    document.getElementById('templateSelect').value = templateType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    createFromTemplate();
+}
+
+function generateDocument() {
+    // Generate document from template
+    alert('Document generated from template!');
+    bootstrap.Modal.getInstance(document.getElementById('templateModal')).hide();
+}
+
+function addRecipient() {
+    // Add recipient to list
+    const email = event.target.closest('.input-group').querySelector('input').value;
+    if (email) {
+        // Add to recipients list
+        alert(`Added ${email} as recipient`);
+        event.target.closest('.input-group').querySelector('input').value = '';
+    }
+}
+
+function sendForSignatures() {
+    // Send document for signatures
+    alert('Document sent for signatures!');
+    bootstrap.Modal.getInstance(document.getElementById('signatureModal')).hide();
+}
+
+function filterDocuments(filter) {
+    // Filter documents based on status
+    // In production, this would filter the actual document list
+    console.log('Filtering by:', filter);
+}
+
+// Signature Pad Functions
+function clearSignature() {
+    signaturePad.clear();
+}
+
+function saveSignature() {
+    if (signaturePad.isEmpty()) {
+        alert('Please provide a signature first.');
+    } else {
+        const signatureData = signaturePad.toDataURL();
+        // Save signature and complete signing process
+        alert('Document signed successfully!');
+        bootstrap.Modal.getInstance(document.getElementById('viewerModal')).hide();
+    }
+}
+
+function printDocument() {
+    window.print();
+}
+
+// Simple signature pad implementation
+class SignaturePad {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.isDrawing = false;
+        
+        // Set canvas size
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+        
+        // Set drawing styles
+        this.ctx.strokeStyle = '#000';
+        this.ctx.lineWidth = 2;
+        this.ctx.lineCap = 'round';
+        
+        // Add event listeners
+        this.canvas.addEventListener('mousedown', this.startDrawing.bind(this));
+        this.canvas.addEventListener('mousemove', this.draw.bind(this));
+        this.canvas.addEventListener('mouseup', this.stopDrawing.bind(this));
+        this.canvas.addEventListener('touchstart', this.handleTouch.bind(this));
+        this.canvas.addEventListener('touchmove', this.handleTouch.bind(this));
+        this.canvas.addEventListener('touchend', this.stopDrawing.bind(this));
+    }
+    
+    startDrawing(e) {
+        this.isDrawing = true;
+        const rect = this.canvas.getBoundingClientRect();
+        this.ctx.beginPath();
+        this.ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+    
+    draw(e) {
+        if (!this.isDrawing) return;
+        const rect = this.canvas.getBoundingClientRect();
+        this.ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        this.ctx.stroke();
+    }
+    
+    stopDrawing() {
+        this.isDrawing = false;
+    }
+    
+    handleTouch(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                         e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        this.canvas.dispatchEvent(mouseEvent);
+    }
+    
+    clear() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    
+    isEmpty() {
+        const pixelData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
+        for (let i = 0; i < pixelData.length; i += 4) {
+            if (pixelData[i + 3] !== 0) return false;
+        }
+        return true;
+    }
+    
+    toDataURL() {
+        return this.canvas.toDataURL();
+    }
+}
+</script>
+{% endblock %}

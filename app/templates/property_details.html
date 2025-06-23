@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details - PropInsight</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/dashboard" class="flex items-center">
+                        <i class="fas fa-home text-purple-600 text-2xl mr-3"></i>
+                        <span class="font-bold text-xl">PropInsight</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-700 hover:text-purple-600">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Search
+                    </a>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Property Details Container -->
+    <div class="container mx-auto px-4 py-8">
+        <div id="propertyDetails" class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <!-- Loading State -->
+            <div class="p-8 text-center">
+                <i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i>
+                <p class="mt-4 text-gray-600">Loading property details...</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4" id="actionButtons" style="display: none;">
+            <button onclick="saveProperty()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center justify-center">
+                <i class="fas fa-bookmark mr-2"></i> Save Property
+            </button>
+            <button onclick="createLead()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center">
+                <i class="fas fa-user-plus mr-2"></i> Create Lead
+            </button>
+            <button onclick="shareProperty()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg flex items-center justify-center">
+                <i class="fas fa-share-alt mr-2"></i> Share
+            </button>
+            <button onclick="printProperty()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center justify-center">
+                <i class="fas fa-print mr-2"></i> Print
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Get property ID from URL
+        const propertyId = "{{ property_id }}";
+        let currentProperty = null;
+
+        // Load property details on page load
+        window.onload = function() {
+            // For now, we'll use the property data from sessionStorage
+            const searchResults = sessionStorage.getItem('lastSearchResults');
+            
+            // DEBUG LINES - ADD THESE
+            console.log('Property ID:', propertyId);
+            console.log('Search Results:', searchResults);
+            
+            if (searchResults) {
+                const results = JSON.parse(searchResults);
+                const property = results.properties.find(p => p.id === propertyId);
+                if (property) {
+                    currentProperty = property;
+                    displayPropertyDetails(property);
+                    document.getElementById('actionButtons').style.display = 'grid';
+                } else {
+                    displayError();
+                }
+            } else {
+                displayError();
+            }
+        };
+
+        function displayPropertyDetails(property) {
+            const container = document.getElementById('propertyDetails');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <!-- Image Gallery -->
+                    <div class="relative h-96 lg:h-full">
+                        <img src="${property.photo_url || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop'}" 
+                            alt="${property.address}" 
+                                class="w-full h-full object-cover"
+                                onerror="this.src='https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop'">
+                        <div class="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full">
+                            ${property.listing_status}
+                        </div>
+                    </div>
+
+                    <!-- Property Info -->
+                    <div class="p-8">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">${property.address}</h1>
+                        <p class="text-4xl font-bold text-purple-600 mb-6">$${property.price.toLocaleString()}</p>
+
+                        <!-- Key Features -->
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <i class="fas fa-bed text-2xl text-purple-600 mb-2"></i>
+                                <p class="text-2xl font-bold">${property.beds}</p>
+                                <p class="text-gray-600">Bedrooms</p>
+                            </div>
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <i class="fas fa-bath text-2xl text-purple-600 mb-2"></i>
+                                <p class="text-2xl font-bold">${property.baths}</p>
+                                <p class="text-gray-600">Bathrooms</p>
+                            </div>
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <i class="fas fa-home text-2xl text-purple-600 mb-2"></i>
+                                <p class="text-2xl font-bold">${property.sqft.toLocaleString()}</p>
+                                <p class="text-gray-600">Sq Ft</p>
+                            </div>
+                        </div>
+
+                        <!-- Additional Details -->
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between py-2 border-b">
+                                <span class="text-gray-600">Property Type:</span>
+                                <span class="font-semibold">${property.property_type}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b">
+                                <span class="text-gray-600">Year Built:</span>
+                                <span class="font-semibold">${property.year_built}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b">
+                                <span class="text-gray-600">Price per Sq Ft:</span>
+                                <span class="font-semibold">$${property.price_per_sqft}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b">
+                                <span class="text-gray-600">Days on Market:</span>
+                                <span class="font-semibold">${property.days_on_market} days</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b">
+                                <span class="text-gray-600">Lot Size:</span>
+                                <span class="font-semibold">${property.lot_size.toLocaleString()} sq ft</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b">
+                                <span class="text-gray-600">MLS #:</span>
+                                <span class="font-semibold">${property.listing_id || 'N/A'}</span>
+                            </div>
+                        </div>
+
+                        <!-- Agent Info -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2">Listing Agent</h3>
+                            <p class="text-gray-700">${property.agent.name}</p>
+                            <p class="text-purple-600 font-semibold">${property.agent.phone}</p>
+                        </div>
+
+                        <!-- View on Realtor.com -->
+                        ${property.property_url && property.property_url !== '#' ? `
+                            <a href="${property.property_url}" target="_blank" 
+                               class="mt-6 inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg">
+                                <i class="fas fa-external-link-alt mr-2"></i> View on Realtor.com
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayError() {
+            const container = document.getElementById('propertyDetails');
+            container.innerHTML = `
+                <div class="p-8 text-center">
+                    <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Property Not Found</h2>
+                    <p class="text-gray-600 mb-4">This property could not be loaded.</p>
+                    <a href="/dashboard" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg inline-block">
+                        Back to Search
+                    </a>
+                </div>
+            `;
+        }
+
+        // Action Functions
+        function saveProperty() {
+            // TODO: Implement save property
+            alert('Property saved! (Feature coming soon)');
+        }
+
+        function createLead() {
+            // TODO: Implement create lead
+            alert('Lead creation form coming soon!');
+        }
+
+        function shareProperty() {
+            if (navigator.share && currentProperty) {
+                navigator.share({
+                    title: currentProperty.address,
+                    text: `Check out this property: ${currentProperty.address} - $${currentProperty.price.toLocaleString()}`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                alert('Property link copied to clipboard!');
+            }
+        }
+
+        function printProperty() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

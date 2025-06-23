@@ -1,0 +1,527 @@
+{% extends "base.html" %}
+
+{% block title %}Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    /* Text rendering improvements */
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+    
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 4rem 0;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 800;
+    }
+    
+    .hero .highlight {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero p {
+        font-size: 1.25rem;
+        color: #64748b;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Search Section */
+    .search-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem auto;
+        max-width: 700px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+    
+    .search-form {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-form .btn {
+        font-weight: 700;
+        letter-spacing: 0.025em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        white-space: nowrap;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 1rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        background: #f8fafc;
+    }
+    
+    .search-input:focus {
+        border-color: #2563eb;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .search-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+    
+    .search-tag {
+        padding: 0.5rem 1rem;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+    }
+    
+    .search-tag:hover {
+        background: #e2e8f0;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    /* Features Grid */
+    .features {
+        padding: 4rem 0;
+    }
+    
+    .features h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .features-subtitle {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #64748b;
+        margin-bottom: 3rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        color: #1e293b;
+        font-weight: 600;
+    }
+    
+    .feature-card p {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .feature-list li {
+        padding: 0.25rem 0;
+        color: #64748b;
+        font-size: 0.875rem;
+        position: relative;
+        padding-left: 1.25rem;
+    }
+    
+    .feature-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin: 4rem 0;
+    }
+    
+    .cta-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cta-section p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .cta-buttons .btn {
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 1rem 2rem;
+        text-shadow: none;
+        letter-spacing: 0.025em;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+    
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #64748b;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    
+    .modal-close:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .search-form {
+            flex-direction: column;
+        }
+        
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .features h2, .cta-section h2 {
+            font-size: 2rem;
+        }
+        
+        .modal-content {
+            margin: 10% auto;
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Complete Platform for <span class="highlight">Real Estate Agents</span></h1>
+    <p>Manage properties, clients, leads, and close more deals with our comprehensive agent workspace</p>
+    
+    <!-- Search Section -->
+    <div class="search-section">
+        <h3 style="margin-bottom: 1rem; color: #1e293b; font-weight: 600;">Search Properties to Get Started</h3>
+        <form class="search-form" id="home-search">
+            <input type="text" 
+                   class="search-input" 
+                   id="search-query"
+                   placeholder="Enter address, city, or ZIP code..." 
+                   required>
+            <button type="submit" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">Search Properties</button>
+        </form>
+        <div class="search-tags">
+            <span style="color: #64748b; font-size: 0.875rem; margin-right: 0.5rem;">Popular searches:</span>
+            <span class="search-tag" onclick="setSearchValue('Miami, FL')">Miami, FL</span>
+            <span class="search-tag" onclick="setSearchValue('Orlando, FL')">Orlando, FL</span>
+            <span class="search-tag" onclick="setSearchValue('Tampa, FL')">Tampa, FL</span>
+            <span class="search-tag" onclick="setSearchValue('32789')">Winter Park</span>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; color: #64748b; font-size: 0.875rem;">
+            <span style="color: #10b981;">✓</span> No credit card required 
+            <span style="margin: 0 1rem;">•</span> 
+            <span style="color: #10b981;">✓</span> 7 free searches 
+            <span style="margin: 0 1rem;">•</span> 
+            <span style="color: #10b981;">✓</span> Instant access
+        </p>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <h2>Essential Tools for Real Estate Success</h2>
+    <p class="features-subtitle">The 3 most important tools to manage your real estate business</p>
+    <div class="feature-grid">
+        <!-- Property Management -->
+        <div class="feature-card">
+            <div class="feature-icon">P</div>
+            <h3>Property Management</h3>
+            <p>MLS integration, advanced search, and comprehensive property database management.</p>
+            <ul class="feature-list">
+                <li>MLS Integration & Custom Listings</li>
+                <li>Interactive Maps with Filters</li>
+                <li>Save & Organize Properties</li>
+                <li>Active, Under Contract & Sold Tracking</li>
+            </ul>
+        </div>
+        
+        <!-- Client CRM -->
+        <div class="feature-card">
+            <div class="feature-icon">C</div>
+            <h3>Customer Relationship Management CRM</h3>
+            <p>Complete contact database for buyers, sellers, and leads with interaction tracking.</p>
+            <ul class="feature-list">
+                <li>Contact Database & Lead Tracking</li>
+                <li>Interaction History & Notes</li>
+                <li>Follow-up Reminders</li>
+                <li>Property Interest Tracking</li>
+            </ul>
+        </div>
+        
+        <!-- Communication -->
+        <div class="feature-card">
+            <div class="feature-icon">M</div>
+            <h3>Communication Hub</h3>
+            <p>Integrated messaging with WhatsApp, SMS, and email communications.</p>
+            <ul class="feature-list">
+                <li>In-app Client Chat</li>
+                <li>WhatsApp & SMS Integration</li>
+                <li>Automated Notifications</li>
+                <li>Appointment Reminders</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Learn More Section -->
+    <div style="text-align: center; margin-top: 3rem;">
+        <h3 style="margin-bottom: 1rem; color: #1e293b; font-weight: 600;">Plus 4 More Powerful Tools</h3>
+        <p style="margin-bottom: 2rem; color: #64748b; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Scheduling, marketing tools, e-signature, market analytics, property comparisons, and multi-device support
+        </p>
+        <a href="/features" class="btn btn-outline" style="font-size: 1rem; padding: 0.875rem 2rem;">
+            View All Features
+        </a>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <h2>Ready to Transform Your Real Estate Business?</h2>
+    <p>Join thousands of successful agents using PropInsight Pro</p>
+    <div class="cta-buttons">
+        <a href="{{ url_for('auth.signup') }}" class="btn" style="background: white; color: #2563eb; font-weight: 600;">Start Free 7-Day Trial</a>
+        <a href="{{ url_for('web.pricing') }}" class="btn btn-outline" style="border-color: white; color: white;">View Pricing Plans</a>
+    </div>
+</section>
+
+<!-- Signup Modal -->
+<div id="signup-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div style="text-align: center;">
+            <h2 style="color: #1e293b; margin-bottom: 1rem;">Start Your Free Trial</h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">Create your account to search properties and access all agent tools</p>
+            
+            <div style="margin-bottom: 2rem;">
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem; padding: 1rem;">Sign Up with Email</a>
+                <a href="{{ url_for('auth.google_login') }}" class="btn btn-secondary" style="width: 100%; padding: 1rem;">Continue with Google</a>
+            </div>
+            
+            <p style="font-size: 0.875rem; color: #64748b;">
+                Already have an account? 
+                <a href="{{ url_for('auth.login') }}" style="color: #2563eb; text-decoration: none; font-weight: 600;">Sign In</a>
+            </p>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                <p style="font-size: 0.75rem; color: #9ca3af;">
+                    <span style="color: #10b981;">✓</span> 7-day free trial
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <span style="color: #10b981;">✓</span> No credit card required
+                    <span style="margin: 0 0.5rem;">•</span>
+                    <span style="color: #10b981;">✓</span> Cancel anytime
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Search functionality
+function setSearchValue(value) {
+    document.getElementById('search-query').value = value;
+    document.getElementById('search-query').focus();
+}
+
+// Modal functionality
+function showModal() {
+    document.getElementById('signup-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('signup-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('signup-modal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Search form handling
+document.getElementById('home-search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const searchValue = document.getElementById('search-query').value.trim();
+    
+    {% if session.user_id %}
+        // If logged in, go to dashboard with search pre-filled
+        if (searchValue) {
+            sessionStorage.setItem('pendingSearch', searchValue);
+        }
+        window.location.href = '/dashboard';
+    {% else %}
+        // If not logged in, show signup modal
+        if (searchValue) {
+            sessionStorage.setItem('pendingSearch', searchValue);
+        }
+        showModal();
+    {% endif %}
+});
+
+// Add search input animations
+document.getElementById('search-query').addEventListener('focus', function() {
+    this.style.borderColor = '#2563eb';
+    this.style.transform = 'scale(1.02)';
+});
+
+document.getElementById('search-query').addEventListener('blur', function() {
+    this.style.borderColor = '#e2e8f0';
+    this.style.transform = 'scale(1)';
+});
+</script>
+{% endblock %}

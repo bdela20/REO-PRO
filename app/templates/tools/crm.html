@@ -1,0 +1,1748 @@
+{% extends "base.html" %}
+
+{% block title %}Client Management - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .client-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    /* Header Section */
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .page-header h1 {
+        color: #1e293b;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .header-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    /* Search and Filter Section */
+    .search-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .search-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .filter-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .filter-select {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        background: white;
+        font-size: 0.875rem;
+        cursor: pointer;
+    }
+    
+    /* Client Tabs */
+    .client-tabs {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e2e8f0;
+        background: white;
+        padding: 0 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .tab-btn {
+        padding: 1rem 0;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: 600;
+        color: #64748b;
+        transition: all 0.3s;
+    }
+    
+    .tab-btn:hover {
+        color: #2563eb;
+    }
+    
+    .tab-btn.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+    }
+    
+    .tab-count {
+        display: inline-block;
+        margin-left: 0.5rem;
+        padding: 0.125rem 0.5rem;
+        background: #f1f5f9;
+        border-radius: 10px;
+        font-size: 0.875rem;
+    }
+    
+    /* View Toggle */
+    .view-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .view-toggle {
+        display: flex;
+        background: #f1f5f9;
+        padding: 0.25rem;
+        border-radius: 8px;
+    }
+    
+    .view-btn {
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .view-btn:hover {
+        color: #475569;
+    }
+    
+    .view-btn.active {
+        background: white;
+        color: #1e293b;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .view-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Client Grid */
+    .clients-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .client-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .client-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .client-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .client-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+    
+    .client-info {
+        flex: 1;
+    }
+    
+    .client-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .client-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .type-lead {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .type-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+    
+    .type-past {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+    
+    .client-details {
+        margin-bottom: 1rem;
+    }
+    
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+    
+    .detail-item svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+    
+    .client-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+    
+    .client-tag {
+        padding: 0.25rem 0.5rem;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .client-actions {
+        display: flex;
+        gap: 0.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .client-actions button {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+    
+    .client-actions button:hover {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    /* List View Styles */
+    .clients-list {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        display: none;
+    }
+    
+    .list-header {
+        display: grid;
+        grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 180px;
+        padding: 1rem 1.5rem;
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .list-item {
+        display: grid;
+        grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 180px;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        align-items: center;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .list-item:hover {
+        background: #f8fafc;
+    }
+    
+    .list-item:last-child {
+        border-bottom: none;
+    }
+    
+    .list-client-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .list-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+    
+    .list-name {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .list-actions {
+        display: flex;
+        gap: 0.375rem;
+    }
+    
+    .list-action-btn {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+    
+    .list-action-btn:hover {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .list-action-btn.delete-btn {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+    
+    .list-action-btn.delete-btn:hover {
+        background: #fecaca;
+        color: #b91c1c;
+        border-color: #f87171;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        z-index: 100;
+    }
+    
+    .fab {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s;
+        font-size: 1.5rem;
+    }
+    
+    .fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Client Modal */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 2rem;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+    }
+    
+    .modal {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 800px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .modal h2 {
+        font-size: 1.5rem;
+        color: #1e293b;
+        margin: 0;
+    }
+    
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #64748b;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .close-modal:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    
+    .form-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .form-section {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .form-section h3 {
+        font-size: 1.125rem;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+    }
+    
+    .form-input {
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    textarea.form-input {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    /* Client Detail View */
+    .client-detail-modal {
+        max-width: 1000px;
+    }
+    
+    .client-detail-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .detail-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 2rem;
+    }
+    
+    .detail-tabs {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .detail-tab {
+        padding: 0.75rem 0;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        font-weight: 500;
+        color: #64748b;
+    }
+    
+    .detail-tab.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    /* Activity Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 0.5rem;
+        bottom: 0;
+        width: 2px;
+        background: #e2e8f0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 2rem;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: -1.5rem;
+        width: 1rem;
+        height: 1rem;
+        background: white;
+        border: 2px solid #2563eb;
+        border-radius: 50%;
+    }
+    
+    .timeline-content {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .timeline-date {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Properties Interest Grid */
+    .properties-mini-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .property-mini-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .property-mini-card:hover {
+        background: white;
+        border-color: #2563eb;
+    }
+    
+    .property-mini-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        object-fit: cover;
+        background: #e2e8f0;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #64748b;
+    }
+    
+    .empty-state svg {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.25rem;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Button Styles - Only for CRM page buttons */
+    .client-container .btn,
+    .modal .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .client-container .btn:hover,
+    .modal .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .client-container .btn-primary,
+    .modal .btn-primary {
+        background: #2563eb;
+        color: white;
+    }
+    
+    .client-container .btn-primary:hover,
+    .modal .btn-primary:hover {
+        background: #1d4ed8;
+    }
+    
+    .client-container .btn-secondary,
+    .modal .btn-secondary {
+        background: #64748b;
+        color: white;
+    }
+    
+    .client-container .btn-secondary:hover,
+    .modal .btn-secondary:hover {
+        background: #475569;
+    }
+    
+    .client-container .btn-sm,
+    .modal .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .list-header,
+        .list-item {
+            grid-template-columns: 2fr 1fr 1fr 150px;
+        }
+        
+        .list-header > *:nth-child(3),
+        .list-header > *:nth-child(4),
+        .list-item > *:nth-child(3),
+        .list-item > *:nth-child(4) {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .header-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .clients-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+        
+        .client-detail-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .view-controls {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+        
+        .list-header,
+        .list-item {
+            grid-template-columns: 1fr auto;
+        }
+        
+        .list-header > *:not(:first-child):not(:last-child),
+        .list-item > *:not(:first-child):not(:last-child) {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="client-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Client Management</h1>
+        
+        <div class="header-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-clients">0</div>
+                <div class="stat-label">Total Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="active-leads">0</div>
+                <div class="stat-label">Active Leads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="buyers-count">0</div>
+                <div class="stat-label">Buyers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="sellers-count">0</div>
+                <div class="stat-label">Sellers</div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="showAddClientModal()">
+            + Add New Client
+        </button>
+    </div>
+    
+    <!-- Search and Filters -->
+    <div class="search-section">
+        <div class="search-bar">
+            <input type="text" 
+                   class="search-input" 
+                   id="client-search" 
+                   placeholder="Search by name, email, phone...">
+            <button class="btn btn-primary" onclick="searchClients()">Search</button>
+        </div>
+        
+        <div class="filter-row">
+            <select class="filter-select" id="type-filter" onchange="filterClients()">
+                <option value="">All Types</option>
+                <option value="lead">Leads</option>
+                <option value="active">Active Clients</option>
+                <option value="past">Past Clients</option>
+            </select>
+            
+            <select class="filter-select" id="category-filter" onchange="filterClients()">
+                <option value="">All Categories</option>
+                <option value="buyer">Buyers</option>
+                <option value="seller">Sellers</option>
+                <option value="both">Both</option>
+            </select>
+            
+            <select class="filter-select" id="source-filter" onchange="filterClients()">
+                <option value="">All Sources</option>
+                <option value="website">Website</option>
+                <option value="referral">Referral</option>
+                <option value="social">Social Media</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+        </div>
+    </div>
+    
+    <!-- Client Tabs -->
+    <div class="client-tabs">
+        <button class="tab-btn active" onclick="setTab('all')">
+            All Clients
+            <span class="tab-count" id="all-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('leads')">
+            Leads
+            <span class="tab-count" id="leads-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('active')">
+            Active
+            <span class="tab-count" id="active-tab-count">0</span>
+        </button>
+        <button class="tab-btn" onclick="setTab('followup')">
+            Follow-up Today
+            <span class="tab-count" id="followup-count">0</span>
+        </button>
+    </div>
+    
+    <!-- Clients Display -->
+    <div id="clients-container">
+        <!-- View Controls -->
+        <div class="view-controls">
+            <div style="color: #64748b; font-size: 0.875rem;">
+                <span id="client-count">0</span> clients found
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="setView('grid')">
+                    <svg fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                    </svg>
+                    Grid
+                </button>
+                <button class="view-btn" onclick="setView('list')">
+                    <svg fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                    List
+                </button>
+            </div>
+        </div>
+        
+        <!-- Grid View -->
+        <div class="clients-grid" id="clients-grid">
+            <!-- Client cards will be loaded here -->
+        </div>
+        
+        <!-- List View -->
+        <div class="clients-list" id="clients-list">
+            <div class="list-header">
+                <div>Client</div>
+                <div>Contact</div>
+                <div>Type</div>
+                <div>Category</div>
+                <div>Budget</div>
+                <div>Actions</div>
+            </div>
+            <div id="list-items">
+                <!-- List items will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <svg width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+            </svg>
+            <h3>No clients found</h3>
+            <p>Start building your client database by adding your first client</p>
+            <button class="btn btn-primary" style="margin-top: 1rem;" onclick="showAddClientModal()">
+                Add Your First Client
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions FAB -->
+<div class="quick-actions">
+    <button class="fab" onclick="showAddClientModal()">+</button>
+</div>
+
+<!-- Add/Edit Client Modal -->
+<div class="modal-overlay" id="client-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Add New Client</h2>
+            <button class="close-modal" onclick="hideClientModal()">×</button>
+        </div>
+        
+        <form id="client-form">
+            <div class="form-sections">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3>Basic Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" id="first-name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" id="last-name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email *</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" id="phone" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Client Type</label>
+                            <select id="client-type" class="form-input">
+                                <option value="lead">Lead</option>
+                                <option value="active">Active Client</option>
+                                <option value="past">Past Client</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select id="category" class="form-input">
+                                <option value="buyer">Buyer</option>
+                                <option value="seller">Seller</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property Preferences -->
+                <div class="form-section">
+                    <h3>Property Preferences</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Budget Min</label>
+                            <input type="number" id="budget-min" class="form-input" placeholder="200000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Budget Max</label>
+                            <input type="number" id="budget-max" class="form-input" placeholder="500000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Preferred Location</label>
+                            <input type="text" id="location" class="form-input" placeholder="Downtown, Suburbs">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Property Type</label>
+                            <select id="property-type" class="form-input">
+                                <option value="">Any</option>
+                                <option value="single-family">Single Family</option>
+                                <option value="condo">Condo</option>
+                                <option value="townhouse">Townhouse</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Min Bedrooms</label>
+                            <input type="number" id="min-beds" class="form-input" placeholder="3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Min Bathrooms</label>
+                            <input type="number" id="min-baths" class="form-input" step="0.5" placeholder="2">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h3>Additional Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Lead Source</label>
+                            <select id="lead-source" class="form-input">
+                                <option value="website">Website</option>
+                                <option value="referral">Referral</option>
+                                <option value="social">Social Media</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Timeline</label>
+                            <select id="timeline" class="form-input">
+                                <option value="asap">ASAP</option>
+                                <option value="1-3months">1-3 Months</option>
+                                <option value="3-6months">3-6 Months</option>
+                                <option value="6months+">6+ Months</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Notes</label>
+                            <textarea id="notes" class="form-input" rows="4" placeholder="Additional notes about the client..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="button" class="btn btn-secondary" onclick="hideClientModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Client</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Client Detail Modal -->
+<div class="modal-overlay" id="client-detail-modal">
+    <div class="modal client-detail-modal">
+        <div class="modal-header">
+            <h2>Client Details</h2>
+            <button class="close-modal" onclick="hideDetailModal()">×</button>
+        </div>
+        
+        <div class="client-detail-header">
+            <div class="detail-avatar" id="detail-avatar">JD</div>
+            <div>
+                <h2 id="detail-name" style="margin: 0; color: #1e293b;">John Doe</h2>
+                <p id="detail-contact" style="color: #64748b; margin: 0.5rem 0;">john.doe@email.com • (555) 123-4567</p>
+                <div id="detail-tags" style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                    <span class="client-type type-active">Active Client</span>
+                    <span class="client-tag">Buyer</span>
+                </div>
+            </div>
+            <div style="margin-left: auto;">
+                <button class="btn btn-primary" onclick="editClient()">Edit Client</button>
+            </div>
+        </div>
+        
+        <div class="detail-tabs">
+            <button class="detail-tab active" onclick="showDetailTab('overview')">Overview</button>
+            <button class="detail-tab" onclick="showDetailTab('activity')">Activity</button>
+            <button class="detail-tab" onclick="showDetailTab('properties')">Properties</button>
+            <button class="detail-tab" onclick="showDetailTab('notes')">Notes</button>
+        </div>
+        
+        <!-- Overview Tab -->
+        <div id="overview-tab" class="tab-content active">
+            <div class="form-grid">
+                <div class="form-section">
+                    <h3>Property Preferences</h3>
+                    <div class="detail-item">
+                        <strong>Budget:</strong> <span id="detail-budget">$200,000 - $500,000</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Location:</strong> <span id="detail-location">Downtown, Suburbs</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Property Type:</strong> <span id="detail-property-type">Single Family</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Requirements:</strong> <span id="detail-requirements">3+ beds, 2+ baths</span>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Client Information</h3>
+                    <div class="detail-item">
+                        <strong>Lead Source:</strong> <span id="detail-source">Website</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Timeline:</strong> <span id="detail-timeline">1-3 Months</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Added:</strong> <span id="detail-added">January 15, 2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Last Contact:</strong> <span id="detail-last-contact">2 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity Tab -->
+        <div id="activity-tab" class="tab-content">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Today, 2:30 PM</div>
+                        <p>Scheduled property showing for 123 Main St</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Yesterday, 10:15 AM</div>
+                        <p>Sent email with 5 new property listings</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">January 15, 2024</div>
+                        <p>Initial consultation - discussed property preferences</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Properties Tab -->
+        <div id="properties-tab" class="tab-content">
+            <h3>Interested Properties</h3>
+            <div class="properties-mini-grid">
+                <div class="property-mini-card">
+                    <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100" class="property-mini-image">
+                    <div>
+                        <div style="font-weight: 600; color: #1e293b;">123 Main St</div>
+                        <div style="font-size: 0.875rem; color: #64748b;">$450,000 • 3 beds • 2 baths</div>
+                    </div>
+                </div>
+                <div class="property-mini-card">
+                    <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=100" class="property-mini-image">
+                    <div>
+                        <div style="font-weight: 600; color: #1e293b;">456 Oak Ave</div>
+                        <div style="font-size: 0.875rem; color: #64748b;">$675,000 • 4 beds • 3 baths</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notes Tab -->
+        <div id="notes-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Notes</h3>
+                <p id="detail-notes">Looking for move-in ready home with good school district. Prefers modern kitchen and open floor plan.</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h4>Add New Note</h4>
+                    <textarea class="form-input" rows="3" placeholder="Add a note..."></textarea>
+                    <button class="btn btn-primary" style="margin-top: 0.5rem;">Add Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State management
+    let clients = [];
+    let currentTab = 'all';
+    let currentView = 'grid';
+    let currentClientId = null;
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        loadClients();
+    });
+    
+    // Load clients from API
+    async function loadClients() {
+        try {
+            console.log('Loading clients from API...');
+            const response = await fetch('/api/clients', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            console.log('API Response:', data);
+            
+            // Check if authentication failed
+            if (response.status === 401 && data.redirect) {
+                console.log('Not authenticated, redirecting to login...');
+                window.location.href = data.redirect;
+                return;
+            }
+            
+            if (data.success) {
+                clients = data.clients || [];
+                console.log(`Loaded ${clients.length} clients`);
+                displayClients();
+                updateStats();
+            } else {
+                console.error('Failed to load clients:', data.error);
+                showToast('Failed to load clients', 'error');
+            }
+        } catch (error) {
+            console.error('Error loading clients:', error);
+            showToast('Error loading clients. Please try refreshing the page.', 'error');
+        }
+    }
+    
+    // Set view
+    function setView(view) {
+        currentView = view;
+        
+        // Update button states
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(view));
+        });
+        
+        // Show/hide appropriate view
+        document.getElementById('clients-grid').style.display = view === 'grid' ? 'grid' : 'none';
+        document.getElementById('clients-list').style.display = view === 'list' ? 'block' : 'none';
+        
+        // Re-display clients
+        displayClients();
+    }
+    
+    // Display clients
+    function displayClients() {
+        const filteredClients = filterClientsList();
+        
+        // Update count
+        document.getElementById('client-count').textContent = filteredClients.length;
+        
+        if (filteredClients.length === 0) {
+            document.getElementById('empty-state').style.display = 'block';
+            document.getElementById('clients-grid').style.display = 'none';
+            document.getElementById('clients-list').style.display = 'none';
+            return;
+        }
+        
+        document.getElementById('empty-state').style.display = 'none';
+        
+        if (currentView === 'grid') {
+            document.getElementById('clients-grid').style.display = 'grid';
+            document.getElementById('clients-list').style.display = 'none';
+            displayGridView(filteredClients);
+        } else {
+            document.getElementById('clients-grid').style.display = 'none';
+            document.getElementById('clients-list').style.display = 'block';
+            displayListView(filteredClients);
+        }
+    }
+    
+    // Display grid view
+    function displayGridView(filteredClients) {
+        const grid = document.getElementById('clients-grid');
+        
+        grid.innerHTML = filteredClients.map(client => {
+            const initials = `${client.firstName[0]}${client.lastName[0]}`;
+            const fullName = `${client.firstName} ${client.lastName}`;
+            
+            return `
+                <div class="client-card" onclick="showClientDetail('${client.id}')">
+                    <div class="client-header">
+                        <div class="client-avatar">${initials}</div>
+                        <div class="client-info">
+                            <div class="client-name">${fullName}</div>
+                            <span class="client-type type-${client.type}">${client.type}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-details">
+                        <div class="detail-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                            </svg>
+                            ${client.email}
+                        </div>
+                        ${client.phone ? `
+                        <div class="detail-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                            </svg>
+                            ${client.phone}
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="client-tags">
+                        <span class="client-tag">${client.category}</span>
+                        ${client.budgetMax ? `<span class="client-tag">$${(client.budgetMax/1000).toFixed(0)}k budget</span>` : ''}
+                        ${client.location ? `<span class="client-tag">${client.location}</span>` : ''}
+                    </div>
+                    
+                    <div class="client-actions">
+                        <button onclick="event.stopPropagation(); contactClient('${client.id}')">Contact</button>
+                        <button onclick="event.stopPropagation(); editClientFromCard('${client.id}')">Edit</button>
+                        <button onclick="event.stopPropagation(); deleteClient('${client.id}')" style="background: #ef4444; color: white;">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Display list view
+    function displayListView(filteredClients) {
+        const list = document.getElementById('list-items');
+        
+        list.innerHTML = filteredClients.map(client => {
+            const initials = `${client.firstName[0]}${client.lastName[0]}`;
+            const fullName = `${client.firstName} ${client.lastName}`;
+            const budgetDisplay = client.budgetMax ? `${(client.budgetMax/1000).toFixed(0)}k` : 'N/A';
+            
+            return `
+                <div class="list-item" onclick="showClientDetail('${client.id}')">
+                    <div class="list-client-info">
+                        <div class="list-avatar">${initials}</div>
+                        <div class="list-name">${fullName}</div>
+                    </div>
+                    <div>${client.email}<br><span style="font-size: 0.875rem; color: #64748b;">${client.phone || 'No phone'}</span></div>
+                    <div><span class="client-type type-${client.type}">${client.type}</span></div>
+                    <div>${client.category}</div>
+                    <div>${budgetDisplay}</div>
+                    <div class="list-actions">
+                        <button class="list-action-btn" onclick="event.stopPropagation(); contactClient('${client.id}')">Contact</button>
+                        <button class="list-action-btn" onclick="event.stopPropagation(); editClientFromCard('${client.id}')">Edit</button>
+                        <button class="list-action-btn delete-btn" onclick="event.stopPropagation(); deleteClient('${client.id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Filter clients
+    function filterClientsList() {
+        let filtered = [...clients];
+        
+        // Tab filter
+        if (currentTab === 'leads') {
+            filtered = filtered.filter(c => c.type === 'lead');
+        } else if (currentTab === 'active') {
+            filtered = filtered.filter(c => c.type === 'active');
+        } else if (currentTab === 'followup') {
+            // Mock follow-up logic - clients contacted more than 7 days ago
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            filtered = filtered.filter(c => new Date(c.lastContact) < weekAgo);
+        }
+        
+        // Search filter
+        const searchTerm = document.getElementById('client-search').value.toLowerCase();
+        if (searchTerm) {
+            filtered = filtered.filter(c => 
+                c.firstName.toLowerCase().includes(searchTerm) ||
+                c.lastName.toLowerCase().includes(searchTerm) ||
+                c.email.toLowerCase().includes(searchTerm) ||
+                (c.phone && c.phone.includes(searchTerm))
+            );
+        }
+        
+        // Type filter
+        const typeFilter = document.getElementById('type-filter').value;
+        if (typeFilter) {
+            filtered = filtered.filter(c => c.type === typeFilter);
+        }
+        
+        // Category filter
+        const categoryFilter = document.getElementById('category-filter').value;
+        if (categoryFilter) {
+            filtered = filtered.filter(c => c.category === categoryFilter);
+        }
+        
+        // Source filter
+        const sourceFilter = document.getElementById('source-filter').value;
+        if (sourceFilter) {
+            filtered = filtered.filter(c => c.source === sourceFilter);
+        }
+        
+        return filtered;
+    }
+    
+    // Update statistics
+    function updateStats() {
+        document.getElementById('total-clients').textContent = clients.length;
+        document.getElementById('active-leads').textContent = clients.filter(c => c.type === 'lead').length;
+        document.getElementById('buyers-count').textContent = clients.filter(c => c.category === 'buyer' || c.category === 'both').length;
+        document.getElementById('sellers-count').textContent = clients.filter(c => c.category === 'seller' || c.category === 'both').length;
+        
+        // Update tab counts
+        document.getElementById('all-count').textContent = clients.length;
+        document.getElementById('leads-count').textContent = clients.filter(c => c.type === 'lead').length;
+        document.getElementById('active-tab-count').textContent = clients.filter(c => c.type === 'active').length;
+        
+        // Mock follow-up count
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        document.getElementById('followup-count').textContent = clients.filter(c => new Date(c.lastContact) < weekAgo).length;
+    }
+    
+    // Set tab
+    function setTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(tab));
+        });
+        displayClients();
+    }
+    
+    // Search clients
+    function searchClients() {
+        displayClients();
+    }
+    
+    // Filter clients
+    function filterClients() {
+        displayClients();
+    }
+    
+    // Clear filters
+    function clearFilters() {
+        document.getElementById('client-search').value = '';
+        document.getElementById('type-filter').value = '';
+        document.getElementById('category-filter').value = '';
+        document.getElementById('source-filter').value = '';
+        displayClients();
+    }
+    
+    // Show/hide modals
+    function showAddClientModal() {
+        currentClientId = null;  // Reset for new client
+        document.getElementById('modal-title').textContent = 'Add New Client';
+        document.getElementById('client-form').reset();
+        document.getElementById('client-modal').classList.add('active');
+    }
+    
+    function hideClientModal() {
+        document.getElementById('client-modal').classList.remove('active');
+        currentClientId = null;
+    }
+    
+    function showClientDetail(clientId) {
+        currentClientId = clientId;
+        const client = clients.find(c => c.id === clientId);
+        
+        if (client) {
+            // Update detail modal with client info
+            document.getElementById('detail-avatar').textContent = `${client.firstName[0]}${client.lastName[0]}`;
+            document.getElementById('detail-name').textContent = `${client.firstName} ${client.lastName}`;
+            document.getElementById('detail-contact').textContent = `${client.email} • ${client.phone || 'No phone'}`;
+            
+            // Update other details
+            document.getElementById('detail-budget').textContent = client.budgetMax ? 
+                `$${client.budgetMin?.toLocaleString() || 0} - $${client.budgetMax.toLocaleString()}` : 'Not specified';
+            document.getElementById('detail-location').textContent = client.location || 'Not specified';
+            document.getElementById('detail-property-type').textContent = client.propertyType || 'Any';
+            document.getElementById('detail-requirements').textContent = 
+                `${client.minBeds || 'Any'} beds, ${client.minBaths || 'Any'} baths`;
+            
+            document.getElementById('client-detail-modal').classList.add('active');
+        }
+    }
+    
+    function hideDetailModal() {
+        document.getElementById('client-detail-modal').classList.remove('active');
+    }
+    
+    function showDetailTab(tab) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.querySelectorAll('.detail-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected tab
+        document.getElementById(`${tab}-tab`).classList.add('active');
+        event.target.classList.add('active');
+    }
+    
+    // Client actions
+    function contactClient(clientId) {
+        const client = clients.find(c => c.id === clientId);
+        if (client) {
+            // Open email client
+            window.location.href = `mailto:${client.email}`;
+        }
+    }
+    
+    function editClientFromCard(clientId) {
+        const client = clients.find(c => c.id === clientId);
+        if (client) {
+            editClient(client);
+        }
+    }
+    
+    function editClient(clientData) {
+        currentClientId = clientData ? clientData.id : currentClientId;
+        const client = clientData || clients.find(c => c.id === currentClientId);
+        
+        if (client) {
+            // Populate form with client data
+            document.getElementById('first-name').value = client.firstName;
+            document.getElementById('last-name').value = client.lastName;
+            document.getElementById('email').value = client.email;
+            document.getElementById('phone').value = client.phone || '';
+            document.getElementById('client-type').value = client.type;
+            document.getElementById('category').value = client.category;
+            document.getElementById('budget-min').value = client.budgetMin || '';
+            document.getElementById('budget-max').value = client.budgetMax || '';
+            document.getElementById('location').value = client.location || '';
+            document.getElementById('property-type').value = client.propertyType || '';
+            document.getElementById('min-beds').value = client.minBeds || '';
+            document.getElementById('min-baths').value = client.minBaths || '';
+            document.getElementById('lead-source').value = client.source || '';
+            document.getElementById('timeline').value = client.timeline || '';
+            document.getElementById('notes').value = client.notes || '';
+            
+            // Show modal
+            document.getElementById('modal-title').textContent = 'Edit Client';
+            hideDetailModal();
+            document.getElementById('client-modal').classList.add('active');
+        }
+    }
+    
+    // Delete client
+    async function deleteClient(clientId) {
+        if (!confirm('Are you sure you want to delete this client? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            console.log(`Deleting client ${clientId}...`);
+            const response = await fetch(`/api/clients/${clientId}`, {
+                method: 'DELETE',
+                credentials: 'same-origin'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                await loadClients();  // Reload from server
+                showToast('Client deleted successfully', 'success');
+            } else {
+                showToast(data.error || 'Failed to delete client', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting client:', error);
+            showToast('An error occurred while deleting', 'error');
+        }
+    }
+    
+    // Handle form submission
+    document.getElementById('client-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const clientData = {
+            firstName: document.getElementById('first-name').value,
+            lastName: document.getElementById('last-name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            type: document.getElementById('client-type').value,
+            category: document.getElementById('category').value,
+            budgetMin: parseInt(document.getElementById('budget-min').value) || null,
+            budgetMax: parseInt(document.getElementById('budget-max').value) || null,
+            location: document.getElementById('location').value,
+            propertyType: document.getElementById('property-type').value,
+            minBeds: parseInt(document.getElementById('min-beds').value) || null,
+            minBaths: parseFloat(document.getElementById('min-baths').value) || null,
+            source: document.getElementById('lead-source').value,
+            timeline: document.getElementById('timeline').value,
+            notes: document.getElementById('notes').value
+        };
+        
+        console.log('Submitting client data:', clientData);
+        
+        try {
+            let response;
+            if (currentClientId) {
+                // Update existing client
+                console.log(`Updating client ${currentClientId}...`);
+                response = await fetch(`/api/clients/${currentClientId}`, {
+                    method: 'PUT',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clientData)
+                });
+            } else {
+                // Create new client
+                console.log('Creating new client...');
+                response = await fetch('/api/clients', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clientData)
+                });
+            }
+            
+            const data = await response.json();
+            console.log('Server response:', data);
+            
+            if (data.success) {
+                hideClientModal();
+                await loadClients(); // Reload clients from server
+                showToast(data.message || 'Client saved successfully', 'success');
+                currentClientId = null;
+            } else {
+                showToast(data.error || 'Failed to save client', 'error');
+            }
+        } catch (error) {
+            console.error('Error saving client:', error);
+            showToast('An error occurred while saving', 'error');
+        }
+    });
+    
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: ${type === 'success' ? '#10b981' : '#ef4444'};
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        `;
+        toast.textContent = message;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    // Add animation styles
+    if (!document.getElementById('toast-styles')) {
+        const style = document.createElement('style');
+        style.id = 'toast-styles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+</script>
+{% endblock %}

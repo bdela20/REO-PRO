@@ -1,0 +1,3043 @@
+{% extends "base.html" %}
+
+{% block title %}Agent Dashboard - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .dashboard-container {
+        margin-top: 1rem;
+    }
+    
+    /* Welcome Section */
+    .welcome-section {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(50px, -50px);
+    }
+    
+    .welcome-section h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .welcome-section p {
+        opacity: 0.9;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .stat-card h3 {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .stat-card .stat-change {
+        font-size: 0.75rem;
+        color: #10b981;
+        font-weight: 500;
+    }
+    
+    /* Saved Properties Widget */
+    .saved-properties-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .saved-properties-widget .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .saved-properties-widget h2 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        color: #1e293b;
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .saved-properties-widget h2 svg {
+        color: #2563eb;
+    }
+
+    .view-all-link {
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .view-all-link:hover {
+        color: #1d4ed8;
+    }
+
+    .saved-properties-list {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .saved-property-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        transition: all 0.3s;
+        cursor: pointer;
+        border: 1px solid #e2e8f0;
+    }
+
+    .saved-property-item:hover {
+        background: #f1f5f9;
+        transform: translateX(4px);
+        border-color: #2563eb;
+    }
+
+    .saved-property-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 6px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .saved-property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .saved-property-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .saved-property-price {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+
+    .saved-property-address {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .saved-property-details {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    .saved-property-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        color: #ef4444;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .saved-property-action:hover {
+        background: #fee2e2;
+        border-color: #ef4444;
+    }
+
+    .loading-spinner {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f4f6;
+        border-top: 3px solid #2563eb;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+    }
+
+    .empty-state svg {
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    .empty-state h4 {
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Property Search Section */
+    .search-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .search-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .search-form {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .search-suggestions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+        align-items: center;
+    }
+    
+    .suggestion-tag {
+        padding: 0.25rem 0.75rem;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+    }
+    
+    .suggestion-tag:hover {
+        background: #e2e8f0;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    /* Filter Styles */
+    .filter-toggle {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .filter-toggle:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .active-filters-badge {
+        background: #2563eb;
+        color: white;
+        padding: 0.125rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+    }
+    
+    .sort-select {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        background: white;
+        cursor: pointer;
+    }
+    
+    .search-filters {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .filter-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+    
+    .filter-input, .filter-select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+    }
+    
+    .filter-input:focus, .filter-select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .range-inputs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .range-inputs input {
+        flex: 1;
+    }
+    
+    .btn-apply-filters {
+        padding: 0.75rem 1.5rem;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-apply-filters:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+    
+    .btn-clear-filters {
+        padding: 0.75rem 1.5rem;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-clear-filters:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+    
+    /* Quick Search Management */
+    .manage-searches-btn {
+        padding: 0.25rem 0.75rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .manage-searches-btn:hover {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .quick-search-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+    }
+    
+    .quick-search-item button {
+        padding: 0.25rem 0.5rem;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 4px;
+        color: #dc2626;
+        font-size: 0.75rem;
+        cursor: pointer;
+    }
+    
+    .quick-search-item button:hover {
+        background: #fee2e2;
+    }
+    
+    /* Pagination Styles */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .pagination button {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.875rem;
+    }
+    
+    .pagination button:hover:not(:disabled) {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .pagination button.active {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    .page-info {
+        margin: 0 1rem;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    
+    /* Property Results */
+    .property-results {
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+    }
+    
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .property-grid {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .property-card {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        gap: 1rem;
+        position: relative;
+    }
+    
+    .property-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+        border-color: #2563eb;
+    }
+    
+    /* Save Property Button */
+    .property-save-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        z-index: 10;
+        border: 2px solid #e2e8f0;
+    }
+    
+    .property-save-btn:hover {
+        transform: scale(1.1);
+        border-color: #ef4444;
+    }
+    
+    .property-save-btn.saved {
+        background: #ef4444;
+        border-color: #ef4444;
+    }
+    
+    .property-save-btn.saved svg {
+        fill: white;
+    }
+    
+    .property-save-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: #ef4444;
+        transition: all 0.3s;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .quick-actions-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .quick-actions h2 {
+        font-size: 1.5rem;
+        color: #1e293b;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .action-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .control-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+    }
+    
+    .control-btn:hover {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .control-btn.active {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        position: relative;
+    }
+    
+    .action-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        cursor: move;
+    }
+    
+    .action-card.dragging {
+        opacity: 0.5;
+        transform: scale(1.05);
+        cursor: grabbing;
+    }
+    
+    .action-card.drag-over {
+        border-color: #2563eb;
+        background: #eff6ff;
+    }
+    
+    .action-card:hover {
+        background: white;
+        border-color: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+    
+    .action-card.edit-mode {
+        padding-top: 2.5rem;
+    }
+    
+    .delete-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 24px;
+        height: 24px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        line-height: 1;
+        transition: all 0.3s;
+    }
+    
+    .edit-mode .delete-btn {
+        display: flex;
+    }
+    
+    .delete-btn:hover {
+        background: #dc2626;
+        transform: scale(1.1);
+    }
+    
+    .action-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    
+    /* Support for emoji icons */
+    .action-icon.emoji-icon {
+        background: white;
+        border: 2px solid #e2e8f0;
+        font-size: 1.5rem;
+    }
+    
+    .action-content h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .action-content p {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin: 0;
+    }
+    
+    /* Add New Action */
+    .add-action-card {
+        background: #f8fafc;
+        border: 2px dashed #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 120px;
+        color: #94a3b8;
+    }
+    
+    .add-action-card:hover {
+        border-color: #2563eb;
+        background: white;
+        color: #2563eb;
+    }
+    
+    .add-action-content {
+        text-align: center;
+    }
+    
+    .add-action-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Add Action Modal */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+    }
+    
+    .modal {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .modal h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .modal-actions button {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-cancel {
+        background: white;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+    }
+    
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+    
+    .btn-save {
+        background: #2563eb;
+        border: 2px solid #2563eb;
+        color: white;
+    }
+    
+    .btn-save:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+    
+    /* Recent Activity */
+    .recent-activity {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .recent-activity h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .activity-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-content h4 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .activity-content p {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .activity-time {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        font-weight: 500;
+    }
+    
+    /* Plan upgrade section */
+    .plan-upgrade {
+        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .plan-upgrade h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+    
+    .plan-upgrade p {
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+    
+    /* Pricing Modal Styles */
+    .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 32px;
+        height: 32px;
+        background: #f1f5f9;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    .close-modal:hover {
+        background: #e2e8f0;
+        transform: scale(1.1);
+    }
+    
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .pricing-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+        transition: all 0.3s;
+    }
+    
+    .pricing-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pricing-card.featured {
+        border-color: #2563eb;
+        transform: scale(1.05);
+    }
+    
+    .popular-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2563eb;
+        color: white;
+        padding: 0.25rem 1rem;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    
+    .plan-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .plan-name {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+    }
+    
+    .plan-price {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .currency {
+        font-size: 1.5rem;
+        color: #64748b;
+        margin-right: 0.25rem;
+    }
+    
+    .amount {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    
+    .period {
+        font-size: 1.25rem;
+        color: #64748b;
+        margin-left: 0.25rem;
+    }
+    
+    .plan-description {
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 2rem;
+    }
+    
+    .plan-features li {
+        padding: 0.75rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #475569;
+    }
+    
+    .plan-features li.disabled {
+        color: #cbd5e1;
+    }
+    
+    .check {
+        color: #10b981;
+        font-weight: bold;
+    }
+    
+    .x {
+        color: #cbd5e1;
+    }
+    
+    .plan-button {
+        width: 100%;
+        padding: 0.875rem;
+        border: 2px solid #e2e8f0;
+        background: white;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #64748b;
+    }
+    
+    .plan-button:hover:not(:disabled) {
+        background: #f8fafc;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    .plan-button.current {
+        background: #f1f5f9;
+        cursor: not-allowed;
+    }
+    
+    .plan-button.featured-btn {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    .plan-button.featured-btn:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+    
+    /* Payment Modal Styles */
+    .selected-plan-summary {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .selected-plan-summary h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.25rem;
+        color: #1e293b;
+    }
+    
+    .selected-plan-summary p {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2563eb;
+    }
+    
+    #payment-form .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    #payment-form input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
+    
+    /* Dashboard-specific Buttons */
+    .dashboard-container .btn,
+    .modal .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .dashboard-container .btn:hover,
+    .modal .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dashboard-container .btn-primary,
+    .modal .btn-primary {
+        background: #2563eb;
+        color: white;
+    }
+    
+    .dashboard-container .btn-primary:hover,
+    .modal .btn-primary:hover {
+        background: #1d4ed8;
+    }
+    
+    .dashboard-container .btn-secondary,
+    .modal .btn-secondary {
+        background: #64748b;
+        color: white;
+    }
+    
+    .dashboard-container .btn-secondary:hover,
+    .modal .btn-secondary:hover {
+        background: #475569;
+    }
+    
+    /* Button utilities */
+    .btn.btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .search-form {
+            flex-direction: column;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1>Welcome back, {{ session.user_name }}!</h1>
+        <p>Your real estate command center is ready. What would you like to accomplish today?</p>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Current Plan</h3>
+            <div class="stat-value">{{ session.user_plan|upper }}</div>
+            <div class="stat-change">Active</div>
+        </div>
+        <div class="stat-card">
+            <h3>Searches Remaining</h3>
+            <div class="stat-value" id="searches-count">{{ user.searches_remaining if user else 5 }}</div>
+            <div class="stat-change">This month</div>
+        </div>
+        <div class="stat-card">
+            <h3>Active Clients</h3>
+            <div class="stat-value">12</div>
+            <div class="stat-change">+2 this week</div>
+        </div>
+        <div class="stat-card">
+            <h3>Properties Saved</h3>
+            <div class="stat-value" id="saved-properties-count">0</div>
+            <div class="stat-change" style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='/properties?tab=saved'">View all</div>
+        </div>
+    </div>
+    
+    <!-- Saved Properties Widget -->
+    <div class="dashboard-card saved-properties-widget">
+        <div class="card-header">
+            <h2>
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                </svg>
+                Saved Properties
+            </h2>
+            <a href="/properties?tab=saved" class="view-all-link">View All <span id="saved-total-count">(0)</span></a>
+        </div>
+        
+        <div class="saved-properties-content">
+            <div id="saved-properties-loading" class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading saved properties...</p>
+            </div>
+            
+            <div id="saved-properties-list" class="saved-properties-list" style="display: none;">
+                <!-- Properties will be loaded here -->
+            </div>
+            
+            <div id="saved-properties-empty" class="empty-state" style="display: none;">
+                <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                </svg>
+                <h4>No Saved Properties</h4>
+                <p>Start browsing and save properties you're interested in</p>
+                <a href="/properties" class="btn btn-primary btn-sm">Browse Properties</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Property Search Section -->
+    <div class="search-section">
+        <h2>Property Search</h2>
+        
+        <!-- Main Search Bar -->
+        <form class="search-form" id="property-search">
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="Enter address, city, or ZIP code to search properties..." 
+                   id="search-query"
+                   required>
+            <button type="submit" class="btn btn-primary">Search Properties</button>
+        </form>
+        
+        <!-- Filter and Sort Controls -->
+        <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" class="filter-toggle" onclick="toggleFilters()">
+                <svg width="16" height="16" fill="currentColor" style="margin-right: 0.5rem;">
+                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+                </svg>
+                Advanced Filters <span id="active-filters-count" class="active-filters-badge" style="display: none;">0</span>
+            </button>
+            
+            <!-- Sort Dropdown (hidden until search) -->
+            <div class="sort-controls" id="sort-controls" style="display: none;">
+                <label style="margin-right: 0.5rem; font-size: 0.875rem; color: #64748b;">Sort by:</label>
+                <select id="sort-by" class="sort-select" onchange="applySort()">
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="newest">Newest Listings</option>
+                    <option value="oldest">Oldest Listings</option>
+                    <option value="sqft_desc">Largest First</option>
+                    <option value="sqft_asc">Smallest First</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Collapsible Filters -->
+        <div class="search-filters" id="search-filters" style="display: none;">
+            <div class="filter-grid">
+                <!-- Price Range -->
+                <div class="filter-group">
+                    <label>Price Range</label>
+                    <div class="range-inputs">
+                        <input type="number" id="min-price" placeholder="Min" class="filter-input">
+                        <span>-</span>
+                        <input type="number" id="max-price" placeholder="Max" class="filter-input">
+                    </div>
+                </div>
+                
+                <!-- Bedrooms -->
+                <div class="filter-group">
+                    <label>Bedrooms</label>
+                    <select id="bedrooms" class="filter-select">
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                        <option value="5">5+</option>
+                    </select>
+                </div>
+                
+                <!-- Bathrooms -->
+                <div class="filter-group">
+                    <label>Bathrooms</label>
+                    <select id="bathrooms" class="filter-select">
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                    </select>
+                </div>
+                
+                <!-- Property Type -->
+                <div class="filter-group">
+                    <label>Property Type</label>
+                    <select id="property-type" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="Single Family">Single Family</option>
+                        <option value="Condo">Condo</option>
+                        <option value="Townhouse">Townhouse</option>
+                        <option value="Multi Family">Multi Family</option>
+                        <option value="Land">Land</option>
+                        <option value="Mobile Home">Mobile Home</option>
+                    </select>
+                </div>
+                
+                <!-- Square Footage -->
+                <div class="filter-group">
+                    <label>Square Footage</label>
+                    <div class="range-inputs">
+                        <input type="number" id="min-sqft" placeholder="Min" class="filter-input">
+                        <span>-</span>
+                        <input type="number" id="max-sqft" placeholder="Max" class="filter-input">
+                    </div>
+                </div>
+                
+                <!-- Year Built -->
+                <div class="filter-group">
+                    <label>Year Built</label>
+                    <div class="range-inputs">
+                        <input type="number" id="min-year" placeholder="Min" class="filter-input" min="1900" max="2024">
+                        <span>-</span>
+                        <input type="number" id="max-year" placeholder="Max" class="filter-input" min="1900" max="2024">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter Actions -->
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                <button type="button" class="btn-apply-filters" onclick="applyFilters()">Apply Filters</button>
+                <button type="button" class="btn-clear-filters" onclick="clearFilters()">Clear All</button>
+            </div>
+        </div>
+        
+        <!-- Quick Search Tags with Management -->
+        <div class="search-suggestions">
+            <span style="color: #64748b; font-size: 0.875rem; margin-right: 0.5rem;">Quick searches:</span>
+            <div id="quick-searches-container" style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap;">
+                <!-- Quick searches will be loaded here -->
+            </div>
+            <button class="manage-searches-btn" onclick="toggleManageSearches()">
+                <svg width="14" height="14" fill="currentColor">
+                    <path d="M11.5 2.5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h7zm-7-1A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V3a1.5 1.5 0 0 0-1.5-1.5h-7z"/>
+                    <path d="M6.5 4a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3z"/>
+                </svg>
+                Manage
+            </button>
+        </div>
+        
+        <!-- Manage Quick Searches Panel -->
+        <div id="manage-searches-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <h4 style="margin: 0 0 1rem 0; font-size: 1rem; color: #1e293b;">Manage Quick Searches</h4>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <input type="text" id="new-quick-search" placeholder="Add new quick search (e.g., 'Downtown Miami')" style="flex: 1; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px;">
+                <button onclick="addQuickSearch()" class="btn btn-sm btn-primary">Add</button>
+            </div>
+            <div id="manage-searches-list" style="display: grid; gap: 0.5rem;">
+                <!-- Editable quick searches will be shown here -->
+            </div>
+            <button onclick="toggleManageSearches()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;">Done</button>
+        </div>
+        
+        <p style="color: #64748b; font-size: 0.875rem; margin-top: 0.5rem;">
+            Search properties to help your clients find their perfect home or investment
+        </p>
+        
+        <!-- Results Container -->
+        <div id="search-results-container" style="display: none; margin-top: 2rem;">
+            <!-- Results will be dynamically inserted here -->
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="quick-actions-header">
+            <h2>Quick Actions</h2>
+            <div class="action-controls">
+                <button class="control-btn" id="edit-btn">
+                    Edit Layout
+                </button>
+                <button class="control-btn" id="add-btn" onclick="showAddModal()">
+                    + Add Action
+                </button>
+            </div>
+        </div>
+        <div class="actions-grid" id="actions-grid">
+            <!-- Action cards will be rendered here by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <ul class="activity-list">
+            <li class="activity-item">
+                <div class="activity-icon">P</div>
+                <div class="activity-content">
+                    <h4>Property Search</h4>
+                    <p>You searched for properties in Orlando, FL</p>
+                </div>
+                <div class="activity-time">2 hours ago</div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon">C</div>
+                <div class="activity-content">
+                    <h4>Client Added</h4>
+                    <p>New client Sarah Johnson added to contacts</p>
+                </div>
+                <div class="activity-time">1 day ago</div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon">S</div>
+                <div class="activity-content">
+                    <h4>Showing Scheduled</h4>
+                    <p>Property showing booked for tomorrow at 2:00 PM</p>
+                </div>
+                <div class="activity-time">2 days ago</div>
+            </li>
+        </ul>
+    </div>
+    
+    {% if session.user_plan == 'free' %}
+    <div class="plan-upgrade">
+        <h3>Upgrade to Pro Plan</h3>
+        <p>Get unlimited searches, advanced CRM features, and marketing tools</p>
+        <a href="#" class="btn" style="background: white; color: #f59e0b; font-weight: 600;" onclick="showPricingModal(); return false;">View Plans & Pricing</a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Property Details Modal -->
+<div class="modal-overlay" id="property-details-modal">
+    <div class="modal" style="max-width: 800px;">
+        <button class="close-modal" onclick="hidePropertyDetails()" aria-label="Close">×</button>
+        <div id="property-details-content">
+            <!-- Property details will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<!-- Pricing Modal -->
+<div class="modal-overlay" id="pricing-modal">
+    <div class="modal" style="max-width: 900px;">
+        <button class="close-modal" onclick="hidePricingModal()" aria-label="Close">×</button>
+        <h2 style="text-align: center; margin-bottom: 1rem; font-size: 2rem; color: #1e293b;">Choose Your Plan</h2>
+        <p style="text-align: center; color: #64748b; margin-bottom: 2rem;">Upgrade to unlock powerful features and grow your real estate business</p>
+        
+        <div class="pricing-grid">
+            <!-- Starter Plan -->
+            <div class="pricing-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Starter</h3>
+                    <div class="plan-price">
+                        <span class="currency">$</span>
+                        <span class="amount">29</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="plan-description">Perfect for new agents getting started</p>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> 50 property searches per month</li>
+                    <li><span class="check">✓</span> Basic client management (up to 25 contacts)</li>
+                    <li><span class="check">✓</span> Property comparison tool</li>
+                    <li><span class="check">✓</span> Email notifications</li>
+                    <li><span class="check">✓</span> Mobile app access</li>
+                    <li><span class="check">✓</span> Basic market analytics</li>
+                    <li class="disabled"><span class="x">✗</span> Advanced CRM features</li>
+                    <li class="disabled"><span class="x">✗</span> WhatsApp integration</li>
+                    <li class="disabled"><span class="x">✗</span> Marketing tools</li>
+                </ul>
+                <button class="plan-button" onclick="selectPlan('starter')">Start Free Trial</button>
+            </div>
+            
+            <!-- Professional Plan -->
+            <div class="pricing-card featured">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-header">
+                    <h3 class="plan-name">Professional</h3>
+                    <div class="plan-price">
+                        <span class="currency">$</span>
+                        <span class="amount">79</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="plan-description">Best for active agents and small teams</p>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> <strong>Unlimited</strong> property searches</li>
+                    <li><span class="check">✓</span> Complete CRM (up to 500 contacts)</li>
+                    <li><span class="check">✓</span> Marketing flyer generator</li>
+                    <li><span class="check">✓</span> E-signature integration</li>
+                    <li><span class="check">✓</span> Advanced market analytics</li>
+                    <li><span class="check">✓</span> Priority customer support</li>
+                    <li><span class="check">✓</span> Property comparison reports</li>
+                </ul>
+                <button class="plan-button featured-btn" onclick="selectPlan('professional')">Start Free Trial</button>
+            </div>
+            
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Enterprise</h3>
+                    <div class="plan-price">
+                        <span class="currency">$</span>
+                        <span class="amount">149</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="plan-description">For teams and high-volume agents</p>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Everything in Professional</li>
+                    <li><span class="check">✓</span> Unlimited contacts</li>
+                    <li><span class="check">✓</span> Team collaboration tools</li>
+                    <li><span class="check">✓</span> Advanced lead management</li>
+                    <li><span class="check">✓</span> Custom branding options</li>
+                    <li><span class="check">✓</span> API access</li>
+                    <li><span class="check">✓</span> Dedicated account manager</li>
+                    <li><span class="check">✓</span> White-label options</li>
+                    <li><span class="check">✓</span> Advanced reporting & analytics</li>
+                </ul>
+                <button class="plan-button" onclick="selectPlan('enterprise')">Start Free Trial</button>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <p style="color: #64748b; font-size: 0.875rem;">
+                <strong>7-day money-back guarantee</strong> • No setup fees • Cancel anytime
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" id="payment-modal">
+    <div class="modal" style="max-width: 500px;">
+        <button class="close-modal" onclick="hidePaymentModal()" aria-label="Close">×</button>
+        <h3 style="margin-bottom: 1.5rem;">Complete Your Upgrade</h3>
+        
+        <div class="selected-plan-summary">
+            <h4 id="selected-plan-name">Professional Plan</h4>
+            <p id="selected-plan-price">$29/month</p>
+        </div>
+        
+        <form id="payment-form">
+            <div class="form-group">
+                <label for="card-name">Cardholder Name</label>
+                <input type="text" id="card-name" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="card-expiry">Expiry Date</label>
+                    <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-cvv">CVV</label>
+                    <input type="text" id="card-cvv" placeholder="123" maxlength="4" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" required> I agree to the <a href="/terms" style="color: #2563eb;">Terms of Service</a> and <a href="/privacy" style="color: #2563eb;">Privacy Policy</a>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                Complete Payment
+            </button>
+            
+            <p style="text-align: center; margin-top: 1rem; color: #64748b; font-size: 0.875rem;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z'/%3E%3C/svg%3E" alt="Secure" style="vertical-align: middle; margin-right: 4px;">
+                Secure payment powered by Stripe
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- Add Action Modal -->
+<div class="modal-overlay" id="add-modal">
+    <div class="modal">
+        <h3>Add New Quick Action</h3>
+        <form id="add-action-form">
+            <div class="form-group">
+                <label for="tool-select">Select a Tool</label>
+                <select id="tool-select" required>
+                    <option value="">Choose a tool to add...</option>
+                    <option value="properties">Property Management</option>
+                    <option value="clients">Customer Relationship Management</option>
+                    <option value="calendar">Calendar & Scheduling</option>
+                    <option value="messages">Messages</option>
+                    <option value="marketing">Marketing Tools</option>
+                    <option value="documents">Documents & E-sign</option>
+                    <option value="analytics">Market Analytics</option>
+                    <option value="property-comparison">Property Comparisons</option>
+                    <optgroup label="Additional Tools">
+                        <option value="property-search">Advanced Property Search</option>
+                        <option value="saved-properties">Saved Properties</option>
+                        <option value="property-valuation">Property Valuation</option>
+                        <option value="lead-capture">Lead Capture Forms</option>
+                        <option value="client-portal">Client Portal</option>
+                        <option value="email-templates">Email Templates</option>
+                        <option value="virtual-tours">Virtual Tour Creator</option>
+                        <option value="commission-calculator">Commission Calculator</option>
+                        <option value="transaction-manager">Transaction Manager</option>
+                        <option value="open-house">Open House Manager</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div id="tool-preview" style="display: none;">
+                <div class="form-group">
+                    <label>Preview</label>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                        <div class="action-icon emoji-icon" id="preview-icon" style="width: 48px; height: 48px;">-</div>
+                        <div>
+                            <h4 id="preview-title" style="margin: 0 0 0.25rem 0; font-size: 1rem; font-weight: 600; color: #1e293b;">-</h4>
+                            <p id="preview-description" style="margin: 0; font-size: 0.875rem; color: #64748b;">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="hideAddModal()">Cancel</button>
+                <button type="submit" class="btn-save" disabled>Add to Dashboard</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Enhanced search functionality with pagination, filters, saved properties, and sync
+    let searchInProgress = false;
+    let currentPage = 1;
+    let totalPages = 1;
+    let currentResults = [];
+    let currentQuery = '';
+    let currentFilters = {};
+    let currentSort = 'price_asc';
+    let savedProperties = [];
+    const RESULTS_PER_PAGE = 10;
+    
+    // Initialize BroadcastChannel for cross-tab sync
+    const propertyChannel = new BroadcastChannel('property_sync');
+    
+    // Default quick searches
+    const defaultQuickSearches = [
+        'Orlando, FL',
+        'Miami, FL',
+        'Tampa, FL',
+        'Jacksonville, FL',
+        'Fort Lauderdale, FL'
+    ];
+    
+    // Load quick searches from localStorage or use defaults
+    let quickSearches = JSON.parse(localStorage.getItem('quickSearches')) || defaultQuickSearches;
+    
+    // Initialize quick searches and saved properties
+    document.addEventListener('DOMContentLoaded', function() {
+        renderQuickSearches();
+        loadSavedProperties();
+        loadDashboardSavedProperties();
+        
+        // Listen for property sync messages
+        propertyChannel.onmessage = (event) => {
+            if (event.data.type === 'property_saved' || event.data.type === 'property_unsaved') {
+                savedProperties = event.data.savedProperties;
+                updateSavedPropertiesCount();
+                loadDashboardSavedProperties();
+                // Re-render results only if they are showing
+                if (currentResults.length > 0) {
+                    displayResults();
+                }
+            }
+        };
+    });
+    
+    // Load saved properties for dashboard
+    async function loadDashboardSavedProperties() {
+        const loadingEl = document.getElementById('saved-properties-loading');
+        const listEl = document.getElementById('saved-properties-list');
+        const emptyEl = document.getElementById('saved-properties-empty');
+        
+        try {
+            const response = await fetch('/api/properties/saved/dashboard', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to load saved properties');
+            }
+            
+            const data = await response.json();
+            const properties = data.properties;
+            const totalCount = data.total_count;
+            
+            // Update total count
+            document.getElementById('saved-total-count').textContent = `(${totalCount})`;
+            document.getElementById('saved-properties-count').textContent = totalCount;
+            
+            // Hide loading
+            loadingEl.style.display = 'none';
+            
+            if (properties.length === 0) {
+                emptyEl.style.display = 'block';
+                listEl.style.display = 'none';
+            } else {
+                emptyEl.style.display = 'none';
+                listEl.style.display = 'block';
+                
+                // Render properties
+                listEl.innerHTML = properties.map(property => `
+                    <div class="saved-property-item" onclick="window.location.href='/property/${property.id}'">
+                        <div class="saved-property-image">
+                            <img src="${property.photo_url}" alt="${property.address}">
+                        </div>
+                        <div class="saved-property-info">
+                            <div class="saved-property-price">$${(property.price || 0).toLocaleString()}</div>
+                            <div class="saved-property-address">${property.address}, ${property.city}, ${property.state}</div>
+                            <div class="saved-property-details">
+                                <span>${property.beds || 0} beds</span>
+                                <span>${property.baths || 0} baths</span>
+                                <span>${(property.sqft || 0).toLocaleString()} sqft</span>
+                            </div>
+                        </div>
+                        <button class="saved-property-action" onclick="event.stopPropagation(); unsaveFromDashboard('${property.id}')" title="Remove from saved">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error loading saved properties:', error);
+            loadingEl.innerHTML = '<p class="error-message">Failed to load saved properties</p>';
+        }
+    }
+
+    // Unsave property from dashboard
+    async function unsaveFromDashboard(propertyId) {
+        try {
+            const response = await fetch(`/api/properties/${propertyId}/unsave`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                // Reload the saved properties list
+                loadDashboardSavedProperties();
+                
+                // Broadcast to other tabs
+                propertyChannel.postMessage({
+                    type: 'property_unsaved',
+                    propertyId: propertyId,
+                    savedProperties: savedProperties.filter(id => id !== propertyId)
+                });
+            } else {
+                alert('Failed to remove property from saved list');
+            }
+        } catch (error) {
+            console.error('Error unsaving property:', error);
+            alert('Failed to remove property from saved list');
+        }
+    }
+    
+    // Load saved properties from backend
+    async function loadSavedProperties() {
+        try {
+            const response = await fetch('/auth/api/user/saved-properties');
+            const data = await response.json();
+            
+            if (data.success) {
+                savedProperties = data.saved_properties || [];
+                updateSavedPropertiesCount();
+            }
+        } catch (error) {
+            console.error('Error loading saved properties:', error);
+        }
+    }
+    
+    // Update saved properties count
+    function updateSavedPropertiesCount() {
+        const countElement = document.getElementById('saved-properties-count');
+        if (countElement) {
+            countElement.textContent = savedProperties.length;
+        }
+    }
+    
+    // Toggle save property
+    async function toggleSaveProperty(propertyId) {
+        const isSaved = savedProperties.includes(propertyId);
+        
+        try {
+            const response = await fetch('/auth/api/user/saved-properties', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    property_id: propertyId,
+                    action: isSaved ? 'remove' : 'add'
+                })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                savedProperties = data.saved_properties;
+                updateSavedPropertiesCount();
+                displayResults(); // Re-render to update buttons
+                
+                // Broadcast to other tabs
+                propertyChannel.postMessage({
+                    type: isSaved ? 'property_unsaved' : 'property_saved',
+                    propertyId: propertyId,
+                    savedProperties: savedProperties
+                });
+                
+                // Show feedback
+                showSaveNotification(isSaved ? 'Property removed from saved' : 'Property saved successfully');
+            }
+        } catch (error) {
+            console.error('Error saving property:', error);
+            showSaveNotification('Error saving property. Please try again.', true);
+        }
+    }
+    
+    // Show save notification
+    function showSaveNotification(message, isError = false) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: ${isError ? '#ef4444' : '#10b981'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    // Render quick searches
+    function renderQuickSearches() {
+        const container = document.getElementById('quick-searches-container');
+        container.innerHTML = quickSearches.map(search => `
+            <span class="suggestion-tag" onclick="setSearchValue('${search}')">${search}</span>
+        `).join('');
+    }
+    
+    // Toggle filters visibility
+    function toggleFilters() {
+        const filters = document.getElementById('search-filters');
+        filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    // Clear all filters
+    function clearFilters() {
+        document.getElementById('min-price').value = '';
+        document.getElementById('max-price').value = '';
+        document.getElementById('bedrooms').value = '';
+        document.getElementById('bathrooms').value = '';
+        document.getElementById('property-type').value = '';
+        document.getElementById('min-sqft').value = '';
+        document.getElementById('max-sqft').value = '';
+        document.getElementById('min-year').value = '';
+        document.getElementById('max-year').value = '';
+        updateActiveFiltersCount();
+    }
+    
+    // Get current filters
+    function getFilters() {
+        const filters = {
+            min_price: document.getElementById('min-price').value || null,
+            max_price: document.getElementById('max-price').value || null,
+            bedrooms: document.getElementById('bedrooms').value || null,
+            bathrooms: document.getElementById('bathrooms').value || null,
+            property_type: document.getElementById('property-type').value || null,
+            min_sqft: document.getElementById('min-sqft').value || null,
+            max_sqft: document.getElementById('max-sqft').value || null,
+            min_year: document.getElementById('min-year').value || null,
+            max_year: document.getElementById('max-year').value || null
+        };
+        
+        // Remove null values
+        Object.keys(filters).forEach(key => {
+            if (filters[key] === null) delete filters[key];
+        });
+        
+        return filters;
+    }
+    
+    // Update active filters count
+    function updateActiveFiltersCount() {
+        const filters = getFilters();
+        const count = Object.keys(filters).length;
+        const badge = document.getElementById('active-filters-count');
+        
+        if (count > 0) {
+            badge.textContent = count;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    // Apply filters
+    function applyFilters() {
+        currentFilters = getFilters();
+        updateActiveFiltersCount();
+        currentPage = 1;
+        
+        if (currentQuery) {
+            performSearch();
+        }
+    }
+    
+    // Apply sort
+    function applySort() {
+        currentSort = document.getElementById('sort-by').value;
+        displayResults();
+    }
+    
+    // Sort results
+    function sortResults(results) {
+        const sorted = [...results];
+        
+        switch (currentSort) {
+            case 'price_asc':
+                sorted.sort((a, b) => a.price - b.price);
+                break;
+            case 'price_desc':
+                sorted.sort((a, b) => b.price - a.price);
+                break;
+            case 'newest':
+                sorted.sort((a, b) => b.year_built - a.year_built);
+                break;
+            case 'oldest':
+                sorted.sort((a, b) => a.year_built - b.year_built);
+                break;
+            case 'sqft_desc':
+                sorted.sort((a, b) => b.sqft - a.sqft);
+                break;
+            case 'sqft_asc':
+                sorted.sort((a, b) => a.sqft - b.sqft);
+                break;
+        }
+        
+        return sorted;
+    }
+    
+    // Filter results client-side
+    function filterResults(results) {
+        return results.filter(property => {
+            if (currentFilters.min_price && property.price < currentFilters.min_price) return false;
+            if (currentFilters.max_price && property.price > currentFilters.max_price) return false;
+            if (currentFilters.bedrooms && property.beds < currentFilters.bedrooms) return false;
+            if (currentFilters.bathrooms && property.baths < currentFilters.bathrooms) return false;
+            if (currentFilters.property_type && property.property_type !== currentFilters.property_type) return false;
+            if (currentFilters.min_sqft && property.sqft < currentFilters.min_sqft) return false;
+            if (currentFilters.max_sqft && property.sqft > currentFilters.max_sqft) return false;
+            if (currentFilters.min_year && property.year_built < currentFilters.min_year) return false;
+            if (currentFilters.max_year && property.year_built > currentFilters.max_year) return false;
+            return true;
+        });
+    }
+    
+    // Set search value
+    window.setSearchValue = function(value) {
+        document.getElementById('search-query').value = value;
+        document.getElementById('search-query').focus();
+    }
+    
+    // Perform search
+    async function performSearch() {
+        if (searchInProgress) return;
+        searchInProgress = true;
+        
+        const resultsContainer = document.getElementById('search-results-container');
+        resultsContainer.style.display = 'block';
+        resultsContainer.innerHTML = `
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem; color: #64748b;">Searching for properties in ${currentQuery}...</p>
+            </div>
+        `;
+        
+        try {
+            const response = await fetch('/api/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    query: currentQuery,
+                    limit: 200 // Get more results for client-side filtering
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                // Update searches remaining
+                const searchesCount = document.querySelector('#searches-count');
+                if (searchesCount && data.searches_remaining !== undefined) {
+                    searchesCount.textContent = data.searches_remaining;
+                }
+                
+                // Store all results
+                currentResults = data.results.properties || [];
+                
+                // Save to session for cross-page access
+                sessionStorage.setItem('propertySearchResults', JSON.stringify({
+                    properties: currentResults,
+                    query: currentQuery
+                }));
+                
+                // Show sort controls
+                document.getElementById('sort-controls').style.display = 'flex';
+                
+                // Display results with pagination
+                displayResults();
+            } else {
+                resultsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
+                        <strong>Search failed:</strong> ${data.error || 'Please try again'}
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            resultsContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
+                    <strong>Connection error.</strong> Please check your connection and try again.
+                </div>
+            `;
+        } finally {
+            searchInProgress = false;
+        }
+    }
+    
+    // Display results with pagination
+    function displayResults() {
+        const resultsContainer = document.getElementById('search-results-container');
+        if (!resultsContainer || currentResults.length === 0) return;
+        
+        // Apply filters and sort
+        let filteredResults = filterResults(currentResults);
+        let sortedResults = sortResults(filteredResults);
+        
+        // Calculate pagination
+        totalPages = Math.ceil(sortedResults.length / RESULTS_PER_PAGE);
+        currentPage = Math.min(currentPage, totalPages || 1);
+        
+        // Get current page results
+        const startIndex = (currentPage - 1) * RESULTS_PER_PAGE;
+        const endIndex = startIndex + RESULTS_PER_PAGE;
+        const pageResults = sortedResults.slice(startIndex, endIndex);
+        
+        if (sortedResults.length === 0) {
+            resultsContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 12px;">
+                    <h3 style="color: #64748b; margin-bottom: 1rem;">No properties found matching your criteria</h3>
+                    <p style="color: #9ca3af;">Try adjusting your filters or search in a different location</p>
+                    <button onclick="clearFilters(); displayResults();" class="btn btn-secondary" style="margin-top: 1rem;">Clear Filters</button>
+                </div>
+            `;
+            return;
+        }
+        
+        // Get market stats for filtered results
+        const marketStats = calculateMarketStats(sortedResults);
+        
+        resultsContainer.innerHTML = `
+            <div class="property-results">
+                <div class="results-header">
+                    <h3 style="margin: 0; color: #1e293b;">
+                        Found ${sortedResults.length} Properties in ${currentQuery}
+                        ${Object.keys(currentFilters).length > 0 ? `<span style="font-size: 0.875rem; color: #64748b;"> (filtered)</span>` : ''}
+                    </h3>
+                    <button onclick="location.reload()" class="btn btn-secondary">New Search</button>
+                </div>
+                
+                <!-- Market Stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <div>
+                        <span style="color: #64748b; font-size: 0.75rem;">Median Price</span><br>
+                        <strong style="color: #1e293b; font-size: 1.25rem;">$${marketStats.medianPrice.toLocaleString()}</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; font-size: 0.75rem;">Price Range</span><br>
+                        <strong style="color: #1e293b;">$${marketStats.minPrice.toLocaleString()} - $${marketStats.maxPrice.toLocaleString()}</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; font-size: 0.75rem;">Avg $/sqft</span><br>
+                        <strong style="color: #1e293b;">$${marketStats.avgPricePerSqft}</strong>
+                    </div>
+                    <div>
+                        <span style="color: #64748b; font-size: 0.75rem;">Total Listings</span><br>
+                        <strong style="color: #1e293b;">${sortedResults.length}</strong>
+                    </div>
+                </div>
+                
+                <!-- Property Grid -->
+                <div class="property-grid">
+                    ${pageResults.map(property => `
+                        <div class="property-card" onclick="showPropertyDetails(${JSON.stringify(property).replace(/"/g, '&quot;')})">
+                            <button class="property-save-btn ${savedProperties.includes(property.id) ? 'saved' : ''}" 
+                                    onclick="event.stopPropagation(); toggleSaveProperty('${property.id}')">
+                                <svg viewBox="0 0 16 16">
+                                    ${savedProperties.includes(property.id) 
+                                        ? '<path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>'
+                                        : '<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>'
+                                    }
+                                </svg>
+                            </button>
+                            <img src="${property.photo_url}" alt="${property.address}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #2563eb; font-weight: 600; font-size: 1rem;">${property.address}</h4>
+                                <p style="margin: 0.25rem 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;">${property.price.toLocaleString()}</p>
+                                <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #64748b;">
+                                    ${property.beds} beds • ${property.baths} baths • ${property.sqft.toLocaleString()} sqft
+                                </p>
+                                <p style="margin: 0.25rem 0; font-size: 0.75rem; color: #9ca3af;">
+                                    ${property.property_type} • Built ${property.year_built}
+                                </p>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <svg width="20" height="20" fill="#64748b" viewBox="0 0 16 16">
+                                    <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <!-- Pagination -->
+                ${totalPages > 1 ? `
+                    <div class="pagination">
+                        <button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''}>First</button>
+                        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                        
+                        ${generatePageButtons()}
+                        
+                        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+                        <button onclick="changePage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>Last</button>
+                        
+                        <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+    
+    // Generate page buttons
+    function generatePageButtons() {
+        let buttons = '';
+        const maxButtons = 5;
+        let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let end = Math.min(totalPages, start + maxButtons - 1);
+        
+        if (end - start + 1 < maxButtons) {
+            start = Math.max(1, end - maxButtons + 1);
+        }
+        
+        for (let i = start; i <= end; i++) {
+            buttons += `<button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+        }
+        
+        return buttons;
+    }
+    
+    // Change page
+    function changePage(page) {
+        currentPage = page;
+        displayResults();
+        
+        // Scroll to top of results
+        document.getElementById('search-results-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Calculate market stats
+    function calculateMarketStats(properties) {
+        if (properties.length === 0) {
+            return {
+                medianPrice: 0,
+                minPrice: 0,
+                maxPrice: 0,
+                avgPricePerSqft: 0
+            };
+        }
+        
+        const prices = properties.map(p => p.price).sort((a, b) => a - b);
+        const medianIndex = Math.floor(prices.length / 2);
+        const medianPrice = prices.length % 2 === 0 
+            ? (prices[medianIndex - 1] + prices[medianIndex]) / 2 
+            : prices[medianIndex];
+        
+        const pricesPerSqft = properties
+            .filter(p => p.sqft > 0)
+            .map(p => p.price / p.sqft);
+        
+        const avgPricePerSqft = pricesPerSqft.length > 0
+            ? Math.round(pricesPerSqft.reduce((a, b) => a + b, 0) / pricesPerSqft.length)
+            : 0;
+        
+        return {
+            medianPrice: Math.round(medianPrice),
+            minPrice: Math.min(...prices),
+            maxPrice: Math.max(...prices),
+            avgPricePerSqft
+        };
+    }
+    
+    // Quick search management
+    function toggleManageSearches() {
+        const panel = document.getElementById('manage-searches-panel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        
+        if (panel.style.display === 'block') {
+            renderManageSearchesList();
+        }
+    }
+    
+    function renderManageSearchesList() {
+        const list = document.getElementById('manage-searches-list');
+        list.innerHTML = quickSearches.map((search, index) => `
+            <div class="quick-search-item">
+                <span>${search}</span>
+                <button onclick="removeQuickSearch(${index})">Remove</button>
+            </div>
+        `).join('');
+    }
+    
+    function addQuickSearch() {
+        const input = document.getElementById('new-quick-search');
+        const value = input.value.trim();
+        
+        if (value && !quickSearches.includes(value)) {
+            quickSearches.push(value);
+            localStorage.setItem('quickSearches', JSON.stringify(quickSearches));
+            renderQuickSearches();
+            renderManageSearchesList();
+            input.value = '';
+        }
+    }
+    
+    function removeQuickSearch(index) {
+        quickSearches.splice(index, 1);
+        localStorage.setItem('quickSearches', JSON.stringify(quickSearches));
+        renderQuickSearches();
+        renderManageSearchesList();
+    }
+    
+    // Handle enter key in add quick search input
+    document.getElementById('new-quick-search')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            addQuickSearch();
+        }
+    });
+    
+    // Main search form handler
+    document.getElementById('property-search').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        currentQuery = document.getElementById('search-query').value.trim();
+        if (!currentQuery) return;
+        
+        currentPage = 1;
+        await performSearch();
+    });
+    
+    // Quick Actions Management
+    let editMode = false;
+    let selectedTool = null;
+    let draggedElement = null;
+    
+    // Available tools database
+    const availableTools = {
+        // Main Navigation Tools
+        'properties': {
+            title: 'Property Management',
+            description: 'Search, save, and manage property listings',
+            url: '/properties',
+            icon: 'P'
+        },
+        'clients': {
+            title: 'Client Management',
+            description: 'Manage contacts and track interactions',
+            url: '/crm',
+            icon: 'CRM'
+        },
+        'calendar': {
+            title: 'Calendar & Scheduling',
+            description: 'Book property appointments and showings',
+            url: '/calendar',
+            icon: 'CS'
+        },
+        'documents': {
+            title: 'Documents & E-sign',
+            description: 'Manage contracts and digital signatures',
+            url: '/documents',
+            icon: 'DE'
+        },
+        'analytics': {
+            title: 'Market Analytics',
+            description: 'View market trends and pricing data',
+            url: '/analytics',
+            icon: 'MA'
+        },
+        'property-comparison': {
+            title: 'Property Comparisons',
+            description: 'Compare multiple properties side by side',
+            url: '/property-comparison',
+            icon: 'PC'
+        },
+        // Additional Tools
+        'property-search': {
+            title: 'Advanced Property Search',
+            description: 'Deep search with advanced filters and criteria',
+            url: '/advanced-search',
+            icon: 'APS'
+        },
+        'saved-properties': {
+            title: 'Saved Properties',
+            description: 'View and manage your saved property listings',
+            url: '/properties?tab=saved',
+            icon: 'SP'
+        },
+        'property-valuation': {
+            title: 'Property Valuation',
+            description: 'Get instant property value estimates',
+            url: '/valuation',
+            icon: 'PV'
+        },
+        'lead-capture': {
+            title: 'Lead Capture Forms',
+            description: 'Create and manage lead generation forms',
+            url: '/lead-capture',
+            icon: '📝'
+        },
+        'client-portal': {
+            title: 'Client Portal',
+            description: 'Give clients access to their property searches',
+            url: '/client-portal',
+            icon: '👥'
+        },
+        'email-templates': {
+            title: 'Email Templates',
+            description: 'Pre-written email templates for quick communication',
+            url: '/email-templates',
+            icon: '📧'
+        },
+        'virtual-tours': {
+            title: 'Virtual Tour Creator',
+            description: 'Create immersive property virtual tours',
+            url: '/virtual-tours',
+            icon: '🎥'
+        },
+        'commission-calculator': {
+            title: 'Commission Calculator',
+            description: 'Calculate commissions and splits',
+            url: '/commission-calculator',
+            icon: '🧮'
+        },
+        'transaction-manager': {
+            title: 'Transaction Manager',
+            description: 'Manage all your real estate transactions',
+            url: '/transactions',
+            icon: '📑'
+        },
+        'open-house': {
+            title: 'Open House Manager',
+            description: 'Organize and track open house events',
+            url: '/open-house',
+            icon: '🏠'
+        }
+    };
+    
+    // Default quick actions
+    const defaultActions = [
+        {
+            id: 'properties',
+            title: 'Property Management',
+            description: 'Search, save, and manage property listings',
+            url: '/properties',
+            icon: 'P'
+        },
+        {
+            id: 'clients',
+            title: 'Client Management',
+            description: 'Manage contacts and track interactions',
+            url: '/crm',
+            icon: 'C'
+        },
+        {
+            id: 'calendar',
+            title: 'Calendar & Scheduling',
+            description: 'Book property appointments and showings',
+            url: '/calendar',
+            icon: 'S'
+        },
+        {
+            id: 'messages',
+            title: 'Messages',
+            description: 'Communicate with clients and leads',
+            url: '/messages',
+            icon: 'M'
+        },
+        {
+            id: 'marketing',
+            title: 'Marketing Tools',
+            description: 'Create flyers and social media content',
+            url: '/marketing',
+            icon: 'K'
+        },
+        {
+            id: 'analytics',
+            title: 'Market Analytics',
+            description: 'View market trends and pricing data',
+            url: '/analytics',
+            icon: 'A'
+        }
+    ];
+    
+    // Load actions from storage or use defaults
+    let quickActions = []; // Will be loaded from server
+    
+    // Render quick actions
+    function renderQuickActions() {
+        const grid = document.getElementById('actions-grid');
+        grid.innerHTML = quickActions.map(action => {
+            // Check if icon is an emoji
+            const isEmoji = action.icon.length > 1 || /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(action.icon);
+            
+            return `
+            <a href="${editMode ? '#' : action.url}" 
+               class="action-card ${editMode ? 'edit-mode' : ''}" 
+               draggable="${editMode}"
+               data-id="${action.id}"
+               ${editMode ? 'onclick="return false;"' : ''}>
+                <button class="delete-btn" onclick="deleteAction('${action.id}')" aria-label="Delete">×</button>
+                <div class="action-icon ${isEmoji ? 'emoji-icon' : ''}">${action.icon}</div>
+                <div class="action-content">
+                    <h3>${action.title}</h3>
+                    <p>${action.description}</p>
+                </div>
+            </a>
+        `}).join('');
+        
+        if (editMode) {
+            grid.innerHTML += `
+                <div class="add-action-card" onclick="showAddModal()">
+                    <div class="add-action-content">
+                        <div class="add-action-icon">+</div>
+                        <div>Add New Action</div>
+                    </div>
+                </div>
+            `;
+            
+            // Add drag and drop event listeners
+            const cards = grid.querySelectorAll('.action-card');
+            cards.forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('drop', handleDrop);
+                card.addEventListener('dragenter', handleDragEnter);
+                card.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+    }
+    
+    // Load quick actions from server
+    async function loadQuickActions() {
+        try {
+            const response = await fetch('/auth/api/user/quick-actions');
+            const data = await response.json();
+            
+            if (data.success) {
+                quickActions = data.quick_actions;
+            } else {
+                quickActions = defaultActions;
+            }
+        } catch (error) {
+            console.error('Error loading quick actions:', error);
+            quickActions = defaultActions;
+        }
+        
+        renderQuickActions();
+    }
+
+    // Save quick actions to server
+    async function saveQuickActions() {
+        try {
+            const response = await fetch('/auth/api/user/quick-actions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ quick_actions: quickActions })
+            });
+            
+            const data = await response.json();
+            if (!data.success) {
+                console.error('Failed to save quick actions');
+            }
+        } catch (error) {
+            console.error('Error saving quick actions:', error);
+        }
+    }
+    
+    // Define all functions first
+    window.toggleEditMode = function() {
+        editMode = !editMode;
+        const editBtn = document.getElementById('edit-btn');
+        editBtn.textContent = editMode ? 'Done Editing' : 'Edit Layout';
+        editBtn.classList.toggle('active', editMode);
+        renderQuickActions();
+    }
+
+    window.deleteAction = async function(id) {
+        if (confirm('Are you sure you want to remove this quick action?')) {
+            quickActions = quickActions.filter(action => action.id !== id);
+            await saveQuickActions();
+            renderQuickActions();
+        }
+    }
+    
+    // Drag and drop handlers
+    function handleDragStart(e) {
+        draggedElement = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+    
+    function handleDragEnd(e) {
+        this.classList.remove('dragging');
+        
+        // Remove all drag-over classes
+        const cards = document.querySelectorAll('.action-card');
+        cards.forEach(card => card.classList.remove('drag-over'));
+    }
+    
+    function handleDragOver(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    }
+    
+    function handleDragEnter(e) {
+        if (this !== draggedElement) {
+            this.classList.add('drag-over');
+        }
+    }
+    
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over');
+    }
+    
+    async function handleDrop(e) {
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+        
+        if (draggedElement !== this) {
+            const draggedId = draggedElement.getAttribute('data-id');
+            const targetId = this.getAttribute('data-id');
+            
+            const draggedIndex = quickActions.findIndex(a => a.id === draggedId);
+            const targetIndex = quickActions.findIndex(a => a.id === targetId);
+            
+            if (draggedIndex !== -1 && targetIndex !== -1) {
+                // Swap positions
+                const draggedAction = quickActions[draggedIndex];
+                quickActions.splice(draggedIndex, 1);
+                quickActions.splice(targetIndex, 0, draggedAction);
+                
+                await saveQuickActions();
+                renderQuickActions();
+            }
+        }
+        
+        return false;
+    }
+    
+    // Modal functions
+    window.showAddModal = function() {
+        document.getElementById('add-modal').classList.add('active');
+        document.getElementById('tool-select').focus();
+    }
+    
+    window.hideAddModal = function() {
+        document.getElementById('add-modal').classList.remove('active');
+        document.getElementById('add-action-form').reset();
+        document.getElementById('tool-preview').style.display = 'none';
+        document.querySelector('.btn-save').disabled = true;
+        selectedTool = null;
+    }
+    
+    // Handle tool selection
+    document.getElementById('tool-select').addEventListener('change', function(e) {
+        const toolId = e.target.value;
+        
+        if (toolId && availableTools[toolId]) {
+            selectedTool = availableTools[toolId];
+            
+            // Show preview
+            document.getElementById('tool-preview').style.display = 'block';
+            document.getElementById('preview-icon').textContent = selectedTool.icon;
+            document.getElementById('preview-title').textContent = selectedTool.title;
+            document.getElementById('preview-description').textContent = selectedTool.description;
+            
+            // Enable save button
+            document.querySelector('.btn-save').disabled = false;
+        } else {
+            document.getElementById('tool-preview').style.display = 'none';
+            document.querySelector('.btn-save').disabled = true;
+            selectedTool = null;
+        }
+    });
+    
+    // Handle add action form submission
+    document.getElementById('add-action-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!selectedTool) return;
+        
+        const toolId = document.getElementById('tool-select').value;
+        
+        // Check if tool is already added
+        if (quickActions.some(action => action.id === toolId)) {
+            alert('This tool is already in your Quick Actions!');
+            return;
+        }
+        
+        const newAction = {
+            id: toolId,
+            title: selectedTool.title,
+            description: selectedTool.description,
+            url: selectedTool.url,
+            icon: selectedTool.icon
+        };
+        
+        quickActions.push(newAction);
+        await saveQuickActions();
+        
+        hideAddModal();
+        renderQuickActions();
+    });
+    
+    // Close modal on overlay click
+    document.getElementById('add-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'add-modal') {
+            hideAddModal();
+        }
+    });
+    
+    // Initialize - Load quick actions when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        loadQuickActions();
+        
+        // Add event listener for edit button
+        document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
+    });
+    
+    // Pricing Modal Functions
+    let selectedPlan = null;
+    
+    window.showPricingModal = function() {
+        document.getElementById('pricing-modal').classList.add('active');
+    }
+    
+    window.hidePricingModal = function() {
+        document.getElementById('pricing-modal').classList.remove('active');
+    }
+    
+    window.showPaymentModal = function() {
+        document.getElementById('payment-modal').classList.add('active');
+    }
+    
+    window.hidePaymentModal = function() {
+        document.getElementById('payment-modal').classList.remove('active');
+        document.getElementById('payment-form').reset();
+    }
+    
+    window.selectPlan = function(plan) {
+        selectedPlan = plan;
+        
+        // Update payment modal with selected plan
+        const planDetails = {
+            starter: {
+                name: 'Starter Plan',
+                price: '$29/month'
+            },
+            professional: {
+                name: 'Professional Plan',
+                price: '$79/month'
+            },
+            enterprise: {
+                name: 'Enterprise Plan',
+                price: '$149/month'
+            }
+        };
+        
+        document.getElementById('selected-plan-name').textContent = planDetails[plan].name;
+        document.getElementById('selected-plan-price').textContent = planDetails[plan].price;
+        
+        // Hide pricing modal and show payment modal
+        hidePricingModal();
+        showPaymentModal();
+    }
+    
+    // Close modals on overlay click
+    document.getElementById('pricing-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'pricing-modal') {
+            hidePricingModal();
+        }
+    });
+    
+    document.getElementById('payment-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'payment-modal') {
+            hidePaymentModal();
+        }
+    });
+    
+    // Format card number input
+    document.getElementById('card-number').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formattedValue;
+    });
+    
+    // Format expiry date input
+    document.getElementById('card-expiry').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        e.target.value = value;
+    });
+    
+    // Only allow numbers for CVV
+    document.getElementById('card-cvv').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+    
+    // Handle payment form submission
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Processing...';
+        submitBtn.disabled = true;
+        
+        // Simulate payment processing
+        setTimeout(() => {
+            // Show success message
+            hidePaymentModal();
+            
+            // Create success notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 2rem;
+                right: 2rem;
+                background: #10b981;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.innerHTML = `
+                <strong>🎉 Upgrade Successful!</strong><br>
+                <span style="font-size: 0.875rem;">Your account has been upgraded to ${selectedPlan === 'professional' ? 'Professional' : 'Enterprise'} plan.</span>
+            `;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+            
+            // Update UI to reflect new plan
+            const planUpgradeSection = document.querySelector('.plan-upgrade');
+            if (planUpgradeSection) {
+                planUpgradeSection.style.display = 'none';
+            }
+            
+            // Update stats to show new plan
+            const planStat = document.querySelector('.stat-value');
+            if (planStat && planStat.parentElement.querySelector('h3').textContent === 'Current Plan') {
+                planStat.textContent = selectedPlan.toUpperCase();
+            }
+            
+            // Reset button
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 2000);
+    });
+    
+    // Show property details modal
+    function showPropertyDetails(property) {
+        const modal = document.getElementById('property-details-modal');
+        const content = document.getElementById('property-details-content');
+        
+        content.innerHTML = `
+            <div style="display: grid; gap: 1.5rem;">
+                <img src="${property.photo_url}" alt="${property.address}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h2 style="margin: 0 0 0.5rem 0; color: #1e293b; font-size: 1.75rem;">${property.address}</h2>
+                        <p style="font-size: 2rem; font-weight: 700; color: #2563eb; margin: 0;">${property.price.toLocaleString()}</p>
+                    </div>
+                    <button class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem;" onclick="toggleSaveProperty('${property.id}'); setTimeout(() => { showPropertyDetails(${JSON.stringify(property).replace(/"/g, '&quot;')}); }, 100);">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            ${savedProperties.includes(property.id) 
+                                ? '<path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>'
+                                : '<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>'
+                            }
+                        </svg>
+                        ${savedProperties.includes(property.id) ? 'Saved' : 'Save Property'}
+                    </button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px;">
+                    <div>
+                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Bedrooms</p>
+                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.beds}</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Bathrooms</p>
+                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.baths}</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Square Feet</p>
+                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.sqft.toLocaleString()}</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Year Built</p>
+                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.year_built}</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="margin: 0 0 1rem 0; color: #1e293b;">Property Details</h3>
+                    <div style="display: grid; gap: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span style="color: #64748b;">Property Type</span>
+                            <span style="font-weight: 600; color: #1e293b;">${property.property_type}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span style="color: #64748b;">Listing Status</span>
+                            <span style="font-weight: 600; color: #1e293b;">${property.status || 'Active'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span style="color: #64748b;">Price per Sq Ft</span>
+                            <span style="font-weight: 600; color: #1e293b;">${Math.round(property.price / property.sqft)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span style="color: #64748b;">Monthly Payment (Est.)</span>
+                            <span style="font-weight: 600; color: #1e293b;">${Math.round(property.price * 0.006).toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="alert('Schedule showing feature coming soon!')">
+                        Schedule Showing
+                    </button>
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Contact agent feature coming soon!')">
+                        Contact Agent
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        modal.classList.add('active');
+    }
+    
+    // Hide property details modal
+    function hidePropertyDetails() {
+        document.getElementById('property-details-modal').classList.remove('active');
+    }
+    
+    // Close modal on overlay click
+    document.getElementById('property-details-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'property-details-modal') {
+            hidePropertyDetails();
+        }
+    });
+    
+    // Add animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+venv/
+instance/
+__pycache__/
+*.pyc
+.DS_Store
+*.db
+newenv
+*.env
+.env
+newenv
+*.env

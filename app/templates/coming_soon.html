@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}{{ feature }} - Coming Soon - PropInsight Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .coming-soon-container {
+        text-align: center;
+        padding: 4rem 2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .coming-soon-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+    }
+    
+    .coming-soon-container h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .coming-soon-container p {
+        font-size: 1.25rem;
+        color: #64748b;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    
+    .feature-preview {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        margin: 2rem 0;
+        text-align: left;
+    }
+    
+    .feature-preview h3 {
+        color: #1e293b;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .feature-preview ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .feature-preview li {
+        padding: 0.5rem 0;
+        color: #64748b;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+    
+    .feature-preview li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+    }
+    
+    .notify-form {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        margin: 2rem 0;
+    }
+    
+    .notify-form h4 {
+        color: #1e293b;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .notify-form p {
+        color: #64748b;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+    
+    .notify-form input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="coming-soon-container">
+    <div class="coming-soon-icon">
+        {% if feature == 'Property Management' %}P
+        {% elif feature == 'Client Management' %}C
+        {% elif feature == 'Calendar & Scheduling' %}S
+        {% elif feature == 'Communication Hub' %}M
+        {% elif feature == 'Marketing Tools' %}K
+        {% elif feature == 'Documents & E-signature' %}D
+        {% elif feature == 'Market Analytics' %}A
+        {% elif feature == 'Property Comparison Tool' %}T
+        {% else %}⚡
+        {% endif %}
+    </div>
+    
+    <h1>{{ feature }}</h1>
+    <p>This powerful feature is currently in development and will be available soon as part of your PropInsight Pro subscription.</p>
+    
+    <div class="feature-preview">
+        <h3>What to Expect:</h3>
+        {% if feature == 'Property Management' %}
+        <ul>
+            <li>Advanced MLS integration with real-time updates</li>
+            <li>Smart property filtering and search tools</li>
+            <li>Property collection management and tagging</li>
+            <li>Detailed property analytics and insights</li>
+            <li>Automated property alerts and notifications</li>
+        </ul>
+        {% elif feature == 'Client Management' %}
+        <ul>
+            <li>Complete contact database with lead scoring</li>
+            <li>Automated follow-up sequences</li>
+            <li>Client interaction timeline and history</li>
+            <li>Property matching and recommendations</li>
+            <li>Sales pipeline tracking and management</li>
+        </ul>
+        {% elif feature == 'Calendar & Scheduling' %}
+        <ul>
+            <li>Integrated calendar with Google/Apple sync</li>
+            <li>Automated showing appointment booking</li>
+            <li>Client availability matching</li>
+            <li>Reminder notifications for all parties</li>
+            <li>Team calendar coordination</li>
+        </ul>
+        {% elif feature == 'Communication Hub' %}
+        <ul>
+            <li>Unified inbox for all client communications</li>
+            <li>WhatsApp and SMS integration</li>
+            <li>Automated message templates</li>
+            <li>Group messaging and broadcasts</li>
+            <li>Communication analytics and tracking</li>
+        </ul>
+        {% elif feature == 'Marketing Tools' %}
+        <ul>
+            <li>Professional property flyer generator</li>
+            <li>Social media post templates</li>
+            <li>Email marketing campaigns</li>
+            <li>Lead capture landing pages</li>
+            <li>Marketing performance analytics</li>
+        </ul>
+        {% elif feature == 'Documents & E-signature' %}
+        <ul>
+            <li>Secure document storage and management</li>
+            <li>Integration with DocuSign and other e-sign platforms</li>
+            <li>Template library for common documents</li>
+            <li>Document sharing and collaboration</li>
+            <li>Compliance tracking and audit trails</li>
+        </ul>
+        {% elif feature == 'Market Analytics' %}
+        <ul>
+            <li>Real-time market trends and statistics</li>
+            <li>Comparative market analysis tools</li>
+            <li>Price prediction and valuation models</li>
+            <li>Neighborhood insights and demographics</li>
+            <li>Investment analysis and ROI calculations</li>
+        </ul>
+        {% elif feature == 'Property Comparison Tool' %}
+        <ul>
+            <li>Side-by-side property comparisons</li>
+            <li>Detailed feature and amenity analysis</li>
+            <li>Price and value comparison matrices</li>
+            <li>Client-friendly comparison reports</li>
+            <li>Investment potential analysis</li>
+        </ul>
+        {% endif %}
+    </div>
+    
+    <div class="notify-form">
+        <h4>Get Notified When Available</h4>
+        <p>Be the first to know when {{ feature }} is ready for use.</p>
+        <form>
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Notify Me</button>
+        </form>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('web.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        <a href="{{ url_for('web.features') }}" class="btn btn-outline" style="margin-left: 1rem;">View All Features</a>
+    </div>
+</div>
+{% endblock %}

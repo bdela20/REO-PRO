@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing - PropInsight Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .pricing-hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 4rem 0;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 3rem;
+    }
+    
+    .pricing-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 800;
+    }
+    
+    .pricing-hero p {
+        font-size: 1.25rem;
+        color: #64748b;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .pricing-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s;
+        position: relative;
+        text-align: center;
+    }
+    
+    .pricing-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pricing-card.popular {
+        border-color: #2563eb;
+        transform: scale(1.05);
+        position: relative;
+    }
+    
+    .pricing-card.popular::before {
+        content: 'Most Popular';
+        position: absolute;
+        top: -1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2563eb;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    
+    .plan-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .plan-price {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #2563eb;
+        margin-bottom: 0.5rem;
+    }
+    
+    .plan-price span {
+        font-size: 1rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    
+    .plan-description {
+        color: #64748b;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+    
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+        margin-bottom: 2rem;
+    }
+    
+    .plan-features li {
+        padding: 0.75rem 0;
+        color: #64748b;
+        position: relative;
+        padding-left: 2rem;
+        font-weight: 500;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .plan-features li:last-child {
+        border-bottom: none;
+    }
+    
+    .plan-features li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .plan-features li.unavailable {
+        opacity: 0.5;
+    }
+    
+    .plan-features li.unavailable::before {
+        content: '✗';
+        color: #ef4444;
+    }
+    
+    .plan-button {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 8px;
+        text-decoration: none;
+        display: block;
+        transition: all 0.3s;
+    }
+    
+    .money-back {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        margin: 3rem 0;
+    }
+    
+    .money-back h3 {
+        color: #166534;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+    
+    .money-back p {
+        color: #15803d;
+        font-size: 1.1rem;
+    }
+    
+    .faq-section {
+        margin-top: 4rem;
+    }
+    
+    .faq-section h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+    }
+    
+    .faq-item {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .faq-item h4 {
+        color: #1e293b;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .faq-item p {
+        color: #64748b;
+        line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+        .pricing-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .pricing-card.popular {
+            transform: none;
+        }
+        
+        .pricing-hero h1 {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pricing-hero">
+    <h1>Simple, Affordable Pricing</h1>
+    <p>Choose the perfect plan for your real estate business. All plans include our core features.</p>
+</div>
+
+<div class="pricing-grid">
+    <!-- Starter Plan -->
+    <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$29<span>/month</span></div>
+        <div class="plan-description">Perfect for new agents getting started</div>
+        
+        <ul class="plan-features">
+            <li>50 property searches per month</li>
+            <li>Basic client management (up to 25 contacts)</li>
+            <li>Property comparison tool</li>
+            <li>Email notifications</li>
+            <li>Mobile app access</li>
+            <li>Basic market analytics</li>
+            <li class="unavailable">Advanced CRM features</li>
+            <li class="unavailable">WhatsApp integration</li>
+            <li class="unavailable">Marketing tools</li>
+        </ul>
+        
+        <a href="{{ url_for('auth.signup') }}" class="plan-button btn-secondary">Start Free Trial</a>
+    </div>
+    
+    <!-- Professional Plan -->
+    <div class="pricing-card popular">
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">$79<span>/month</span></div>
+        <div class="plan-description">Best for active agents and small teams</div>
+        
+        <ul class="plan-features">
+            <li>Unlimited property searches</li>
+            <li>Complete CRM (up to 500 contacts)</li>
+            <li>Calendar & scheduling tools</li>
+            <li>E-signature integration</li>
+            <li>Advanced market analytics</li>
+            <li>Priority customer support</li>
+            <li>Property comparison reports</li>
+        </ul>
+        
+        <a href="{{ url_for('auth.signup') }}" class="plan-button btn-primary">Start Free Trial</a>
+    </div>
+    
+    <!-- Enterprise Plan -->
+    <div class="pricing-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price">$149<span>/month</span></div>
+        <div class="plan-description">For teams and high-volume agents</div>
+        
+        <ul class="plan-features">
+            <li>Everything in Professional</li>
+            <li>Unlimited contacts</li>
+            <li>Team collaboration tools</li>
+            <li>Advanced lead management</li>
+            <li>Custom branding options</li>
+            <li>API access</li>
+            <li>Dedicated account manager</li>
+            <li>White-label options</li>
+            <li>Advanced reporting & analytics</li>
+        </ul>
+        
+        <a href="{{ url_for('auth.signup') }}" class="plan-button btn-outline">Start Free Trial</a>
+    </div>
+</div>
+
+<div class="money-back">
+    <h3>7-Day Money-Back Guarantee</h3>
+    <p>Try PropInsight Pro risk-free. If you're not completely satisfied within 7 days, we'll refund your money. No questions asked.</p>
+</div>
+
+<div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-grid">
+        <div class="faq-item">
+            <h4>Can I change plans anytime?</h4>
+            <p>Yes! You can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4>Is there a free trial?</h4>
+            <p>Yes, all plans come with a 30-day free trial. No credit card required to start your trial.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4>What payment methods do you accept?</h4>
+            <p>We accept all major credit cards (Visa, MasterCard, American Express) and PayPal for your convenience.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4>Is my data secure?</h4>
+            <p>Absolutely. We use bank-level encryption and security measures to protect your data. All data is backed up daily.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4>Do you offer team discounts?</h4>
+            <p>Yes! Contact us for special pricing on teams of 5 or more agents. We offer significant discounts for brokerages.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4>Can I cancel anytime?</h4>
+            <p>Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

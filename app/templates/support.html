@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block title %}Support - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .support-hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 4rem 0;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 3rem;
+    }
+    
+    .support-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 800;
+    }
+    
+    .support-hero p {
+        font-size: 1.25rem;
+        color: #64748b;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .support-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+    
+    .support-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        text-align: center;
+    }
+    
+    .support-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .support-icon {
+        width: 70px;
+        height: 70px;
+        background: #2563eb;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: white;
+        font-size: 1.75rem;
+        font-weight: bold;
+    }
+    
+    .support-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .support-card p {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .support-button {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: #2563eb;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .support-button:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+    
+    .faq-section {
+        margin-bottom: 4rem;
+    }
+    
+    .faq-section h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+    }
+    
+    .faq-item {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .faq-item h4 {
+        color: #1e293b;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .faq-item p {
+        color: #64748b;
+        line-height: 1.6;
+    }
+    
+    .contact-section {
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+    
+    .contact-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .contact-section p {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .contact-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .contact-item {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .contact-item h4 {
+        color: #1e293b;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .contact-item p {
+        color: #64748b;
+        margin: 0.25rem 0;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+    }
+    
+    .back-link:hover {
+        color: #1d4ed8;
+    }
+    
+    @media (max-width: 768px) {
+        .support-hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .support-options {
+            grid-template-columns: 1fr;
+        }
+        
+        .faq-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('web.index') }}" class="back-link">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back to Home
+    </a>
+</div>
+
+<div class="support-hero">
+    <h1>How Can We Help You?</h1>
+    <p>Get the support you need to succeed with PropInsight Pro. We're here to help you every step of the way.</p>
+</div>
+
+<div class="container">
+    <div class="support-options">
+        <!-- Live Chat -->
+        <div class="support-card">
+            <div class="support-icon">C</div>
+            <h3>Live Chat</h3>
+            <p>Get instant help from our support team. Available Monday-Friday, 8 AM - 8 PM EST.</p>
+            <a href="#" class="support-button">Start Chat</a>
+        </div>
+        
+        <!-- Email Support -->
+        <div class="support-card">
+            <div class="support-icon">E</div>
+            <h3>Email Support</h3>
+            <p>Send us a detailed message and we'll respond within 24 hours during business days.</p>
+            <a href="mailto:support@propinsightpro.com" class="support-button">Send Email</a>
+        </div>
+        
+        <!-- Phone Support -->
+        <div class="support-card">
+            <div class="support-icon">P</div>
+            <h3>Phone Support</h3>
+            <p>Speak directly with our support team for immediate assistance with urgent issues.</p>
+            <a href="tel:1-800-PROP-INSIGHT" class="support-button">Call Now</a>
+        </div>
+        
+        <!-- Knowledge Base -->
+        <div class="support-card">
+            <div class="support-icon">K</div>
+            <h3>Knowledge Base</h3>
+            <p>Browse our comprehensive guides, tutorials, and frequently asked questions.</p>
+            <a href="#" class="support-button">Browse Articles</a>
+        </div>
+        
+        <!-- Video Tutorials -->
+        <div class="support-card">
+            <div class="support-icon">V</div>
+            <h3>Video Tutorials</h3>
+            <p>Watch step-by-step video guides to master all features of PropInsight Pro.</p>
+            <a href="#" class="support-button">Watch Videos</a>
+        </div>
+        
+        <!-- Training Sessions -->
+        <div class="support-card">
+            <div class="support-icon">T</div>
+            <h3>Training Sessions</h3>
+            <p>Join our weekly live training sessions to learn advanced features and best practices.</p>
+            <a href="#" class="support-button">Register Now</a>
+        </div>
+    </div>
+    
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>How do I get started with PropInsight Pro?</h4>
+                <p>Simply sign up for your free 30-day trial, complete your profile setup, and start exploring our features. Our onboarding guide will walk you through the basics.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Can I import my existing client data?</h4>
+                <p>Yes! We support importing contacts from CSV files, Google Contacts, and most CRM systems. Contact support for assistance with large data migrations.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Is there mobile app available?</h4>
+                <p>Yes, our mobile app is available for both iOS and Android. All your data syncs automatically between your mobile and web accounts.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>How does MLS integration work?</h4>
+                <p>We integrate with major MLS systems to provide real-time property data. Setup varies by region - our support team will help configure your MLS access.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>What if I need to cancel my subscription?</h4>
+                <p>You can cancel anytime from your account settings. You'll continue to have access until the end of your billing period, and we offer a 30-day money-back guarantee.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Do you offer team or brokerage pricing?</h4>
+                <p>Yes! We have special pricing for teams of 5+ agents and comprehensive brokerage solutions. Contact our sales team for custom pricing.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="contact-section">
+        <h2>Still Need Help?</h2>
+        <p>Our support team is standing by to help you succeed with PropInsight Pro</p>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <h4>General Support</h4>
+                <p>support@propinsightpro.com</p>
+                <p>1-800-PROP-INSIGHT</p>
+                <p>Monday-Friday: 8 AM - 8 PM EST</p>
+            </div>
+            
+            <div class="contact-item">
+                <h4>Sales & Billing</h4>
+                <p>sales@propinsightpro.com</p>
+                <p>1-800-PROP-SALES</p>
+                <p>Monday-Friday: 9 AM - 6 PM EST</p>
+            </div>
+            
+            <div class="contact-item">
+                <h4>Technical Issues</h4>
+                <p>tech@propinsightpro.com</p>
+                <p>Priority response for subscribers</p>
+                <p>24/7 for critical issues</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+            <p style="color: #64748b; font-size: 0.875rem;">
+                <strong>Emergency Support:</strong> For critical issues affecting your business, call our emergency line at 1-800-PROP-911 (available 24/7 for Professional and Enterprise subscribers)
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

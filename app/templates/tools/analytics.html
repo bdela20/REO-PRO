@@ -1,0 +1,805 @@
+{% extends "base.html" %}
+
+{% block title %}Market Analysis - Real Estate Office Pro{% endblock %}
+
+{% block content %}
+<!-- Chart.js and Additional Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* Main Layout */
+    #market-analysis-page {
+        min-height: calc(100vh - 56px);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+    }
+    
+    /* Header Section */
+    .analysis-header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .header-title h1 {
+        color: white;
+        margin: 0;
+        font-size: 2rem;
+    }
+    
+    .header-title p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 5px 0 0 0;
+    }
+    
+    /* Search Section */
+    .search-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .search-form {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 250px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        color: white;
+        font-size: 14px;
+    }
+    
+    .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .search-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
+    
+    .stat-change {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .stat-change.positive {
+        color: #4CAF50;
+    }
+    
+    .stat-change.negative {
+        color: #f44336;
+    }
+    
+    /* Charts Section */
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .chart-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .chart-title {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .chart-controls {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .time-filter {
+        padding: 5px 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        color: white;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .time-filter.active {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .chart-wrapper {
+        position: relative;
+        height: 300px;
+    }
+    
+    /* Market Insights */
+    .insights-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .insights-header {
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .insight-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: start;
+        gap: 15px;
+    }
+    
+    .insight-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .insight-content {
+        flex: 1;
+    }
+    
+    .insight-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .insight-description {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+    }
+    
+    /* Comparison Table */
+    .comparison-table {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        overflow-x: auto;
+    }
+    
+    .table {
+        width: 100%;
+        color: white;
+    }
+    
+    .table th {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .table td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Export Button */
+    .export-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+    
+    .export-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Loading Spinner */
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        color: white;
+    }
+    
+    .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid white;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div id="market-analysis-page">
+    <!-- Header -->
+    <div class="analysis-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Market Analysis</h1>
+                <p>Real-time market insights and property value trends</p>
+            </div>
+            <button class="export-btn" onclick="exportReport()">
+                <i class="fas fa-download"></i> Export Report
+            </button>
+        </div>
+    </div>
+    
+    <!-- Search Section -->
+    <div class="search-section">
+        <form class="search-form" onsubmit="searchMarket(event)">
+            <input type="text" class="search-input" id="locationInput" 
+                   placeholder="Enter city, zip code, or neighborhood..." 
+                   value="Orlando, FL">
+            <select class="search-input" id="propertyType">
+                <option value="all">All Property Types</option>
+                <option value="single-family">Single Family</option>
+                <option value="condo">Condo/Townhouse</option>
+                <option value="multi-family">Multi-Family</option>
+                <option value="land">Land</option>
+            </select>
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i> Analyze Market
+            </button>
+        </form>
+    </div>
+    
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Analyzing market data...</p>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #4CAF50;">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="stat-value">$425,000</div>
+            <div class="stat-label">Median Home Price</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>+8.5% from last year</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #2196F3;">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-value">$285/ft²</div>
+            <div class="stat-label">Average Price per Sq Ft</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>+5.2% from last year</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #FF9800;">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-value">38 days</div>
+            <div class="stat-label">Average Days on Market</div>
+            <div class="stat-change negative">
+                <i class="fas fa-arrow-down"></i>
+                <span>-12% from last year</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon" style="color: #9C27B0;">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="stat-value">3.2%</div>
+            <div class="stat-label">Inventory Growth</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>More homes available</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <!-- Price Trends Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">Median Price Trends</h3>
+                <div class="chart-controls">
+                    <button class="time-filter active" onclick="updatePriceChart('6m')">6M</button>
+                    <button class="time-filter" onclick="updatePriceChart('1y')">1Y</button>
+                    <button class="time-filter" onclick="updatePriceChart('3y')">3Y</button>
+                    <button class="time-filter" onclick="updatePriceChart('5y')">5Y</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="priceTrendsChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Inventory Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">Housing Inventory</h3>
+                <div class="chart-controls">
+                    <button class="time-filter active" onclick="updateInventoryChart('current')">Current</button>
+                    <button class="time-filter" onclick="updateInventoryChart('yoy')">Year over Year</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="inventoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Market Insights -->
+    <div class="insights-section">
+        <h2 class="insights-header">Market Insights for Orlando, FL</h2>
+        
+        <div class="insight-item">
+            <div class="insight-icon" style="color: #4CAF50;">
+                <i class="fas fa-arrow-trend-up"></i>
+            </div>
+            <div class="insight-content">
+                <div class="insight-title">Strong Seller's Market</div>
+                <div class="insight-description">
+                    With average days on market at 38 days and limited inventory, sellers have the advantage. 
+                    Properties priced correctly are receiving multiple offers.
+                </div>
+            </div>
+        </div>
+        
+        <div class="insight-item">
+            <div class="insight-icon" style="color: #2196F3;">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="insight-content">
+                <div class="insight-title">Growing Population</div>
+                <div class="insight-description">
+                    Orlando continues to attract new residents with a 2.8% annual population growth, 
+                    driving sustained demand for housing across all price points.
+                </div>
+            </div>
+        </div>
+        
+        <div class="insight-item">
+            <div class="insight-icon" style="color: #FF9800;">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="insight-content">
+                <div class="insight-title">New Construction Activity</div>
+                <div class="insight-description">
+                    New construction permits are up 15% year-over-year, helping to address inventory 
+                    shortages. Most activity is in the $350K-$500K price range.
+                </div>
+            </div>
+        </div>
+        
+        <div class="insight-item">
+            <div class="insight-icon" style="color: #9C27B0;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="insight-content">
+                <div class="insight-title">Investment Opportunity</div>
+                <div class="insight-description">
+                    Rental yields remain strong at 5.8% average, with particularly good opportunities 
+                    in neighborhoods near theme parks and downtown.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Neighborhood Comparison -->
+    <div class="comparison-table">
+        <h3 class="chart-title" style="margin-bottom: 20px;">Neighborhood Comparison</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Neighborhood</th>
+                    <th>Median Price</th>
+                    <th>Price/Sq Ft</th>
+                    <th>YoY Change</th>
+                    <th>Days on Market</th>
+                    <th>Inventory</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Winter Park</td>
+                    <td>$685,000</td>
+                    <td>$385</td>
+                    <td class="positive">+12.5%</td>
+                    <td>25</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>Lake Nona</td>
+                    <td>$525,000</td>
+                    <td>$295</td>
+                    <td class="positive">+9.8%</td>
+                    <td>32</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Downtown Orlando</td>
+                    <td>$450,000</td>
+                    <td>$425</td>
+                    <td class="positive">+7.2%</td>
+                    <td>28</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>Windermere</td>
+                    <td>$750,000</td>
+                    <td>$325</td>
+                    <td class="positive">+15.3%</td>
+                    <td>45</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>College Park</td>
+                    <td>$425,000</td>
+                    <td>$310</td>
+                    <td class="positive">+6.5%</td>
+                    <td>35</td>
+                    <td>Low</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// Initialize charts
+let priceTrendsChart = null;
+let inventoryChart = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializePriceTrendsChart();
+    initializeInventoryChart();
+});
+
+function initializePriceTrendsChart() {
+    const ctx = document.getElementById('priceTrendsChart').getContext('2d');
+    
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(102, 126, 234, 0.5)');
+    gradient.addColorStop(1, 'rgba(102, 126, 234, 0.0)');
+    
+    priceTrendsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Median Price',
+                data: [395000, 398000, 405000, 412000, 418000, 425000],
+                borderColor: '#667eea',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        callback: function(value) {
+                            return '$' + (value / 1000) + 'K';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function initializeInventoryChart() {
+    const ctx = document.getElementById('inventoryChart').getContext('2d');
+    
+    inventoryChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['< $300K', '$300-400K', '$400-500K', '$500-750K', '$750K+'],
+            datasets: [{
+                label: 'Active Listings',
+                data: [125, 287, 356, 198, 89],
+                backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                borderColor: '#667eea',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updatePriceChart(period) {
+    // Update active button
+    document.querySelectorAll('.chart-controls .time-filter').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Update chart data based on period
+    let labels, data;
+    
+    switch(period) {
+        case '6m':
+            labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            data = [395000, 398000, 405000, 412000, 418000, 425000];
+            break;
+        case '1y':
+            labels = ['Jul 23', 'Sep 23', 'Nov 23', 'Jan 24', 'Mar 24', 'May 24'];
+            data = [385000, 390000, 392000, 398000, 410000, 425000];
+            break;
+        case '3y':
+            labels = ['2021', '2022', '2023', '2024'];
+            data = [325000, 365000, 390000, 425000];
+            break;
+        case '5y':
+            labels = ['2019', '2020', '2021', '2022', '2023', '2024'];
+            data = [285000, 295000, 325000, 365000, 390000, 425000];
+            break;
+    }
+    
+    priceTrendsChart.data.labels = labels;
+    priceTrendsChart.data.datasets[0].data = data;
+    priceTrendsChart.update();
+}
+
+function updateInventoryChart(view) {
+    // Update active button
+    event.target.parentElement.querySelectorAll('.time-filter').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    if (view === 'yoy') {
+        inventoryChart.data.datasets = [{
+            label: '2023',
+            data: [156, 245, 298, 223, 112],
+            backgroundColor: 'rgba(255, 152, 0, 0.8)',
+            borderColor: '#FF9800',
+            borderWidth: 1
+        }, {
+            label: '2024',
+            data: [125, 287, 356, 198, 89],
+            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+            borderColor: '#667eea',
+            borderWidth: 1
+        }];
+        
+        inventoryChart.options.plugins.legend.display = true;
+    } else {
+        inventoryChart.data.datasets = [{
+            label: 'Active Listings',
+            data: [125, 287, 356, 198, 89],
+            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+            borderColor: '#667eea',
+            borderWidth: 1
+        }];
+        
+        inventoryChart.options.plugins.legend.display = false;
+    }
+    
+    inventoryChart.update();
+}
+
+function searchMarket(event) {
+    event.preventDefault();
+    
+    const location = document.getElementById('locationInput').value;
+    const propertyType = document.getElementById('propertyType').value;
+    
+    // Show loading spinner
+    document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('statsGrid').style.opacity = '0.5';
+    
+    // Simulate API call
+    setTimeout(() => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('statsGrid').style.opacity = '1';
+        
+        // Update UI with new data
+        updateMarketData(location, propertyType);
+    }, 1500);
+}
+
+function updateMarketData(location, propertyType) {
+    // In production, this would fetch real data from your API
+    // For now, we'll just update the location in the insights header
+    document.querySelector('.insights-header').textContent = `Market Insights for ${location}`;
+    
+    // Simulate data update
+    if (propertyType === 'condo') {
+        document.querySelectorAll('.stat-value')[0].textContent = '$325,000';
+        document.querySelectorAll('.stat-value')[1].textContent = '$425/ft²';
+    }
+}
+
+function exportReport() {
+    // In production, this would generate a PDF report
+    alert('Generating market analysis report...\nThis would create a PDF with all charts and data.');
+}
+</script>
+{% endblock %}

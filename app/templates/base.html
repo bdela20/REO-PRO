@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Real Estate Office Pro{% endblock %}</title>
+    
+    <!-- Favicon - Option 1: Using an actual favicon file -->
+    <!-- <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}"> -->
+    
+    <!-- Favicon - Option 2: Inline SVG favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232563eb'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='20' font-weight='bold'>R</text></svg>">
+    
+    <!-- Apple Touch Icon for iOS -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232563eb'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='20' font-weight='bold'>R</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Improve text rendering globally */
+        *, *::before, *::after {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        
+        /* Navigation */
+        nav {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+        
+        .nav-links a.admin-link {
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .nav-links a.admin-link:hover {
+            color: #b91c1c;
+        }
+        
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #64748b;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .dropdown-menu a:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+        
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 4px;
+            background: none;
+            border: none;
+            position: relative;
+            z-index: 101;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #2563eb;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-6px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-6px, -6px);
+        }
+        
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 49;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s;
+            z-index: 100;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mobile-menu-content {
+            padding: 1.5rem;
+        }
+        
+        .mobile-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mobile-nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #64748b;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .mobile-nav-link:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+        
+        .mobile-nav-link.admin-link {
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .mobile-nav-link.admin-link:hover {
+            color: #b91c1c;
+            background: #fef2f2;
+        }
+        
+        /* Mobile Dropdown */
+        .mobile-dropdown {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mobile-dropdown-toggle {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            color: #64748b;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .mobile-dropdown-toggle:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+        
+        .mobile-dropdown-toggle svg {
+            transition: transform 0.3s;
+        }
+        
+        .mobile-dropdown.active .mobile-dropdown-toggle svg {
+            transform: rotate(180deg);
+        }
+        
+        .mobile-dropdown-content {
+            display: none;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .mobile-dropdown.active .mobile-dropdown-content {
+            display: block;
+        }
+        
+        .mobile-dropdown-content a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #64748b;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .mobile-dropdown-content a:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+        
+        .mobile-menu-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: auto;
+        }
+        
+        .mobile-menu-footer .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Flash messages */
+        .flash-messages {
+            margin: 1rem 0;
+        }
+        
+        .flash {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .flash.success {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+        
+        .flash.error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+        
+        .flash.info {
+            background: #dbeafe;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+        }
+        
+        .flash.warning {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            text-align: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            letter-spacing: 0.025em;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white !important;
+            font-weight: 800;
+            border: 1px solid #1d4ed8;
+            text-shadow: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+            color: white !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:visited {
+            color: white !important;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #f8fafc;
+            color: #475569;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+        
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .mobile-menu {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            /* Hide the logo text on very small screens */
+            @media (max-width: 480px) {
+                .logo span {
+                    display: none;
+                }
+            }
+        }
+        
+        /* Card styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Form styles */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: #f8fafc;
+        }
+    </style>
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="{{ url_for('web.index') }}" class="logo">
+                <div class="logo-icon">R</div>
+                <span>Real Estate Office Pro</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="nav-links">
+                <a href="{{ url_for('web.index') }}">Home</a>
+                
+                {% if session.user_id %}
+                    <a href="{{ url_for('web.dashboard') }}">Dashboard</a>
+                    
+                    <!-- Agent Tools Dropdown -->
+                    <div class="nav-dropdown">
+                        <a href="#" style="display: flex; align-items: center; gap: 0.25rem;">
+                            Tools
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="/properties">Property Management</a>
+                            <a href="/crm">CRM</a>
+                            <a href="/calendar">Calendar & Scheduling</a>
+                            <a href="/education">Education Center</a>
+                            <a href="/documents">Documents & E-sign</a>
+                            <a href="/analytics">Market Analytics</a>
+                            <a href="/comparisons">Property Comparisons</a>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('auth.profile') }}">Profile</a>
+                    
+                    <!-- ADMIN LINK - Only visible to admin users -->
+                    {% if session.user_email == 'benjamindelarosa20@gmail.com' %}
+                        <a href="{{ url_for('admin.users') }}" class="admin-link">
+                            Admin Panel
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('web.features') }}">Features</a>
+                    <a href="{{ url_for('web.pricing') }}">Pricing</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Sign In</a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Start Free Trial</a>
+                {% endif %}
+            </div>
+            
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo" style="font-size: 1.2rem;">
+                <div class="logo-icon" style="width: 28px; height: 28px; font-size: 14px;">R</div>
+                <span>Menu</span>
+            </div>
+        </div>
+        
+        <div class="mobile-menu-content">
+            <div class="mobile-nav-item">
+                <a href="{{ url_for('web.index') }}" class="mobile-nav-link">Home</a>
+            </div>
+            
+            {% if session.user_id %}
+                <div class="mobile-nav-item">
+                    <a href="{{ url_for('web.dashboard') }}" class="mobile-nav-link">Dashboard</a>
+                </div>
+                
+                <!-- Mobile Tools Dropdown -->
+                <div class="mobile-dropdown" id="toolsDropdown">
+                    <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown('toolsDropdown')">
+                        Tools
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </button>
+                    <div class="mobile-dropdown-content">
+                        <a href="/properties">Property Management</a>
+                        <a href="/crm">CRM</a>
+                        <a href="/calendar">Calendar & Scheduling</a>
+                        <a href="/education">Education Center</a>
+                        <a href="/documents">Documents & E-sign</a>
+                        <a href="/analytics">Market Analytics</a>
+                        <a href="/comparisons">Property Comparisons</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-nav-item">
+                    <a href="{{ url_for('auth.profile') }}" class="mobile-nav-link">Profile</a>
+                </div>
+                
+                <!-- ADMIN LINK - Only visible to admin users -->
+                {% if session.user_email == 'benjamindelarosa20@gmail.com' %}
+                    <div class="mobile-nav-item">
+                        <a href="{{ url_for('admin.users') }}" class="mobile-nav-link admin-link">
+                            Admin Panel
+                        </a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="mobile-nav-item">
+                    <a href="{{ url_for('web.features') }}" class="mobile-nav-link">Features</a>
+                </div>
+                <div class="mobile-nav-item">
+                    <a href="{{ url_for('web.pricing') }}" class="mobile-nav-link">Pricing</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mobile-menu-footer">
+            {% if session.user_id %}
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Sign In</a>
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Start Free Trial</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">
+                            {% if category == 'success' %}
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                            {% elif category == 'error' %}
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                                </svg>
+                            {% elif category == 'info' %}
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                </svg>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <footer style="margin-top: 4rem; padding: 3rem 0; background: white; border-top: 1px solid #e2e8f0;">
+        <div class="container" style="text-align: center; color: #64748b;">
+            <p>&copy; 2024 Real Estate Office Pro. All rights reserved.</p>
+            <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 2rem; font-size: 0.875rem;">
+                <a href="{{ url_for('web.privacy') }}" style="color: #64748b; text-decoration: none;">Privacy Policy</a>
+                <a href="{{ url_for('web.terms') }}" style="color: #64748b; text-decoration: none;">Terms of Service</a>
+                <a href="{{ url_for('web.support') }}" style="color: #64748b; text-decoration: none;">Support</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Mobile Menu JavaScript -->
+    <script>
+        // Get elements
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const body = document.body;
+        
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (mobileMenu.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+                mobileMenuOverlay.style.display = 'block';
+            } else {
+                body.style.overflow = '';
+                setTimeout(() => {
+                    if (!mobileMenu.classList.contains('active')) {
+                        mobileMenuOverlay.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+        
+        // Toggle mobile dropdown
+        function toggleMobileDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('active');
+        }
+        
+        // Event listeners
+        hamburgerBtn.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking on a link (optional)
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's not a dropdown toggle
+                if (!link.classList.contains('mobile-dropdown-toggle')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+        
+        // Close menu on window resize if open
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
+                hamburgerBtn.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+                body.style.overflow = '';
+                mobileMenuOverlay.style.display = 'none';
+            }
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

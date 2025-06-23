@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service - Real Estate Office Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .legal-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+    
+    .legal-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .legal-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .legal-header p {
+        color: #64748b;
+        font-size: 1.1rem;
+    }
+    
+    .legal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 3rem;
+        border: 1px solid #e2e8f0;
+        line-height: 1.8;
+    }
+    
+    .legal-content h2 {
+        color: #1e293b;
+        font-size: 1.5rem;
+        margin: 2rem 0 1rem 0;
+        font-weight: 600;
+    }
+    
+    .legal-content h3 {
+        color: #374151;
+        font-size: 1.25rem;
+        margin: 1.5rem 0 0.75rem 0;
+        font-weight: 600;
+    }
+    
+    .legal-content p {
+        color: #64748b;
+        margin-bottom: 1rem;
+    }
+    
+    .legal-content ul {
+        color: #64748b;
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .legal-content li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .contact-info {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 2rem;
+    }
+    
+    .back-link:hover {
+        color: #1d4ed8;
+    }
+    
+    .highlight-box {
+        background: #dbeafe;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="legal-container">
+    <a href="{{ url_for('web.index') }}" class="back-link">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back to Home
+    </a>
+    
+    <div class="legal-header">
+        <h1>Terms of Service</h1>
+        <p>Last updated: June 14, 2025</p>
+    </div>
+    
+    <div class="legal-content">
+        <div class="highlight-box">
+            <p><strong>Important:</strong> By using PropInsight Pro, you agree to these terms. Please read them carefully as they contain important information about your rights and obligations.</p>
+        </div>
+        
+        <h2>1. Acceptance of Terms</h2>
+        <p>Welcome to PropInsight Pro! These Terms of Service ("Terms") govern your use of our real estate agent platform and services. By creating an account or using our services, you agree to be bound by these Terms and our Privacy Policy.</p>
+        
+        <h2>2. Description of Service</h2>
+        <p>PropInsight Pro provides a comprehensive platform for real estate agents, including:</p>
+        <ul>
+            <li>Property search and management tools</li>
+            <li>Client relationship management (CRM) system</li>
+            <li>Communication and scheduling tools</li>
+            <li>Marketing and document management features</li>
+            <li>Market analytics and reporting tools</li>
+        </ul>
+        
+        <h2>3. User Accounts and Responsibilities</h2>
+        <h3>Account Registration</h3>
+        <p>To use our services, you must create an account with accurate and complete information. You are responsible for maintaining the confidentiality of your account credentials.</p>
+        
+        <h3>Acceptable Use</h3>
+        <p>You agree to use our platform only for lawful purposes and in accordance with these Terms. You may not:</p>
+        <ul>
+            <li>Violate any applicable laws or regulations</li>
+            <li>Infringe on intellectual property rights</li>
+            <li>Transmit malicious code or attempt to breach security</li>
+            <li>Use the platform for unauthorized commercial purposes</li>
+            <li>Share your account credentials with unauthorized parties</li>
+        </ul>
+        
+        <h2>4. Subscription and Payment Terms</h2>
+        <h3>Billing</h3>
+        <p>Our services are offered on a subscription basis. You agree to pay all fees associated with your chosen plan. Fees are billed in advance and are non-refundable except as expressly stated in our refund policy.</p>
+        
+        <h3>Free Trial</h3>
+        <p>We offer a 7-day free trial for new users. Your subscription will automatically begin after the trial period unless you cancel before the trial ends.</p>
+        
+        <h3>Cancellation</h3>
+        <p>You may cancel your subscription at any time. Cancellation will take effect at the end of your current billing period.</p>
+        
+        <h2>5. Data and Privacy</h2>
+        <p>Your privacy is important to us. Our collection and use of personal information is governed by our Privacy Policy. You retain ownership of your data, and we will not share it with third parties except as outlined in our Privacy Policy.</p>
+        
+        <h2>6. MLS and Third-Party Data</h2>
+        <p>Our platform may integrate with Multiple Listing Services (MLS) and other third-party data providers. Your use of such data is subject to the terms and conditions of these providers and applicable real estate laws and regulations.</p>
+        
+        <h2>7. Intellectual Property</h2>
+        <p>The PropInsight Pro platform, including its software, design, and content, is protected by intellectual property laws. You may not copy, modify, or distribute our platform without written permission.</p>
+        
+        <h2>8. Limitation of Liability</h2>
+        <p>PropInsight Pro provides the platform "as is" without warranties of any kind. We shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services.</p>
+        
+        <h2>9. Professional Responsibilities</h2>
+        <p>As a real estate professional, you acknowledge that:</p>
+        <ul>
+            <li>You are responsible for compliance with all applicable real estate laws</li>
+            <li>You must maintain appropriate professional licenses</li>
+            <li>Our platform is a tool to assist your business, not replace professional judgment</li>
+            <li>You are responsible for verifying the accuracy of all information</li>
+        </ul>
+        
+        <h2>10. Service Availability</h2>
+        <p>We strive to maintain high availability of our services, but we cannot guarantee uninterrupted access. We may perform maintenance or updates that temporarily affect service availability.</p>
+        
+        <h2>11. Termination</h2>
+        <p>We may terminate your account if you violate these Terms or engage in activities that could harm our platform or other users. Upon termination, your access to the platform will cease, and your data may be deleted.</p>
+        
+        <h2>12. Changes to Terms</h2>
+        <p>We may update these Terms periodically. We will notify you of significant changes via email or platform notifications. Continued use of our services after changes constitutes acceptance of the new Terms.</p>
+        
+        <h2>13. Governing Law</h2>
+        <p>These Terms are governed by the laws of Florida, United States. Any disputes will be resolved in the courts of Orange County, Florida.</p>
+        
+        <div class="contact-info">
+            <h3>Contact Information</h3>
+            <p>If you have questions about these Terms of Service, please contact us:</p>
+            <p><strong>Email:</strong> legal@propinsightpro.com<br>
+            <strong>Phone:</strong> 1-800-PROP-INSIGHT<br>
+            <strong>Address:</strong> PropInsight Pro, 123 Real Estate Blvd, Orlando, FL 32801</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

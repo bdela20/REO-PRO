@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}Features - PropInsight Pro{% endblock %}
+
+{% block styles %}
+<style>
+    .features-hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 4rem 0;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 3rem;
+    }
+    
+    .features-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        font-weight: 800;
+    }
+    
+    .features-hero p {
+        font-size: 1.25rem;
+        color: #64748b;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 4rem;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 2rem;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: #2563eb;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.35rem;
+        margin-bottom: 0.75rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+    
+    .feature-card p {
+        color: #64748b;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+        font-size: 0.95rem;
+    }
+    
+    .feature-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .feature-list li {
+        padding: 0.4rem 0;
+        color: #64748b;
+        position: relative;
+        padding-left: 1.5rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+    
+    .feature-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    
+    .cta-section {
+        background: #2563eb;
+        color: white;
+        border-radius: 24px;
+        padding: 3rem;
+        text-align: center;
+        margin: 4rem auto;
+        max-width: 1200px;
+    }
+    
+    .cta-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+    
+    @media (max-width: 1200px) {
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+            padding: 0 1rem;
+        }
+        
+        .features-hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .feature-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="features-hero">
+    <h1>Complete Real Estate Agent Platform</h1>
+    <p>Every tool you need to manage properties, clients, and grow your real estate business</p>
+</div>
+
+<div class="features-grid">
+    <!-- 1. Property Management -->
+    <div class="feature-card">
+        <div class="feature-icon">P</div>
+        <h3>Property Management</h3>
+        <p>Comprehensive property database with MLS integration and advanced search capabilities to help you find the perfect properties for your clients.</p>
+        <ul class="feature-list">
+            <li>MLS Integration & Custom Listings</li>
+            <li>Interactive Maps with Advanced Filters</li>
+            <li>Save & Organize Property Collections</li>
+            <li>Active, Under Contract & Sold Tracking</li>
+            <li>Property Photo Galleries</li>
+            <li>Neighborhood Insights & Analytics</li>
+        </ul>
+    </div>
+    
+    <!-- 2. Client Management -->
+    <div class="feature-card">
+        <div class="feature-icon">C</div>
+        <h3>Customer Relationship Management</h3>
+        <p>Complete customer relationship management system designed specifically for real estate agents to track all client interactions.</p>
+        <ul class="feature-list">
+            <li>Contact Database for Buyers & Sellers</li>
+            <li>Lead Tracking & Management</li>
+            <li>Interaction History & Notes</li>
+            <li>Follow-up Reminders & Tasks</li>
+            <li>Property Interest Tracking</li>
+            <li>Client Communication Timeline</li>
+        </ul>
+    </div>
+    
+    <!-- 3. Calendar & Scheduling -->
+    <div class="feature-card">
+        <div class="feature-icon">S</div>
+        <h3>Calendar & Scheduling</h3>
+        <p>Professional scheduling system to manage property showings, client meetings, and all your real estate appointments.</p>
+        <ul class="feature-list">
+            <li>Property Showing Scheduler</li>
+            <li>Google Calendar Integration</li>
+            <li>Apple Calendar Sync</li>
+            <li>Appointment Management</li>
+            <li>Automated Reminder System</li>
+            <li>Availability Sharing</li>
+        </ul>
+    </div>
+    
+    
+    <!-- 4. Education Center -->
+    <div class="feature-card">
+        <div class="feature-icon">E</div>
+        <h3>Education Center</h3>
+        <p>Comprehensive learning platform with video courses, tutorials, and resources to master real estate and grow your skills.</p>
+        <ul class="feature-list">
+            <li>Expert-Led Video Courses</li>
+            <li>Sales & Negotiation Training</li>
+            <li>Digital Marketing Masterclasses</li>
+            <li>Legal & Compliance Updates</li>
+            <li>Downloadable Resources & Templates</li>
+            <li>Progress Tracking & Certificates</li>
+        </ul>
+    </div>
+    
+    <!-- 5. Documents & E-sign -->
+    <div class="feature-card">
+        <div class="feature-icon">D</div>
+        <h3>Documents & E-sign</h3>
+        <p>Complete document management system with electronic signature capabilities for contracts and legal documents.</p>
+        <ul class="feature-list">
+            <li>Contract Management System</li>
+            <li>DocuSign Integration</li>
+            <li>Secure Document Storage</li>
+            <li>Document Access Control</li>
+            <li>Template Library</li>
+            <li>Audit Trail & Compliance</li>
+        </ul>
+    </div>
+    
+    <!-- 6. Market Analytics -->
+    <div class="feature-card">
+        <div class="feature-icon">A</div>
+        <h3>Market Analytics</h3>
+        <p>Real-time market data and analytics to help you price properties accurately and provide valuable insights to clients.</p>
+        <ul class="feature-list">
+            <li>Average Prices & Market Trends</li>
+            <li>Days on Market Statistics</li>
+            <li>Demand Analysis by Area</li>
+            <li>Pricing Accuracy Tools</li>
+            <li>Market Trend Reports</li>
+            <li>Comparative Market Analysis</li>
+        </ul>
+    </div>
+    
+    <!-- 7. Property Comparisons -->
+    <div class="feature-card">
+        <div class="feature-icon">T</div>
+        <h3>Property Comparisons</h3>
+        <p>Side-by-side property comparisons to help your clients make informed decisions with detailed analytics and insights.</p>
+        <ul class="feature-list">
+            <li>Side-by-side Property Comparisons</li>
+            <li>Price & Feature Analysis</li>
+            <li>Market Value Assessment</li>
+            <li>Investment ROI Calculations</li>
+            <li>Neighborhood Comparison</li>
+            <li>Client Decision Support Tools</li>
+        </ul>
+    </div>
+</div>
+
+<div class="cta-section">
+    <h2>Ready to Transform Your Real Estate Business?</h2>
+    <p>Start your free trial today and experience the complete agent platform</p>
+    <a href="{{ url_for('auth.signup') }}" class="btn" style="background: white; color: #2563eb; font-weight: 700; font-size: 1.1rem; padding: 1rem 2rem;">Start Free 7-Day Trial</a>
+</div>
+{% endblock %}
