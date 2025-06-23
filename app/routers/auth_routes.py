@@ -154,6 +154,19 @@ def signup():
 
 # ===== GOOGLE OAUTH ROUTES =====
 
+@auth_bp.route('/debug-oauth-config')
+def debug_oauth_config():
+    """Temporary debug endpoint - REMOVE AFTER TESTING"""
+    import os
+    return jsonify({
+        'client_id_first_20': os.environ.get('GOOGLE_CLIENT_ID', 'NOT SET')[:20],
+        'client_id_last_20': os.environ.get('GOOGLE_CLIENT_ID', 'NOT SET')[-20:],
+        'has_secret': bool(os.environ.get('GOOGLE_CLIENT_SECRET')),
+        'redirect_uri': os.environ.get('GOOGLE_REDIRECT_URI', 'NOT SET'),
+        'production': os.environ.get('PRODUCTION'),
+        'railway_env': bool(os.environ.get('RAILWAY_ENVIRONMENT'))
+    })
+
 @auth_bp.route('/google')
 def google_login():
     """Initiate Google OAuth login"""
@@ -726,4 +739,3 @@ def get_property_details(property_id):
     except Exception as e:
         logger.error(f"Error loading property details: {e}")
         return jsonify({'error': 'Failed to load property details'}), 500
-    
