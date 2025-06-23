@@ -9,3 +9,7 @@ newenv
 .env
 newenv
 *.env
+.env
+.env.*
+*.env
+newenv
