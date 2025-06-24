@@ -304,7 +304,7 @@ def google_callback():
         print(f"Access token received: {access_token[:20]}...")
         
         # Get user info directly from Google's userinfo endpoint
-        resp = google.get('userinfo')  # Let Authlib handle the URL
+        resp = google.get('https://www.googleapis.com/oauth2/v2/userinfo')
         user_info = resp.json()
         
         print(f"User info received: {user_info}")
