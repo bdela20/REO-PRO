@@ -414,8 +414,8 @@
         font-size: 0.875rem;
     }
     
-    /* Button Styles */
-    .btn {
+    /* Document Page Button Styles - Using specific class names to avoid conflicts */
+    .doc-btn {
         padding: 0.75rem 1.5rem;
         border-radius: 8px;
         font-weight: 600;
@@ -429,36 +429,36 @@
         font-size: 0.875rem;
     }
     
-    .btn:hover {
+    .doc-btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
-    .btn-primary {
+    .doc-btn-primary {
         background: #10b981;
         color: white;
     }
     
-    .btn-primary:hover {
+    .doc-btn-primary:hover {
         background: #059669;
     }
     
-    .btn-secondary {
+    .doc-btn-secondary {
         background: #64748b;
         color: white;
     }
     
-    .btn-secondary:hover {
+    .doc-btn-secondary:hover {
         background: #475569;
     }
     
-    .btn-outline {
+    .doc-btn-outline {
         background: white;
         border: 2px solid #e2e8f0;
         color: #64748b;
     }
     
-    .btn-outline:hover {
+    .doc-btn-outline:hover {
         background: #f8fafc;
         border-color: #10b981;
         color: #10b981;
@@ -692,13 +692,13 @@
         <p class="page-description">Manage contracts, agreements, and get signatures electronically with DocuSign integration</p>
         
         <div class="header-actions">
-            <button class="btn btn-primary" onclick="uploadDocument()">
+            <button class="doc-btn doc-btn-primary" onclick="uploadDocument()">
                 <i class="fas fa-upload"></i> Upload Document
             </button>
-            <button class="btn btn-primary" onclick="createFromTemplate()">
+            <button class="doc-btn doc-btn-primary" onclick="createFromTemplate()">
                 <i class="fas fa-file-plus"></i> Create New
             </button>
-            <button class="btn btn-outline" onclick="manageTemplates()">
+            <button class="doc-btn doc-btn-outline" onclick="manageTemplates()">
                 <i class="fas fa-cog"></i> Manage Templates
             </button>
         </div>
@@ -974,7 +974,7 @@
             </div>
             <div class="upload-text">Drag and drop your document here</div>
             <div class="upload-subtext">or click to browse files</div>
-            <button class="btn btn-outline" type="button">
+            <button class="doc-btn doc-btn-outline" type="button">
                 <i class="fas fa-folder-open"></i> Browse Files
             </button>
             <input type="file" id="fileInput" hidden accept=".pdf,.doc,.docx">
@@ -1006,8 +1006,8 @@
             </div>
             
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button type="button" class="btn btn-secondary" onclick="hideUploadModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="completeUpload()">
+                <button type="button" class="doc-btn doc-btn-secondary" onclick="hideUploadModal()">Cancel</button>
+                <button type="button" class="doc-btn doc-btn-primary" onclick="completeUpload()">
                     <i class="fas fa-upload"></i> Upload Document
                 </button>
             </div>
@@ -1055,8 +1055,8 @@
             </div>
             
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button type="button" class="btn btn-secondary" onclick="hideTemplateModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="generateDocument()">
+                <button type="button" class="doc-btn doc-btn-secondary" onclick="hideTemplateModal()">Cancel</button>
+                <button type="button" class="doc-btn doc-btn-primary" onclick="generateDocument()">
                     <i class="fas fa-file-plus"></i> Generate Document
                 </button>
             </div>

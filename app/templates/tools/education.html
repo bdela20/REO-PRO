@@ -10,9 +10,9 @@
         padding: 0 1rem;
     }
     
-    /* Hero Section */
+    /* Hero Section with Purple Theme */
     .education-hero {
-        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
         color: white;
         border-radius: 16px;
         padding: 3rem;
@@ -20,6 +20,7 @@
         margin-bottom: 3rem;
         position: relative;
         overflow: hidden;
+        border: 2px solid #7c3aed;
     }
     
     .education-hero::before {
@@ -49,7 +50,20 @@
         z-index: 1;
     }
     
-    /* Course Categories */
+    /* New Course Badge */
+    .new-badge {
+        background: #86efac;
+        color: #166534;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    /* Category Tabs */
     .category-tabs {
         display: flex;
         gap: 1rem;
@@ -72,15 +86,15 @@
     }
     
     .category-tab:hover {
-        background: #f8fafc;
-        border-color: #2563eb;
-        color: #2563eb;
+        background: #f3e8ff;
+        border-color: #7c3aed;
+        color: #7c3aed;
     }
     
     .category-tab.active {
-        background: #2563eb;
+        background: #7c3aed;
         color: white;
-        border-color: #2563eb;
+        border-color: #7c3aed;
     }
     
     /* Video Grid */
@@ -98,11 +112,13 @@
         border: 1px solid #e2e8f0;
         transition: all 0.3s;
         cursor: pointer;
+        position: relative;
     }
     
     .video-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+        border-color: #7c3aed;
     }
     
     .video-thumbnail {
@@ -149,7 +165,7 @@
     }
     
     .video-card:hover .play-overlay {
-        background: #2563eb;
+        background: #7c3aed;
         transform: translate(-50%, -50%) scale(1.1);
     }
     
@@ -190,12 +206,17 @@
     }
     
     .video-badge {
-        background: #f0f9ff;
-        color: #2563eb;
+        background: #f3e8ff;
+        color: #7c3aed;
         padding: 0.25rem 0.75rem;
         border-radius: 16px;
         font-weight: 600;
         font-size: 0.75rem;
+    }
+    
+    .video-badge.new {
+        background: #86efac;
+        color: #166534;
     }
     
     /* Course Section */
@@ -204,7 +225,8 @@
         border-radius: 16px;
         padding: 2rem;
         margin-bottom: 3rem;
-        border: 1px solid #e2e8f0;
+        border: 2px solid #e9d5ff;
+        position: relative;
     }
     
     .course-header {
@@ -221,7 +243,7 @@
     }
     
     .view-all-btn {
-        color: #2563eb;
+        color: #7c3aed;
         text-decoration: none;
         font-weight: 600;
         display: flex;
@@ -236,47 +258,78 @@
     
     /* Progress Tracking */
     .progress-card {
-        background: #f8fafc;
-        border-radius: 12px;
-        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        border: 2px solid #e9d5ff;
+        border-radius: 16px;
+        padding: 2rem;
         margin-bottom: 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+    }
+    
+    .progress-stats {
+        display: flex;
+        gap: 3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        text-transform: uppercase;
     }
     
     .progress-info h3 {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         color: #1e293b;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
     }
     
-    .progress-bar {
-        width: 100%;
-        height: 8px;
-        background: #e2e8f0;
-        border-radius: 4px;
-        overflow: hidden;
-        margin-top: 0.5rem;
+    .continue-btn {
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
     }
     
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-        transition: width 0.3s;
+    .continue-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
     }
     
     .achievement-badge {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 2rem;
+        font-size: 3rem;
         font-weight: bold;
+        box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
     }
     
     /* Video Modal */
@@ -332,13 +385,14 @@
     }
     
     .close-video:hover {
-        background: #f1f5f9;
+        background: #f3e8ff;
         transform: scale(1.1);
     }
     
     /* Resource Downloads */
     .resources-section {
-        background: #f8fafc;
+        background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        border: 2px solid #e9d5ff;
         border-radius: 16px;
         padding: 2rem;
         margin-bottom: 3rem;
@@ -352,7 +406,7 @@
     
     .resource-item {
         background: white;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #e9d5ff;
         border-radius: 8px;
         padding: 1rem 1.5rem;
         display: flex;
@@ -362,8 +416,8 @@
     }
     
     .resource-item:hover {
-        border-color: #2563eb;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-color: #7c3aed;
+        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
     }
     
     .resource-info {
@@ -375,7 +429,7 @@
     .resource-icon {
         width: 40px;
         height: 40px;
-        background: #eff6ff;
+        background: #f3e8ff;
         border-radius: 8px;
         display: flex;
         align-items: center;
@@ -385,7 +439,7 @@
     
     .download-btn {
         padding: 0.5rem 1rem;
-        background: #2563eb;
+        background: #7c3aed;
         color: white;
         border: none;
         border-radius: 6px;
@@ -395,7 +449,7 @@
     }
     
     .download-btn:hover {
-        background: #1d4ed8;
+        background: #6b21a8;
     }
     
     /* Responsive */
@@ -417,6 +471,11 @@
             text-align: center;
             gap: 1.5rem;
         }
+        
+        .progress-stats {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
     }
 </style>
 {% endblock %}
@@ -425,20 +484,34 @@
 <div class="education-container">
     <!-- Hero Section -->
     <div class="education-hero">
-        <h1>Real Estate Education Center</h1>
+        <h1>Education Center</h1>
         <p>Master the art of real estate with our comprehensive video courses and resources</p>
+        <span class="new-badge">+2 New</span>
     </div>
     
     <!-- Progress Tracking -->
     <div class="progress-card">
         <div class="progress-info" style="flex: 1;">
             <h3>Your Learning Progress</h3>
-            <p style="color: #64748b; margin-bottom: 0.5rem;">12 of 45 lessons completed</p>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 27%;"></div>
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Courses Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">78%</div>
+                    <div class="stat-label">Progress Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4.2h</div>
+                    <div class="stat-label">Learning Time</div>
+                </div>
             </div>
+            <button class="continue-btn">
+                Continue Learning →
+            </button>
         </div>
-        <div class="achievement-badge">🏆</div>
+        <div class="achievement-badge">🎓</div>
     </div>
     
     <!-- Category Tabs -->
@@ -460,37 +533,37 @@
         </div>
         
         <div class="videos-grid">
-            <!-- Video 1 -->
-            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+            <!-- Video 1 - Real Estate License -->
+            <div class="video-card" onclick="playVideo('_285-2-HGIo')">
                 <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Getting Started in Real Estate">
-                    <div class="video-duration">15:30</div>
+                    <img src="https://img.youtube.com/vi/_285-2-HGIo/maxresdefault.jpg" alt="Real Estate License">
+                    <div class="video-duration">12:47</div>
                     <div class="play-overlay">
                         <div class="play-icon"></div>
                     </div>
                 </div>
                 <div class="video-content">
-                    <h3 class="video-title">Getting Started as a Real Estate Agent</h3>
-                    <p class="video-description">Learn the fundamentals of starting your real estate career, from licensing to your first sale.</p>
+                    <h3 class="video-title">How to Get Your Real Estate License (Step by Step)</h3>
+                    <p class="video-description">Complete guide to getting your real estate license, requirements, and exam preparation tips.</p>
                     <div class="video-meta">
                         <span>Beginner</span>
-                        <span class="video-badge">Free</span>
+                        <span class="video-badge new">New</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Video 2 -->
-            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+            <!-- Video 2 - Marketing Strategies -->
+            <div class="video-card" onclick="playVideo('STyI3P7orEY')">
                 <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Digital Marketing">
-                    <div class="video-duration">22:45</div>
+                    <img src="https://img.youtube.com/vi/STyI3P7orEY/maxresdefault.jpg" alt="Marketing Strategies">
+                    <div class="video-duration">28:15</div>
                     <div class="play-overlay">
                         <div class="play-icon"></div>
                     </div>
                 </div>
                 <div class="video-content">
-                    <h3 class="video-title">Digital Marketing for Real Estate</h3>
-                    <p class="video-description">Master social media, SEO, and online advertising to generate more leads.</p>
+                    <h3 class="video-title">Real Estate Marketing Strategies That Actually Work</h3>
+                    <p class="video-description">Learn proven marketing strategies to generate more leads and grow your real estate business.</p>
                     <div class="video-meta">
                         <span>Intermediate</span>
                         <span class="video-badge">Pro</span>
@@ -498,56 +571,18 @@
                 </div>
             </div>
             
-            <!-- Video 3 -->
-            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+            <!-- Video 3 - First Year Success -->
+            <div class="video-card" onclick="playVideo('SLh0Ma5NI0A')">
                 <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Negotiation Skills">
-                    <div class="video-duration">18:20</div>
+                    <img src="https://img.youtube.com/vi/SLh0Ma5NI0A/maxresdefault.jpg" alt="First Year Success">
+                    <div class="video-duration">15:22</div>
                     <div class="play-overlay">
                         <div class="play-icon"></div>
                     </div>
                 </div>
                 <div class="video-content">
-                    <h3 class="video-title">Advanced Negotiation Techniques</h3>
-                    <p class="video-description">Close more deals with proven negotiation strategies used by top agents.</p>
-                    <div class="video-meta">
-                        <span>Advanced</span>
-                        <span class="video-badge">Pro</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 4 -->
-            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Property Valuation">
-                    <div class="video-duration">25:10</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">Property Valuation Masterclass</h3>
-                    <p class="video-description">Learn how to accurately value properties using comparative market analysis.</p>
-                    <div class="video-meta">
-                        <span>Intermediate</span>
-                        <span class="video-badge">Free</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 5 -->
-            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Client Management">
-                    <div class="video-duration">19:55</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">Building Client Relationships</h3>
-                    <p class="video-description">Create lasting relationships that lead to referrals and repeat business.</p>
+                    <h3 class="video-title">New Real Estate Agent? Do These 5 Things Your First Year</h3>
+                    <p class="video-description">Essential tips and strategies for new agents to succeed in their first year.</p>
                     <div class="video-meta">
                         <span>Beginner</span>
                         <span class="video-badge">Free</span>
@@ -555,18 +590,56 @@
                 </div>
             </div>
             
-            <!-- Video 6 -->
-            <div class="video-card" onclick="playVideo('dQw4w9WgXcQ')">
+            <!-- Video 4 - Investment Properties -->
+            <div class="video-card" onclick="playVideo('41vMAGXQj_s')">
                 <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Legal Compliance">
-                    <div class="video-duration">30:40</div>
+                    <img src="https://img.youtube.com/vi/41vMAGXQj_s/maxresdefault.jpg" alt="Investment Properties">
+                    <div class="video-duration">19:30</div>
                     <div class="play-overlay">
                         <div class="play-icon"></div>
                     </div>
                 </div>
                 <div class="video-content">
-                    <h3 class="video-title">Real Estate Law & Compliance</h3>
-                    <p class="video-description">Stay compliant with the latest regulations and avoid legal pitfalls.</p>
+                    <h3 class="video-title">Real Estate Investing for Beginners</h3>
+                    <p class="video-description">Learn the fundamentals of real estate investing and how to analyze investment properties.</p>
+                    <div class="video-meta">
+                        <span>Intermediate</span>
+                        <span class="video-badge new">New</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 5 - Social Media Marketing -->
+            <div class="video-card" onclick="playVideo('C3L-I_g9lTU')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/C3L-I_g9lTU/maxresdefault.jpg" alt="Social Media Marketing">
+                    <div class="video-duration">24:18</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Social Media Marketing for Real Estate Agents</h3>
+                    <p class="video-description">Master Instagram, Facebook, and TikTok to attract more clients and listings.</p>
+                    <div class="video-meta">
+                        <span>Intermediate</span>
+                        <span class="video-badge">Pro</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video 6 - Lead Generation -->
+            <div class="video-card" onclick="playVideo('dLotwE5tyPU')">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dLotwE5tyPU/maxresdefault.jpg" alt="Lead Generation">
+                    <div class="video-duration">31:45</div>
+                    <div class="play-overlay">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">Lead Generation Strategies for Real Estate Agents</h3>
+                    <p class="video-description">Discover multiple ways to generate high-quality leads consistently.</p>
                     <div class="video-meta">
                         <span>Advanced</span>
                         <span class="video-badge">Pro</span>
@@ -707,7 +780,7 @@
             
             setTimeout(() => {
                 this.textContent = 'Downloaded!';
-                this.style.background = '#10b981';
+                this.style.background = '#22c55e';
                 
                 setTimeout(() => {
                     this.textContent = originalText;
