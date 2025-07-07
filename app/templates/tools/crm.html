@@ -25,6 +25,26 @@
         font-size: 2rem;
         margin-bottom: 1rem;
         font-weight: 700;
+        /* Colored shadow background */
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #2563eb;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        position: relative;
+        display: inline-block;
+    }
+    
+    .page-header h1::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, transparent 50%);
+        border-radius: 12px;
+        pointer-events: none;
     }
     
     .header-stats {
@@ -831,6 +851,11 @@
         .list-header > *:not(:first-child):not(:last-child),
         .list-item > *:not(:first-child):not(:last-child) {
             display: none;
+        }
+        
+        .page-header h1 {
+            font-size: 1.75rem;
+            padding: 0.5rem 1rem;
         }
     }
 </style>

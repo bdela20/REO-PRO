@@ -102,516 +102,229 @@
         font-weight: 500;
     }
     
-    /* Saved Properties Widget */
-    .saved-properties-widget {
+    /* Features Preview */
+    .features-preview {
         background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        padding: 2rem;
         margin-bottom: 2rem;
         border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
     }
-
-    .saved-properties-widget .card-header {
+    
+    .features-preview::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #10b981 100%);
+    }
+    
+    .features-preview-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .features-preview-header h2 {
+        font-size: 1.75rem;
+        color: #1e293b;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .features-preview-header p {
+        color: #64748b;
+        font-size: 1rem;
+        margin: 0;
+    }
+    
+    .features-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .feature-preview-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-preview-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, var(--card-color, #2563eb) 0%, var(--card-color-light, #3b82f6) 100%);
+        opacity: 0.8;
+    }
+    
+    .feature-preview-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-color: var(--card-color, #2563eb);
+    }
+    
+    /* Card Color Variants */
+    .feature-preview-card:nth-child(1) {
+        --card-color: #2563eb;
+        --card-color-light: #3b82f6;
+    }
+    
+    .feature-preview-card:nth-child(2) {
+        --card-color: #10b981;
+        --card-color-light: #34d399;
+    }
+    
+    .feature-preview-card:nth-child(3) {
+        --card-color: #f59e0b;
+        --card-color-light: #fbbf24;
+    }
+    
+    .feature-preview-card:nth-child(4) {
+        --card-color: #8b5cf6;
+        --card-color-light: #a78bfa;
+    }
+    
+    .feature-preview-card:nth-child(5) {
+        --card-color: #ef4444;
+        --card-color-light: #f87171;
+    }
+    
+    .feature-preview-card:nth-child(6) {
+        --card-color: #06b6d4;
+        --card-color-light: #22d3ee;
+    }
+    
+    .feature-preview-header {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
         margin-bottom: 1.5rem;
     }
-
-    .saved-properties-widget h2 {
+    
+    .feature-preview-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 1.5rem;
-        color: #1e293b;
-        margin: 0;
-        font-weight: 700;
-    }
-
-    .saved-properties-widget h2 svg {
-        color: #2563eb;
-    }
-
-    .view-all-link {
-        color: #2563eb;
-        text-decoration: none;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: color 0.3s;
-    }
-
-    .view-all-link:hover {
-        color: #1d4ed8;
-    }
-
-    .saved-properties-list {
-        display: grid;
-        gap: 1rem;
-    }
-
-    .saved-property-item {
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        background: #f8fafc;
-        border-radius: 8px;
-        transition: all 0.3s;
-        cursor: pointer;
-        border: 1px solid #e2e8f0;
-    }
-
-    .saved-property-item:hover {
-        background: #f1f5f9;
-        transform: translateX(4px);
-        border-color: #2563eb;
-    }
-
-    .saved-property-image {
-        width: 80px;
-        height: 80px;
-        border-radius: 6px;
-        overflow: hidden;
+        justify-content: center;
+        color: white;
+        background: linear-gradient(135deg, var(--card-color, #2563eb) 0%, var(--card-color-light, #3b82f6) 100%);
+        margin-right: 1rem;
         flex-shrink: 0;
     }
-
-    .saved-property-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .saved-property-info {
+    
+    .feature-preview-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
         flex: 1;
-        min-width: 0;
     }
-
-    .saved-property-price {
-        font-size: 1.125rem;
+    
+    .feature-preview-trend {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    
+    .feature-preview-trend.up {
+        background: #dcfce7;
+        color: #166534;
+    }
+    
+    .feature-preview-trend.down {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+    
+    .feature-preview-trend.neutral {
+        background: #f1f5f9;
+        color: #475569;
+    }
+    
+    .feature-preview-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 0.75rem 0.5rem;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+        border: 1px solid #f1f5f9;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-1px);
+    }
+    
+    .stat-number {
+        display: block;
+        font-size: 1.25rem;
         font-weight: 700;
         color: #1e293b;
         margin-bottom: 0.25rem;
     }
-
-    .saved-property-address {
-        font-size: 0.875rem;
-        color: #64748b;
-        margin-bottom: 0.5rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .saved-property-details {
-        display: flex;
-        gap: 1rem;
+    
+    .stat-label {
         font-size: 0.75rem;
-        color: #94a3b8;
+        color: #64748b;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
     }
-
-    .saved-property-action {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        color: #ef4444;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .saved-property-action:hover {
-        background: #fee2e2;
-        border-color: #ef4444;
-    }
-
-    .loading-spinner {
+    
+    .feature-preview-footer {
         text-align: center;
-        padding: 2rem;
-        color: #64748b;
-    }
-
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #f3f4f6;
-        border-top: 3px solid #2563eb;
-        border-radius: 50%;
-        margin: 0 auto 1rem;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 2rem;
-        color: #64748b;
-    }
-
-    .empty-state svg {
-        margin-bottom: 1rem;
-        opacity: 0.3;
-    }
-
-    .empty-state h4 {
-        color: #475569;
-        margin-bottom: 0.5rem;
-    }
-
-    .empty-state p {
-        margin-bottom: 1rem;
-        font-size: 0.875rem;
     }
     
-    /* Property Search Section */
-    .search-section {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border: 1px solid #e2e8f0;
-    }
-    
-    .search-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: #1e293b;
-        font-weight: 700;
-    }
-    
-    .search-form {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .search-input {
-        flex: 1;
-        padding: 0.875rem 1rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        background: #f8fafc;
-        font-size: 1rem;
-        transition: all 0.3s;
-    }
-    
-    .search-input:focus {
-        outline: none;
-        border-color: #2563eb;
-        background: white;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-    
-    .search-suggestions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        margin-top: 0.5rem;
-        align-items: center;
-    }
-    
-    .suggestion-tag {
-        padding: 0.25rem 0.75rem;
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        color: #64748b;
-    }
-    
-    .suggestion-tag:hover {
-        background: #e2e8f0;
-        border-color: #2563eb;
-        color: #2563eb;
-    }
-    
-    /* Filter Styles */
-    .filter-toggle {
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.3s;
+    .feature-preview-link {
         display: inline-flex;
         align-items: center;
-    }
-    
-    .filter-toggle:hover {
-        border-color: #2563eb;
-        color: #2563eb;
-    }
-    
-    .active-filters-badge {
-        background: #2563eb;
-        color: white;
-        padding: 0.125rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        margin-left: 0.5rem;
-    }
-    
-    .sort-select {
+        gap: 0.5rem;
         padding: 0.5rem 1rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        font-size: 0.875rem;
-        background: white;
-        cursor: pointer;
-    }
-    
-    .search-filters {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-top: 1rem;
-    }
-    
-    .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-    
-    .filter-group label {
-        display: block;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #475569;
-        margin-bottom: 0.5rem;
-    }
-    
-    .filter-input, .filter-select {
-        width: 100%;
-        padding: 0.5rem;
-        border: 2px solid #e2e8f0;
+        background: var(--card-color, #2563eb);
+        color: white;
+        text-decoration: none;
         border-radius: 6px;
         font-size: 0.875rem;
-        transition: all 0.3s;
+        font-weight: 500;
+        transition: all 0.3s ease;
     }
     
-    .filter-input:focus, .filter-select:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-    
-    .range-inputs {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .range-inputs input {
-        flex: 1;
-    }
-    
-    .btn-apply-filters {
-        padding: 0.75rem 1.5rem;
-        background: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    
-    .btn-apply-filters:hover {
-        background: #1d4ed8;
+    .feature-preview-link:hover {
+        background: var(--card-color-light, #3b82f6);
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     
-    .btn-clear-filters {
-        padding: 0.75rem 1.5rem;
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s;
+    .feature-preview-link::after {
+        content: '→';
+        font-weight: bold;
+        transition: transform 0.3s ease;
     }
     
-    .btn-clear-filters:hover {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-    }
-    
-    /* Quick Search Management */
-    .manage-searches-btn {
-        padding: 0.25rem 0.75rem;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        color: #64748b;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-    
-    .manage-searches-btn:hover {
-        background: #f8fafc;
-        border-color: #2563eb;
-        color: #2563eb;
-    }
-    
-    .quick-search-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.5rem;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-    }
-    
-    .quick-search-item button {
-        padding: 0.25rem 0.5rem;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        border-radius: 4px;
-        color: #dc2626;
-        font-size: 0.75rem;
-        cursor: pointer;
-    }
-    
-    .quick-search-item button:hover {
-        background: #fee2e2;
-    }
-    
-    /* Pagination Styles */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
-    }
-    
-    .pagination button {
-        padding: 0.5rem 1rem;
-        border: 1px solid #e2e8f0;
-        background: white;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.875rem;
-    }
-    
-    .pagination button:hover:not(:disabled) {
-        background: #f8fafc;
-        border-color: #2563eb;
-        color: #2563eb;
-    }
-    
-    .pagination button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    
-    .pagination button.active {
-        background: #2563eb;
-        color: white;
-        border-color: #2563eb;
-    }
-    
-    .page-info {
-        margin: 0 1rem;
-        color: #64748b;
-        font-size: 0.875rem;
-    }
-    
-    /* Property Results */
-    .property-results {
-        background: #f8fafc;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        padding: 1.5rem;
-    }
-    
-    .results-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .property-grid {
-        display: grid;
-        gap: 1rem;
-    }
-    
-    .property-card {
-        background: white;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        padding: 1.5rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        gap: 1rem;
-        position: relative;
-    }
-    
-    .property-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-        border-color: #2563eb;
-    }
-    
-    /* Save Property Button */
-    .property-save-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        width: 36px;
-        height: 36px;
-        background: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s;
-        z-index: 10;
-        border: 2px solid #e2e8f0;
-    }
-    
-    .property-save-btn:hover {
-        transform: scale(1.1);
-        border-color: #ef4444;
-    }
-    
-    .property-save-btn.saved {
-        background: #ef4444;
-        border-color: #ef4444;
-    }
-    
-    .property-save-btn.saved svg {
-        fill: white;
-    }
-    
-    .property-save-btn svg {
-        width: 20px;
-        height: 20px;
-        fill: #ef4444;
-        transition: all 0.3s;
+    .feature-preview-link:hover::after {
+        transform: translateX(2px);
     }
     
     /* Quick Actions */
@@ -901,74 +614,6 @@
         border-color: #1d4ed8;
     }
     
-    /* Recent Activity */
-    .recent-activity {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        border: 1px solid #e2e8f0;
-    }
-    
-    .recent-activity h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        color: #1e293b;
-        font-weight: 700;
-    }
-    
-    .activity-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .activity-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 0;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-    
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        background: #f1f5f9;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #64748b;
-        font-weight: 600;
-        flex-shrink: 0;
-    }
-    
-    .activity-content {
-        flex: 1;
-    }
-    
-    .activity-content h4 {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 0.25rem;
-    }
-    
-    .activity-content p {
-        font-size: 0.75rem;
-        color: #64748b;
-        margin: 0;
-    }
-    
-    .activity-time {
-        font-size: 0.75rem;
-        color: #9ca3af;
-        font-weight: 500;
-    }
-    
     /* Plan upgrade section */
     .plan-upgrade {
         background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
@@ -1240,12 +885,45 @@
             grid-template-columns: 1fr;
         }
         
-        .search-form {
-            flex-direction: column;
-        }
-        
         .stats-grid {
             grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .features-preview-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .features-preview {
+            padding: 1.5rem;
+        }
+        
+        .feature-preview-stats {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        .feature-preview-card {
+            padding: 1.25rem;
+        }
+        
+        .features-preview-header h2 {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .features-preview-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-preview-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .feature-preview-icon {
+            margin-right: 0;
         }
     }
 </style>
@@ -1271,254 +949,173 @@
             <div class="stat-value" id="searches-count">{{ user.searches_remaining if user else 5 }}</div>
             <div class="stat-change">This month</div>
         </div>
-        <div class="stat-card">
-            <h3>Active Clients</h3>
-            <div class="stat-value">12</div>
-            <div class="stat-change">+2 this week</div>
-        </div>
-        <div class="stat-card">
-            <h3>Properties Saved</h3>
-            <div class="stat-value" id="saved-properties-count">0</div>
-            <div class="stat-change" style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='/properties?tab=saved'">View all</div>
-        </div>
     </div>
     
-    <!-- Saved Properties Widget -->
-    <div class="dashboard-card saved-properties-widget">
-        <div class="card-header">
-            <h2>
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                </svg>
-                Saved Properties
-            </h2>
-            <a href="/properties?tab=saved" class="view-all-link">View All <span id="saved-total-count">(0)</span></a>
+    <!-- Features Preview -->
+    <div class="features-preview">
+        <div class="features-preview-header">
+            <h2>Your Business at a Glance</h2>
+            <p>Real-time insights from your complete real estate platform</p>
         </div>
-        
-        <div class="saved-properties-content">
-            <div id="saved-properties-loading" class="loading-spinner">
-                <div class="spinner"></div>
-                <p>Loading saved properties...</p>
-            </div>
-            
-            <div id="saved-properties-list" class="saved-properties-list" style="display: none;">
-                <!-- Properties will be loaded here -->
-            </div>
-            
-            <div id="saved-properties-empty" class="empty-state" style="display: none;">
-                <svg width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                </svg>
-                <h4>No Saved Properties</h4>
-                <p>Start browsing and save properties you're interested in</p>
-                <a href="/properties" class="btn btn-primary btn-sm">Browse Properties</a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Property Search Section -->
-    <div class="search-section">
-        <h2>Property Search</h2>
-        
-        <!-- Main Search Bar -->
-        <form class="search-form" id="property-search">
-            <input type="text" 
-                   class="search-input" 
-                   placeholder="Enter address, city, or ZIP code to search properties..." 
-                   id="search-query"
-                   required>
-            <button type="submit" class="btn btn-primary">Search Properties</button>
-        </form>
-        
-        <!-- Filter and Sort Controls -->
-        <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <button type="button" class="filter-toggle" onclick="toggleFilters()">
-                <svg width="16" height="16" fill="currentColor" style="margin-right: 0.5rem;">
-                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
-                </svg>
-                Advanced Filters <span id="active-filters-count" class="active-filters-badge" style="display: none;">0</span>
-            </button>
-            
-            <!-- Sort Dropdown (hidden until search) -->
-            <div class="sort-controls" id="sort-controls" style="display: none;">
-                <label style="margin-right: 0.5rem; font-size: 0.875rem; color: #64748b;">Sort by:</label>
-                <select id="sort-by" class="sort-select" onchange="applySort()">
-                    <option value="price_asc">Price: Low to High</option>
-                    <option value="price_desc">Price: High to Low</option>
-                    <option value="newest">Newest Listings</option>
-                    <option value="oldest">Oldest Listings</option>
-                    <option value="sqft_desc">Largest First</option>
-                    <option value="sqft_asc">Smallest First</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Collapsible Filters -->
-        <div class="search-filters" id="search-filters" style="display: none;">
-            <div class="filter-grid">
-                <!-- Price Range -->
-                <div class="filter-group">
-                    <label>Price Range</label>
-                    <div class="range-inputs">
-                        <input type="number" id="min-price" placeholder="Min" class="filter-input">
-                        <span>-</span>
-                        <input type="number" id="max-price" placeholder="Max" class="filter-input">
+        <div class="features-preview-grid">
+            <!-- CRM Preview -->
+            <div class="feature-preview-card">
+                <div class="feature-preview-header">
+                    <div class="feature-preview-icon crm-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                        </svg>
+                    </div>
+                    <h3>Client Management</h3>
+                    <span class="feature-preview-trend up">+12%</span>
+                </div>
+                <div class="feature-preview-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">47</span>
+                        <span class="stat-label">Active Leads</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">23</span>
+                        <span class="stat-label">Qualified Buyers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Hot Prospects</span>
                     </div>
                 </div>
-                
-                <!-- Bedrooms -->
-                <div class="filter-group">
-                    <label>Bedrooms</label>
-                    <select id="bedrooms" class="filter-select">
-                        <option value="">Any</option>
-                        <option value="1">1+</option>
-                        <option value="2">2+</option>
-                        <option value="3">3+</option>
-                        <option value="4">4+</option>
-                        <option value="5">5+</option>
-                    </select>
+                <div class="feature-preview-footer">
+                    <a href="/crm" class="feature-preview-link">View CRM Dashboard</a>
                 </div>
-                
-                <!-- Bathrooms -->
-                <div class="filter-group">
-                    <label>Bathrooms</label>
-                    <select id="bathrooms" class="filter-select">
-                        <option value="">Any</option>
-                        <option value="1">1+</option>
-                        <option value="2">2+</option>
-                        <option value="3">3+</option>
-                        <option value="4">4+</option>
-                    </select>
+            </div>
+
+            <!-- Documents & E-sign Preview -->
+            <div class="feature-preview-card">
+                <div class="feature-preview-header">
+                    <div class="feature-preview-icon documents-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                            <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.697 19.697 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.712 5.712 0 0 1-.911-.95 11.651 11.651 0 0 0-1.997.406 11.307 11.307 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.266.266 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.71 12.71 0 0 1 1.01-.193 11.744 11.744 0 0 1-.51-.858 20.801 20.801 0 0 1-.5 1.05zm2.446.45c.15.163.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.876 3.876 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.706.061.19.152.394.13.572-.016.128-.032.25-.04.37z"/>
+                        </svg>
+                    </div>
+                    <h3>Documents & E-sign</h3>
+                    <span class="feature-preview-trend up">+5%</span>
                 </div>
-                
-                <!-- Property Type -->
-                <div class="filter-group">
-                    <label>Property Type</label>
-                    <select id="property-type" class="filter-select">
-                        <option value="">All Types</option>
-                        <option value="Single Family">Single Family</option>
-                        <option value="Condo">Condo</option>
-                        <option value="Townhouse">Townhouse</option>
-                        <option value="Multi Family">Multi Family</option>
-                        <option value="Land">Land</option>
-                        <option value="Mobile Home">Mobile Home</option>
-                    </select>
-                </div>
-                
-                <!-- Square Footage -->
-                <div class="filter-group">
-                    <label>Square Footage</label>
-                    <div class="range-inputs">
-                        <input type="number" id="min-sqft" placeholder="Min" class="filter-input">
-                        <span>-</span>
-                        <input type="number" id="max-sqft" placeholder="Max" class="filter-input">
+                <div class="feature-preview-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">14</span>
+                        <span class="stat-label">Signed Contracts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Pending Signatures</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">127</span>
+                        <span class="stat-label">Total Documents</span>
                     </div>
                 </div>
-                
-                <!-- Year Built -->
-                <div class="filter-group">
-                    <label>Year Built</label>
-                    <div class="range-inputs">
-                        <input type="number" id="min-year" placeholder="Min" class="filter-input" min="1900" max="2024">
-                        <span>-</span>
-                        <input type="number" id="max-year" placeholder="Max" class="filter-input" min="1900" max="2024">
+                <div class="feature-preview-footer">
+                    <a href="/documents" class="feature-preview-link">Manage Documents</a>
+                </div>
+            </div>
+
+            <!-- Calendar & Scheduling Preview -->
+            <div class="feature-preview-card">
+                <div class="feature-preview-header">
+                    <div class="feature-preview-icon calendar-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5 0zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                        </svg>
+                    </div>
+                    <h3>Calendar & Scheduling</h3>
+                    <span class="feature-preview-trend neutral">Today</span>
+                </div>
+                <div class="feature-preview-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">9</span>
+                        <span class="stat-label">Today's Showings</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">23</span>
+                        <span class="stat-label">This Week</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">156</span>
+                        <span class="stat-label">Total This Month</span>
                     </div>
                 </div>
+                <div class="feature-preview-footer">
+                    <a href="/calendar" class="feature-preview-link">View Schedule</a>
+                </div>
             </div>
-            
-            <!-- Filter Actions -->
-            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
-                <button type="button" class="btn-apply-filters" onclick="applyFilters()">Apply Filters</button>
-                <button type="button" class="btn-clear-filters" onclick="clearFilters()">Clear All</button>
+
+            <!-- Education Center Preview -->
+            <div class="feature-preview-card">
+                <div class="feature-preview-header">
+                    <div class="feature-preview-icon education-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913L8 8.46Z"/>
+                            <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46l-3.892-1.555Z"/>
+                        </svg>
+                    </div>
+                    <h3>Education Center</h3>
+                    <span class="feature-preview-trend up">+2 New</span>
+                </div>
+                <div class="feature-preview-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Courses Completed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">78%</span>
+                        <span class="stat-label">Progress Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.2h</span>
+                        <span class="stat-label">Learning Time</span>
+                    </div>
+                </div>
+                <div class="feature-preview-footer">
+                    <a href="/education" class="feature-preview-link">Continue Learning</a>
+                </div>
             </div>
-        </div>
-        
-        <!-- Quick Search Tags with Management -->
-        <div class="search-suggestions">
-            <span style="color: #64748b; font-size: 0.875rem; margin-right: 0.5rem;">Quick searches:</span>
-            <div id="quick-searches-container" style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap;">
-                <!-- Quick searches will be loaded here -->
+
+            <!-- Market Analytics Preview -->
+            <div class="feature-preview-card">
+                <div class="feature-preview-header">
+                    <div class="feature-preview-icon analytics-icon">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                        </svg>
+                    </div>
+                    <h3>Market Analytics</h3>
+                    <span class="feature-preview-trend up">+8.3%</span>
+                </div>
+                <div class="feature-preview-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">$425K</span>
+                        <span class="stat-label">Avg Home Price</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">18</span>
+                        <span class="stat-label">Days on Market</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">94.2%</span>
+                        <span class="stat-label">Price to List Ratio</span>
+                    </div>
+                </div>
+                <div class="feature-preview-footer">
+                    <a href="/analytics" class="feature-preview-link">View Market Data</a>
+                </div>
             </div>
-            <button class="manage-searches-btn" onclick="toggleManageSearches()">
-                <svg width="14" height="14" fill="currentColor">
-                    <path d="M11.5 2.5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h7zm-7-1A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V3a1.5 1.5 0 0 0-1.5-1.5h-7z"/>
-                    <path d="M6.5 4a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3z"/>
-                </svg>
-                Manage
-            </button>
-        </div>
-        
-        <!-- Manage Quick Searches Panel -->
-        <div id="manage-searches-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-            <h4 style="margin: 0 0 1rem 0; font-size: 1rem; color: #1e293b;">Manage Quick Searches</h4>
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                <input type="text" id="new-quick-search" placeholder="Add new quick search (e.g., 'Downtown Miami')" style="flex: 1; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px;">
-                <button onclick="addQuickSearch()" class="btn btn-sm btn-primary">Add</button>
-            </div>
-            <div id="manage-searches-list" style="display: grid; gap: 0.5rem;">
-                <!-- Editable quick searches will be shown here -->
-            </div>
-            <button onclick="toggleManageSearches()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;">Done</button>
-        </div>
-        
-        <p style="color: #64748b; font-size: 0.875rem; margin-top: 0.5rem;">
-            Search properties to help your clients find their perfect home or investment
-        </p>
-        
-        <!-- Results Container -->
-        <div id="search-results-container" style="display: none; margin-top: 2rem;">
-            <!-- Results will be dynamically inserted here -->
+
         </div>
     </div>
+
     
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <div class="quick-actions-header">
-            <h2>Quick Actions</h2>
-            <div class="action-controls">
-                <button class="control-btn" id="edit-btn">
-                    Edit Layout
-                </button>
-                <button class="control-btn" id="add-btn" onclick="showAddModal()">
-                    + Add Action
-                </button>
-            </div>
-        </div>
-        <div class="actions-grid" id="actions-grid">
-            <!-- Action cards will be rendered here by JavaScript -->
-        </div>
-    </div>
-    
-    <!-- Recent Activity -->
-    <div class="recent-activity">
-        <h2>Recent Activity</h2>
-        <ul class="activity-list">
-            <li class="activity-item">
-                <div class="activity-icon">P</div>
-                <div class="activity-content">
-                    <h4>Property Search</h4>
-                    <p>You searched for properties in Orlando, FL</p>
-                </div>
-                <div class="activity-time">2 hours ago</div>
-            </li>
-            <li class="activity-item">
-                <div class="activity-icon">C</div>
-                <div class="activity-content">
-                    <h4>Client Added</h4>
-                    <p>New client Sarah Johnson added to contacts</p>
-                </div>
-                <div class="activity-time">1 day ago</div>
-            </li>
-            <li class="activity-item">
-                <div class="activity-icon">S</div>
-                <div class="activity-content">
-                    <h4>Showing Scheduled</h4>
-                    <p>Property showing booked for tomorrow at 2:00 PM</p>
-                </div>
-                <div class="activity-time">2 days ago</div>
-            </li>
-        </ul>
-    </div>
     
     {% if session.user_plan == 'free' %}
     <div class="plan-upgrade">
@@ -1527,16 +1124,6 @@
         <a href="#" class="btn" style="background: white; color: #f59e0b; font-weight: 600;" onclick="showPricingModal(); return false;">View Plans & Pricing</a>
     </div>
     {% endif %}
-</div>
-
-<!-- Property Details Modal -->
-<div class="modal-overlay" id="property-details-modal">
-    <div class="modal" style="max-width: 800px;">
-        <button class="close-modal" onclick="hidePropertyDetails()" aria-label="Close">×</button>
-        <div id="property-details-content">
-            <!-- Property details will be dynamically inserted here -->
-        </div>
-    </div>
 </div>
 
 <!-- Pricing Modal -->
@@ -1735,656 +1322,6 @@
 </div>
 
 <script>
-    // Enhanced search functionality with pagination, filters, saved properties, and sync
-    let searchInProgress = false;
-    let currentPage = 1;
-    let totalPages = 1;
-    let currentResults = [];
-    let currentQuery = '';
-    let currentFilters = {};
-    let currentSort = 'price_asc';
-    let savedProperties = [];
-    const RESULTS_PER_PAGE = 10;
-    
-    // Initialize BroadcastChannel for cross-tab sync
-    const propertyChannel = new BroadcastChannel('property_sync');
-    
-    // Default quick searches
-    const defaultQuickSearches = [
-        'Orlando, FL',
-        'Miami, FL',
-        'Tampa, FL',
-        'Jacksonville, FL',
-        'Fort Lauderdale, FL'
-    ];
-    
-    // Load quick searches from localStorage or use defaults
-    let quickSearches = JSON.parse(localStorage.getItem('quickSearches')) || defaultQuickSearches;
-    
-    // Initialize quick searches and saved properties
-    document.addEventListener('DOMContentLoaded', function() {
-        renderQuickSearches();
-        loadSavedProperties();
-        loadDashboardSavedProperties();
-        
-        // Listen for property sync messages
-        propertyChannel.onmessage = (event) => {
-            if (event.data.type === 'property_saved' || event.data.type === 'property_unsaved') {
-                savedProperties = event.data.savedProperties;
-                updateSavedPropertiesCount();
-                loadDashboardSavedProperties();
-                // Re-render results only if they are showing
-                if (currentResults.length > 0) {
-                    displayResults();
-                }
-            }
-        };
-    });
-    
-    // Load saved properties for dashboard
-    async function loadDashboardSavedProperties() {
-        const loadingEl = document.getElementById('saved-properties-loading');
-        const listEl = document.getElementById('saved-properties-list');
-        const emptyEl = document.getElementById('saved-properties-empty');
-        
-        try {
-            const response = await fetch('/api/properties/saved/dashboard', {
-                method: 'GET',
-                credentials: 'include'
-            });
-            
-            if (!response.ok) {
-                throw new Error('Failed to load saved properties');
-            }
-            
-            const data = await response.json();
-            const properties = data.properties;
-            const totalCount = data.total_count;
-            
-            // Update total count
-            document.getElementById('saved-total-count').textContent = `(${totalCount})`;
-            document.getElementById('saved-properties-count').textContent = totalCount;
-            
-            // Hide loading
-            loadingEl.style.display = 'none';
-            
-            if (properties.length === 0) {
-                emptyEl.style.display = 'block';
-                listEl.style.display = 'none';
-            } else {
-                emptyEl.style.display = 'none';
-                listEl.style.display = 'block';
-                
-                // Render properties
-                listEl.innerHTML = properties.map(property => `
-                    <div class="saved-property-item" onclick="window.location.href='/property/${property.id}'">
-                        <div class="saved-property-image">
-                            <img src="${property.photo_url}" alt="${property.address}">
-                        </div>
-                        <div class="saved-property-info">
-                            <div class="saved-property-price">$${(property.price || 0).toLocaleString()}</div>
-                            <div class="saved-property-address">${property.address}, ${property.city}, ${property.state}</div>
-                            <div class="saved-property-details">
-                                <span>${property.beds || 0} beds</span>
-                                <span>${property.baths || 0} baths</span>
-                                <span>${(property.sqft || 0).toLocaleString()} sqft</span>
-                            </div>
-                        </div>
-                        <button class="saved-property-action" onclick="event.stopPropagation(); unsaveFromDashboard('${property.id}')" title="Remove from saved">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                            </svg>
-                        </button>
-                    </div>
-                `).join('');
-            }
-        } catch (error) {
-            console.error('Error loading saved properties:', error);
-            loadingEl.innerHTML = '<p class="error-message">Failed to load saved properties</p>';
-        }
-    }
-
-    // Unsave property from dashboard
-    async function unsaveFromDashboard(propertyId) {
-        try {
-            const response = await fetch(`/api/properties/${propertyId}/unsave`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                // Reload the saved properties list
-                loadDashboardSavedProperties();
-                
-                // Broadcast to other tabs
-                propertyChannel.postMessage({
-                    type: 'property_unsaved',
-                    propertyId: propertyId,
-                    savedProperties: savedProperties.filter(id => id !== propertyId)
-                });
-            } else {
-                alert('Failed to remove property from saved list');
-            }
-        } catch (error) {
-            console.error('Error unsaving property:', error);
-            alert('Failed to remove property from saved list');
-        }
-    }
-    
-    // Load saved properties from backend
-    async function loadSavedProperties() {
-        try {
-            const response = await fetch('/auth/api/user/saved-properties');
-            const data = await response.json();
-            
-            if (data.success) {
-                savedProperties = data.saved_properties || [];
-                updateSavedPropertiesCount();
-            }
-        } catch (error) {
-            console.error('Error loading saved properties:', error);
-        }
-    }
-    
-    // Update saved properties count
-    function updateSavedPropertiesCount() {
-        const countElement = document.getElementById('saved-properties-count');
-        if (countElement) {
-            countElement.textContent = savedProperties.length;
-        }
-    }
-    
-    // Toggle save property
-    async function toggleSaveProperty(propertyId) {
-        const isSaved = savedProperties.includes(propertyId);
-        
-        try {
-            const response = await fetch('/auth/api/user/saved-properties', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    property_id: propertyId,
-                    action: isSaved ? 'remove' : 'add'
-                })
-            });
-            
-            const data = await response.json();
-            if (data.success) {
-                savedProperties = data.saved_properties;
-                updateSavedPropertiesCount();
-                displayResults(); // Re-render to update buttons
-                
-                // Broadcast to other tabs
-                propertyChannel.postMessage({
-                    type: isSaved ? 'property_unsaved' : 'property_saved',
-                    propertyId: propertyId,
-                    savedProperties: savedProperties
-                });
-                
-                // Show feedback
-                showSaveNotification(isSaved ? 'Property removed from saved' : 'Property saved successfully');
-            }
-        } catch (error) {
-            console.error('Error saving property:', error);
-            showSaveNotification('Error saving property. Please try again.', true);
-        }
-    }
-    
-    // Show save notification
-    function showSaveNotification(message, isError = false) {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: ${isError ? '#ef4444' : '#10b981'};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 10000;
-            animation: slideIn 0.3s ease-out;
-        `;
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-out';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-    
-    // Render quick searches
-    function renderQuickSearches() {
-        const container = document.getElementById('quick-searches-container');
-        container.innerHTML = quickSearches.map(search => `
-            <span class="suggestion-tag" onclick="setSearchValue('${search}')">${search}</span>
-        `).join('');
-    }
-    
-    // Toggle filters visibility
-    function toggleFilters() {
-        const filters = document.getElementById('search-filters');
-        filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
-    }
-    
-    // Clear all filters
-    function clearFilters() {
-        document.getElementById('min-price').value = '';
-        document.getElementById('max-price').value = '';
-        document.getElementById('bedrooms').value = '';
-        document.getElementById('bathrooms').value = '';
-        document.getElementById('property-type').value = '';
-        document.getElementById('min-sqft').value = '';
-        document.getElementById('max-sqft').value = '';
-        document.getElementById('min-year').value = '';
-        document.getElementById('max-year').value = '';
-        updateActiveFiltersCount();
-    }
-    
-    // Get current filters
-    function getFilters() {
-        const filters = {
-            min_price: document.getElementById('min-price').value || null,
-            max_price: document.getElementById('max-price').value || null,
-            bedrooms: document.getElementById('bedrooms').value || null,
-            bathrooms: document.getElementById('bathrooms').value || null,
-            property_type: document.getElementById('property-type').value || null,
-            min_sqft: document.getElementById('min-sqft').value || null,
-            max_sqft: document.getElementById('max-sqft').value || null,
-            min_year: document.getElementById('min-year').value || null,
-            max_year: document.getElementById('max-year').value || null
-        };
-        
-        // Remove null values
-        Object.keys(filters).forEach(key => {
-            if (filters[key] === null) delete filters[key];
-        });
-        
-        return filters;
-    }
-    
-    // Update active filters count
-    function updateActiveFiltersCount() {
-        const filters = getFilters();
-        const count = Object.keys(filters).length;
-        const badge = document.getElementById('active-filters-count');
-        
-        if (count > 0) {
-            badge.textContent = count;
-            badge.style.display = 'inline-block';
-        } else {
-            badge.style.display = 'none';
-        }
-    }
-    
-    // Apply filters
-    function applyFilters() {
-        currentFilters = getFilters();
-        updateActiveFiltersCount();
-        currentPage = 1;
-        
-        if (currentQuery) {
-            performSearch();
-        }
-    }
-    
-    // Apply sort
-    function applySort() {
-        currentSort = document.getElementById('sort-by').value;
-        displayResults();
-    }
-    
-    // Sort results
-    function sortResults(results) {
-        const sorted = [...results];
-        
-        switch (currentSort) {
-            case 'price_asc':
-                sorted.sort((a, b) => a.price - b.price);
-                break;
-            case 'price_desc':
-                sorted.sort((a, b) => b.price - a.price);
-                break;
-            case 'newest':
-                sorted.sort((a, b) => b.year_built - a.year_built);
-                break;
-            case 'oldest':
-                sorted.sort((a, b) => a.year_built - b.year_built);
-                break;
-            case 'sqft_desc':
-                sorted.sort((a, b) => b.sqft - a.sqft);
-                break;
-            case 'sqft_asc':
-                sorted.sort((a, b) => a.sqft - b.sqft);
-                break;
-        }
-        
-        return sorted;
-    }
-    
-    // Filter results client-side
-    function filterResults(results) {
-        return results.filter(property => {
-            if (currentFilters.min_price && property.price < currentFilters.min_price) return false;
-            if (currentFilters.max_price && property.price > currentFilters.max_price) return false;
-            if (currentFilters.bedrooms && property.beds < currentFilters.bedrooms) return false;
-            if (currentFilters.bathrooms && property.baths < currentFilters.bathrooms) return false;
-            if (currentFilters.property_type && property.property_type !== currentFilters.property_type) return false;
-            if (currentFilters.min_sqft && property.sqft < currentFilters.min_sqft) return false;
-            if (currentFilters.max_sqft && property.sqft > currentFilters.max_sqft) return false;
-            if (currentFilters.min_year && property.year_built < currentFilters.min_year) return false;
-            if (currentFilters.max_year && property.year_built > currentFilters.max_year) return false;
-            return true;
-        });
-    }
-    
-    // Set search value
-    window.setSearchValue = function(value) {
-        document.getElementById('search-query').value = value;
-        document.getElementById('search-query').focus();
-    }
-    
-    // Perform search
-    async function performSearch() {
-        if (searchInProgress) return;
-        searchInProgress = true;
-        
-        const resultsContainer = document.getElementById('search-results-container');
-        resultsContainer.style.display = 'block';
-        resultsContainer.innerHTML = `
-            <div class="loading-spinner">
-                <div class="spinner"></div>
-                <p style="margin-top: 1rem; color: #64748b;">Searching for properties in ${currentQuery}...</p>
-            </div>
-        `;
-        
-        try {
-            const response = await fetch('/api/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    query: currentQuery,
-                    limit: 200 // Get more results for client-side filtering
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok && data.success) {
-                // Update searches remaining
-                const searchesCount = document.querySelector('#searches-count');
-                if (searchesCount && data.searches_remaining !== undefined) {
-                    searchesCount.textContent = data.searches_remaining;
-                }
-                
-                // Store all results
-                currentResults = data.results.properties || [];
-                
-                // Save to session for cross-page access
-                sessionStorage.setItem('propertySearchResults', JSON.stringify({
-                    properties: currentResults,
-                    query: currentQuery
-                }));
-                
-                // Show sort controls
-                document.getElementById('sort-controls').style.display = 'flex';
-                
-                // Display results with pagination
-                displayResults();
-            } else {
-                resultsContainer.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
-                        <strong>Search failed:</strong> ${data.error || 'Please try again'}
-                    </div>
-                `;
-            }
-        } catch (error) {
-            console.error('Search error:', error);
-            resultsContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
-                    <strong>Connection error.</strong> Please check your connection and try again.
-                </div>
-            `;
-        } finally {
-            searchInProgress = false;
-        }
-    }
-    
-    // Display results with pagination
-    function displayResults() {
-        const resultsContainer = document.getElementById('search-results-container');
-        if (!resultsContainer || currentResults.length === 0) return;
-        
-        // Apply filters and sort
-        let filteredResults = filterResults(currentResults);
-        let sortedResults = sortResults(filteredResults);
-        
-        // Calculate pagination
-        totalPages = Math.ceil(sortedResults.length / RESULTS_PER_PAGE);
-        currentPage = Math.min(currentPage, totalPages || 1);
-        
-        // Get current page results
-        const startIndex = (currentPage - 1) * RESULTS_PER_PAGE;
-        const endIndex = startIndex + RESULTS_PER_PAGE;
-        const pageResults = sortedResults.slice(startIndex, endIndex);
-        
-        if (sortedResults.length === 0) {
-            resultsContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 12px;">
-                    <h3 style="color: #64748b; margin-bottom: 1rem;">No properties found matching your criteria</h3>
-                    <p style="color: #9ca3af;">Try adjusting your filters or search in a different location</p>
-                    <button onclick="clearFilters(); displayResults();" class="btn btn-secondary" style="margin-top: 1rem;">Clear Filters</button>
-                </div>
-            `;
-            return;
-        }
-        
-        // Get market stats for filtered results
-        const marketStats = calculateMarketStats(sortedResults);
-        
-        resultsContainer.innerHTML = `
-            <div class="property-results">
-                <div class="results-header">
-                    <h3 style="margin: 0; color: #1e293b;">
-                        Found ${sortedResults.length} Properties in ${currentQuery}
-                        ${Object.keys(currentFilters).length > 0 ? `<span style="font-size: 0.875rem; color: #64748b;"> (filtered)</span>` : ''}
-                    </h3>
-                    <button onclick="location.reload()" class="btn btn-secondary">New Search</button>
-                </div>
-                
-                <!-- Market Stats -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    <div>
-                        <span style="color: #64748b; font-size: 0.75rem;">Median Price</span><br>
-                        <strong style="color: #1e293b; font-size: 1.25rem;">$${marketStats.medianPrice.toLocaleString()}</strong>
-                    </div>
-                    <div>
-                        <span style="color: #64748b; font-size: 0.75rem;">Price Range</span><br>
-                        <strong style="color: #1e293b;">$${marketStats.minPrice.toLocaleString()} - $${marketStats.maxPrice.toLocaleString()}</strong>
-                    </div>
-                    <div>
-                        <span style="color: #64748b; font-size: 0.75rem;">Avg $/sqft</span><br>
-                        <strong style="color: #1e293b;">$${marketStats.avgPricePerSqft}</strong>
-                    </div>
-                    <div>
-                        <span style="color: #64748b; font-size: 0.75rem;">Total Listings</span><br>
-                        <strong style="color: #1e293b;">${sortedResults.length}</strong>
-                    </div>
-                </div>
-                
-                <!-- Property Grid -->
-                <div class="property-grid">
-                    ${pageResults.map(property => `
-                        <div class="property-card" onclick="showPropertyDetails(${JSON.stringify(property).replace(/"/g, '&quot;')})">
-                            <button class="property-save-btn ${savedProperties.includes(property.id) ? 'saved' : ''}" 
-                                    onclick="event.stopPropagation(); toggleSaveProperty('${property.id}')">
-                                <svg viewBox="0 0 16 16">
-                                    ${savedProperties.includes(property.id) 
-                                        ? '<path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>'
-                                        : '<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>'
-                                    }
-                                </svg>
-                            </button>
-                            <img src="${property.photo_url}" alt="${property.address}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">
-                            <div style="flex: 1;">
-                                <h4 style="margin: 0 0 0.5rem 0; color: #2563eb; font-weight: 600; font-size: 1rem;">${property.address}</h4>
-                                <p style="margin: 0.25rem 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;">${property.price.toLocaleString()}</p>
-                                <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #64748b;">
-                                    ${property.beds} beds • ${property.baths} baths • ${property.sqft.toLocaleString()} sqft
-                                </p>
-                                <p style="margin: 0.25rem 0; font-size: 0.75rem; color: #9ca3af;">
-                                    ${property.property_type} • Built ${property.year_built}
-                                </p>
-                            </div>
-                            <div style="display: flex; align-items: center;">
-                                <svg width="20" height="20" fill="#64748b" viewBox="0 0 16 16">
-                                    <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <!-- Pagination -->
-                ${totalPages > 1 ? `
-                    <div class="pagination">
-                        <button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''}>First</button>
-                        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
-                        
-                        ${generatePageButtons()}
-                        
-                        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
-                        <button onclick="changePage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>Last</button>
-                        
-                        <span class="page-info">Page ${currentPage} of ${totalPages}</span>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }
-    
-    // Generate page buttons
-    function generatePageButtons() {
-        let buttons = '';
-        const maxButtons = 5;
-        let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-        let end = Math.min(totalPages, start + maxButtons - 1);
-        
-        if (end - start + 1 < maxButtons) {
-            start = Math.max(1, end - maxButtons + 1);
-        }
-        
-        for (let i = start; i <= end; i++) {
-            buttons += `<button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
-        }
-        
-        return buttons;
-    }
-    
-    // Change page
-    function changePage(page) {
-        currentPage = page;
-        displayResults();
-        
-        // Scroll to top of results
-        document.getElementById('search-results-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    
-    // Calculate market stats
-    function calculateMarketStats(properties) {
-        if (properties.length === 0) {
-            return {
-                medianPrice: 0,
-                minPrice: 0,
-                maxPrice: 0,
-                avgPricePerSqft: 0
-            };
-        }
-        
-        const prices = properties.map(p => p.price).sort((a, b) => a - b);
-        const medianIndex = Math.floor(prices.length / 2);
-        const medianPrice = prices.length % 2 === 0 
-            ? (prices[medianIndex - 1] + prices[medianIndex]) / 2 
-            : prices[medianIndex];
-        
-        const pricesPerSqft = properties
-            .filter(p => p.sqft > 0)
-            .map(p => p.price / p.sqft);
-        
-        const avgPricePerSqft = pricesPerSqft.length > 0
-            ? Math.round(pricesPerSqft.reduce((a, b) => a + b, 0) / pricesPerSqft.length)
-            : 0;
-        
-        return {
-            medianPrice: Math.round(medianPrice),
-            minPrice: Math.min(...prices),
-            maxPrice: Math.max(...prices),
-            avgPricePerSqft
-        };
-    }
-    
-    // Quick search management
-    function toggleManageSearches() {
-        const panel = document.getElementById('manage-searches-panel');
-        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        
-        if (panel.style.display === 'block') {
-            renderManageSearchesList();
-        }
-    }
-    
-    function renderManageSearchesList() {
-        const list = document.getElementById('manage-searches-list');
-        list.innerHTML = quickSearches.map((search, index) => `
-            <div class="quick-search-item">
-                <span>${search}</span>
-                <button onclick="removeQuickSearch(${index})">Remove</button>
-            </div>
-        `).join('');
-    }
-    
-    function addQuickSearch() {
-        const input = document.getElementById('new-quick-search');
-        const value = input.value.trim();
-        
-        if (value && !quickSearches.includes(value)) {
-            quickSearches.push(value);
-            localStorage.setItem('quickSearches', JSON.stringify(quickSearches));
-            renderQuickSearches();
-            renderManageSearchesList();
-            input.value = '';
-        }
-    }
-    
-    function removeQuickSearch(index) {
-        quickSearches.splice(index, 1);
-        localStorage.setItem('quickSearches', JSON.stringify(quickSearches));
-        renderQuickSearches();
-        renderManageSearchesList();
-    }
-    
-    // Handle enter key in add quick search input
-    document.getElementById('new-quick-search')?.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            addQuickSearch();
-        }
-    });
-    
-    // Main search form handler
-    document.getElementById('property-search').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        currentQuery = document.getElementById('search-query').value.trim();
-        if (!currentQuery) return;
-        
-        currentPage = 1;
-        await performSearch();
-    });
-    
     // Quick Actions Management
     let editMode = false;
     let selectedTool = null;
@@ -2919,98 +1856,6 @@
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }, 2000);
-    });
-    
-    // Show property details modal
-    function showPropertyDetails(property) {
-        const modal = document.getElementById('property-details-modal');
-        const content = document.getElementById('property-details-content');
-        
-        content.innerHTML = `
-            <div style="display: grid; gap: 1.5rem;">
-                <img src="${property.photo_url}" alt="${property.address}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px;">
-                
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <h2 style="margin: 0 0 0.5rem 0; color: #1e293b; font-size: 1.75rem;">${property.address}</h2>
-                        <p style="font-size: 2rem; font-weight: 700; color: #2563eb; margin: 0;">${property.price.toLocaleString()}</p>
-                    </div>
-                    <button class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem;" onclick="toggleSaveProperty('${property.id}'); setTimeout(() => { showPropertyDetails(${JSON.stringify(property).replace(/"/g, '&quot;')}); }, 100);">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            ${savedProperties.includes(property.id) 
-                                ? '<path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>'
-                                : '<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>'
-                            }
-                        </svg>
-                        ${savedProperties.includes(property.id) ? 'Saved' : 'Save Property'}
-                    </button>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px;">
-                    <div>
-                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Bedrooms</p>
-                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.beds}</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Bathrooms</p>
-                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.baths}</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Square Feet</p>
-                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.sqft.toLocaleString()}</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; color: #64748b; font-size: 0.875rem;">Year Built</p>
-                        <p style="margin: 0.25rem 0 0 0; font-weight: 600; color: #1e293b; font-size: 1.25rem;">${property.year_built}</p>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 style="margin: 0 0 1rem 0; color: #1e293b;">Property Details</h3>
-                    <div style="display: grid; gap: 0.75rem;">
-                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span style="color: #64748b;">Property Type</span>
-                            <span style="font-weight: 600; color: #1e293b;">${property.property_type}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span style="color: #64748b;">Listing Status</span>
-                            <span style="font-weight: 600; color: #1e293b;">${property.status || 'Active'}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span style="color: #64748b;">Price per Sq Ft</span>
-                            <span style="font-weight: 600; color: #1e293b;">${Math.round(property.price / property.sqft)}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span style="color: #64748b;">Monthly Payment (Est.)</span>
-                            <span style="font-weight: 600; color: #1e293b;">${Math.round(property.price * 0.006).toLocaleString()}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 1rem;">
-                    <button class="btn btn-primary" style="flex: 1;" onclick="alert('Schedule showing feature coming soon!')">
-                        Schedule Showing
-                    </button>
-                    <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Contact agent feature coming soon!')">
-                        Contact Agent
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        modal.classList.add('active');
-    }
-    
-    // Hide property details modal
-    function hidePropertyDetails() {
-        document.getElementById('property-details-modal').classList.remove('active');
-    }
-    
-    // Close modal on overlay click
-    document.getElementById('property-details-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'property-details-modal') {
-            hidePropertyDetails();
-        }
     });
     
     // Add animations
