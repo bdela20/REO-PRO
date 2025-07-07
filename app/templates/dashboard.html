@@ -945,9 +945,9 @@
             <div class="stat-change">Active</div>
         </div>
         <div class="stat-card">
-            <h3>Clients Remaining</h3>
-            <div class="stat-value" id="searches-count">{{ user.searches_remaining if user else 5 }}</div>
-            <div class="stat-change">This month</div>
+            <h3>CRM Client Searches</h3>
+            <div class="stat-value" id="client-searches">UNLIMITED</div>
+            <div class="stat-change">Full Access</div>
         </div>
     </div>
     
@@ -969,20 +969,20 @@
                         </svg>
                     </div>
                     <h3>Client Management</h3>
-                    <span class="feature-preview-trend up">+12%</span>
+                    <span class="feature-preview-trend neutral">Today</span></span>
                 </div>
                 <div class="feature-preview-stats">
                     <div class="stat-item">
-                        <span class="stat-number">47</span>
-                        <span class="stat-label">Active Leads</span>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Total Leads</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">23</span>
-                        <span class="stat-label">Qualified Buyers</span>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Active Clients</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">8</span>
-                        <span class="stat-label">Hot Prospects</span>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Need Follow-up</span>
                     </div>
                 </div>
                 <div class="feature-preview-footer">
@@ -1120,7 +1120,7 @@
     {% if session.user_plan == 'free' %}
     <div class="plan-upgrade">
         <h3>Upgrade to Pro Plan</h3>
-        <p>Get unlimited searches, advanced CRM features, and marketing tools</p>
+        <p>Get advanced CRM features, unlimited contacts, and marketing tools</p>
         <a href="#" class="btn" style="background: white; color: #f59e0b; font-weight: 600;" onclick="showPricingModal(); return false;">View Plans & Pricing</a>
     </div>
     {% endif %}
@@ -1146,9 +1146,9 @@
                     <p class="plan-description">Perfect for new agents getting started</p>
                 </div>
                 <ul class="plan-features">
-                    <li><span class="check">✓</span> 50 property searches per month</li>
-                    <li><span class="check">✓</span> Basic client management (up to 25 contacts)</li>
-                    <li><span class="check">✓</span> Property comparison tool</li>
+                    <li><span class="check">✓</span> Up to 50 CRM contacts</li>
+                    <li><span class="check">✓</span> Basic client management</li>
+                    <li><span class="check">✓</span> Calendar & scheduling</li>
                     <li><span class="check">✓</span> Email notifications</li>
                     <li><span class="check">✓</span> Mobile app access</li>
                     <li><span class="check">✓</span> Basic market analytics</li>
@@ -1172,13 +1172,15 @@
                     <p class="plan-description">Best for active agents and small teams</p>
                 </div>
                 <ul class="plan-features">
-                    <li><span class="check">✓</span> <strong>Unlimited</strong> property searches</li>
-                    <li><span class="check">✓</span> Complete CRM (up to 500 contacts)</li>
+                    <li><span class="check">✓</span> <strong>Unlimited</strong> CRM contacts</li>
+                    <li><span class="check">✓</span> Advanced client management</li>
                     <li><span class="check">✓</span> Marketing flyer generator</li>
                     <li><span class="check">✓</span> E-signature integration</li>
                     <li><span class="check">✓</span> Advanced market analytics</li>
                     <li><span class="check">✓</span> Priority customer support</li>
-                    <li><span class="check">✓</span> Property comparison reports</li>
+                    <li><span class="check">✓</span> Email campaign tools</li>
+                    <li><span class="check">✓</span> Document management</li>
+                    <li><span class="check">✓</span> Transaction tracking</li>
                 </ul>
                 <button class="plan-button featured-btn" onclick="selectPlan('professional')">Start Free Trial</button>
             </div>
@@ -1196,7 +1198,6 @@
                 </div>
                 <ul class="plan-features">
                     <li><span class="check">✓</span> Everything in Professional</li>
-                    <li><span class="check">✓</span> Unlimited contacts</li>
                     <li><span class="check">✓</span> Team collaboration tools</li>
                     <li><span class="check">✓</span> Advanced lead management</li>
                     <li><span class="check">✓</span> Custom branding options</li>
@@ -1204,6 +1205,7 @@
                     <li><span class="check">✓</span> Dedicated account manager</li>
                     <li><span class="check">✓</span> White-label options</li>
                     <li><span class="check">✓</span> Advanced reporting & analytics</li>
+                    <li><span class="check">✓</span> Phone support</li>
                 </ul>
                 <button class="plan-button" onclick="selectPlan('enterprise')">Start Free Trial</button>
             </div>
@@ -1277,25 +1279,20 @@
                 <label for="tool-select">Select a Tool</label>
                 <select id="tool-select" required>
                     <option value="">Choose a tool to add...</option>
-                    <option value="properties">Property Management</option>
                     <option value="clients">Customer Relationship Management</option>
                     <option value="calendar">Calendar & Scheduling</option>
                     <option value="messages">Messages</option>
                     <option value="marketing">Marketing Tools</option>
                     <option value="documents">Documents & E-sign</option>
                     <option value="analytics">Market Analytics</option>
-                    <option value="property-comparison">Property Comparisons</option>
                     <optgroup label="Additional Tools">
-                        <option value="property-search">Advanced Property Search</option>
-                        <option value="saved-properties">Saved Properties</option>
-                        <option value="property-valuation">Property Valuation</option>
-                        <option value="lead-capture">Lead Capture Forms</option>
                         <option value="client-portal">Client Portal</option>
                         <option value="email-templates">Email Templates</option>
                         <option value="virtual-tours">Virtual Tour Creator</option>
                         <option value="commission-calculator">Commission Calculator</option>
                         <option value="transaction-manager">Transaction Manager</option>
                         <option value="open-house">Open House Manager</option>
+                        <option value="lead-capture">Lead Capture Forms</option>
                     </optgroup>
                 </select>
             </div>
@@ -1327,15 +1324,9 @@
     let selectedTool = null;
     let draggedElement = null;
     
-    // Available tools database
+    // Available tools database (PROPERTY SEARCH TOOLS REMOVED)
     const availableTools = {
         // Main Navigation Tools
-        'properties': {
-            title: 'Property Management',
-            description: 'Search, save, and manage property listings',
-            url: '/properties',
-            icon: 'P'
-        },
         'clients': {
             title: 'Client Management',
             description: 'Manage contacts and track interactions',
@@ -1344,7 +1335,7 @@
         },
         'calendar': {
             title: 'Calendar & Scheduling',
-            description: 'Book property appointments and showings',
+            description: 'Book appointments and showings',
             url: '/calendar',
             icon: 'CS'
         },
@@ -1360,31 +1351,19 @@
             url: '/analytics',
             icon: 'MA'
         },
-        'property-comparison': {
-            title: 'Property Comparisons',
-            description: 'Compare multiple properties side by side',
-            url: '/property-comparison',
-            icon: 'PC'
+        'messages': {
+            title: 'Messages',
+            description: 'Communicate with clients and leads',
+            url: '/messages',
+            icon: '💬'
+        },
+        'marketing': {
+            title: 'Marketing Tools',
+            description: 'Create flyers and social media content',
+            url: '/marketing',
+            icon: '🎯'
         },
         // Additional Tools
-        'property-search': {
-            title: 'Advanced Property Search',
-            description: 'Deep search with advanced filters and criteria',
-            url: '/advanced-search',
-            icon: 'APS'
-        },
-        'saved-properties': {
-            title: 'Saved Properties',
-            description: 'View and manage your saved property listings',
-            url: '/properties?tab=saved',
-            icon: 'SP'
-        },
-        'property-valuation': {
-            title: 'Property Valuation',
-            description: 'Get instant property value estimates',
-            url: '/valuation',
-            icon: 'PV'
-        },
         'lead-capture': {
             title: 'Lead Capture Forms',
             description: 'Create and manage lead generation forms',
@@ -1393,7 +1372,7 @@
         },
         'client-portal': {
             title: 'Client Portal',
-            description: 'Give clients access to their property searches',
+            description: 'Give clients access to their information',
             url: '/client-portal',
             icon: '👥'
         },
@@ -1405,7 +1384,7 @@
         },
         'virtual-tours': {
             title: 'Virtual Tour Creator',
-            description: 'Create immersive property virtual tours',
+            description: 'Create immersive virtual tours',
             url: '/virtual-tours',
             icon: '🎥'
         },
@@ -1429,15 +1408,8 @@
         }
     };
     
-    // Default quick actions
+    // Default quick actions (PROPERTY TOOLS REMOVED)
     const defaultActions = [
-        {
-            id: 'properties',
-            title: 'Property Management',
-            description: 'Search, save, and manage property listings',
-            url: '/properties',
-            icon: 'P'
-        },
         {
             id: 'clients',
             title: 'Client Management',
@@ -1448,7 +1420,7 @@
         {
             id: 'calendar',
             title: 'Calendar & Scheduling',
-            description: 'Book property appointments and showings',
+            description: 'Book appointments and showings',
             url: '/calendar',
             icon: 'S'
         },
@@ -1472,6 +1444,13 @@
             description: 'View market trends and pricing data',
             url: '/analytics',
             icon: 'A'
+        },
+        {
+            id: 'documents',
+            title: 'Documents & E-sign',
+            description: 'Manage contracts and digital signatures',
+            url: '/documents',
+            icon: 'D'
         }
     ];
     
@@ -1710,9 +1689,100 @@
         }
     });
     
+    // CRM Stats Loading Function
+    async function loadCRMStats() {
+        try {
+            const response = await fetch('/api/clients/stats', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Find the CRM preview card
+                const crmCard = document.querySelector('.feature-preview-card:has(.crm-icon)');
+                
+                if (crmCard) {
+                    // Update Total Leads
+                    const totalLeadsElement = crmCard.querySelector('.stat-item:nth-child(1) .stat-number');
+                    if (totalLeadsElement) {
+                        animateNumber(totalLeadsElement, parseInt(totalLeadsElement.textContent) || 0, data.stats.active_leads);
+                    }
+                    
+                    // Update Active Clients
+                    const activeClientsElement = crmCard.querySelector('.stat-item:nth-child(2) .stat-number');
+                    if (activeClientsElement) {
+                        animateNumber(activeClientsElement, parseInt(activeClientsElement.textContent) || 0, data.stats.qualified_buyers);
+                    }
+                    
+                    // Update Need Follow-up
+                    const followUpElement = crmCard.querySelector('.stat-item:nth-child(3) .stat-number');
+                    if (followUpElement) {
+                        animateNumber(followUpElement, parseInt(followUpElement.textContent) || 0, data.stats.hot_prospects);
+                    }
+                    
+                    // Update trend to show time period or status
+                    const trendElement = crmCard.querySelector('.feature-preview-trend');
+                    if (trendElement) {
+                        // Show different status based on activity
+                        if (data.stats.new_clients_30d > 0) {
+                            trendElement.className = 'feature-preview-trend up';
+                            trendElement.textContent = `${data.stats.new_clients_30d} new this month`;
+                        } else if (data.stats.hot_prospects > 0) {
+                            trendElement.className = 'feature-preview-trend down';
+                            trendElement.textContent = `${data.stats.hot_prospects} need attention`;
+                        } else {
+                            trendElement.className = 'feature-preview-trend neutral';
+                            trendElement.textContent = 'All up to date';
+                        }
+                    }
+                    
+                    // Update title if no clients
+                    if (data.stats.total_clients === 0) {
+                        const titleElement = crmCard.querySelector('h3');
+                        titleElement.innerHTML = 'Client Management <small style="font-size: 0.75rem; color: #64748b;">(Get Started)</small>';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading CRM stats:', error);
+        }
+    }
+    
+    // Animate number changes
+    function animateNumber(element, start, end) {
+        const duration = 500; // ms
+        const startTime = performance.now();
+        
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const current = Math.floor(start + (end - start) * progress);
+            element.textContent = current;
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    }
+    
     // Initialize - Load quick actions when page loads
     document.addEventListener('DOMContentLoaded', () => {
         loadQuickActions();
+        
+        // Load CRM stats
+        loadCRMStats();
+        
+        // Refresh CRM stats every 60 seconds
+        setInterval(loadCRMStats, 60000);
         
         // Add event listener for edit button
         document.getElementById('edit-btn').addEventListener('click', toggleEditMode);

@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)
     
     # Configuration
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', 'sqlite:///propinsight.db')
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', 'sqlite:///reo_pro.db')
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     
@@ -27,7 +27,7 @@ def create_app():
         print("🚀 Running in PRODUCTION mode with HTTPS enabled")
     
     # Session Configuration - IMPORTANT FOR OAUTH
-    app.config['SESSION_COOKIE_NAME'] = 'propinsight_session'
+    app.config['SESSION_COOKIE_NAME'] = 'reo_pro_session'
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SECURE'] = bool(os.environ.get('PRODUCTION', False))  # True in production
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'

@@ -30,7 +30,7 @@ def pricing():
     """Pricing page"""
     return render_template('pricing.html')
 
-# NEW PAGES - Legal and Support
+# Legal and Support pages
 @web_bp.route('/privacy')
 def privacy():
     """Privacy Policy page"""
@@ -131,18 +131,12 @@ def force_login():
             return f"Forced login for {user.email}. <a href='/crm'>Try CRM now</a>"
     return "No user found in session"
 
+# Tool pages
 @web_bp.route('/education')
 @login_required
 def education():
     """Education Center with video courses"""
     return render_template('tools/education.html')
-
-@web_bp.route('/properties')
-@login_required
-def properties():
-    """Property Management"""
-    user = User.query.get(session['user_id'])
-    return render_template('tools/property.html', user=user)
 
 @web_bp.route('/crm')
 @login_required
@@ -179,80 +173,3 @@ def documents():
 def analytics():
     """Market Analytics"""
     return render_template('tools/analytics.html')
-
-@web_bp.route('/comparisons')
-@login_required
-def comparisons():
-    """Property Comparisons"""
-    return render_template('tools/comparisons.html')
-
-# FIXED SEARCH ENDPOINT - Using PropertyService instead of RapidAPI
-@web_bp.route('/api/search', methods=['POST'])
-@login_required
-def search_properties():
-    """Search for properties using PropertyService"""
-    try:
-        # Import PropertyService
-        from app.services import PropertyService
-        
-        data = request.get_json()
-        query = data.get('query', '').strip()
-        filters = data.get('filters', {})
-        
-        if not query:
-            return jsonify({'error': 'Search query is required'}), 400
-        
-        user = User.query.get(session['user_id'])
-        if user.searches_remaining <= 0:
-            return jsonify({'error': 'No searches remaining. Please upgrade your plan.'}), 403
-        
-        print(f"DEBUG: Searching for {query} using PropertyService")
-        
-        # Use PropertyService to search
-        property_service = PropertyService()
-        results = property_service.search_properties_comprehensive(
-            search_query=query,
-            limit=50,
-            filters=filters
-        )
-        
-        # Update search count
-        user.searches_remaining -= 1
-        db.session.commit()
-        
-        # Add searches_remaining to the response
-        if results.get('success'):
-            results['searches_remaining'] = user.searches_remaining
-        
-        print(f"DEBUG: Found {len(results.get('results', {}).get('properties', []))} properties")
-        
-        return jsonify(results)
-        
-    except ImportError as e:
-        print(f"DEBUG: PropertyService import error: {e}")
-        return jsonify({
-            'error': 'Property search service not available',
-            'success': False
-        }), 503
-        
-    except Exception as e:
-        print(f"DEBUG: Unexpected error: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({
-            'error': f'Server error: {str(e)}',
-            'success': False
-        }), 500
-    
-@web_bp.route('/search')
-@login_required
-def search_page():
-    """Render the search results page"""
-    query = request.args.get('q', '')
-    return render_template('search_results.html', query=query)
-    
-@web_bp.route('/property/<property_id>')
-@login_required
-def property_details(property_id):
-    """Display detailed property information"""
-    return render_template('property_details.html', property_id=property_id)

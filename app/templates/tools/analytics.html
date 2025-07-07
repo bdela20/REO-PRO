@@ -9,199 +9,236 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-    /* Main Layout */
-    #market-analysis-page {
-        min-height: calc(100vh - 56px);
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 30px;
+    /* Main Container */
+    .market-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
     }
     
     /* Header Section */
-    .analysis-header {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 30px;
-        margin-bottom: 30px;
+    .market-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .market-header h1 {
+        color: #1e293b;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(248, 113, 113, 0.05) 100%);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #ef4444;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+        position: relative;
+        display: inline-block;
     }
     
     .header-content {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 1.5rem;
     }
     
-    .header-title h1 {
-        color: white;
-        margin: 0;
-        font-size: 2rem;
-    }
-    
-    .header-title p {
-        color: rgba(255, 255, 255, 0.8);
-        margin: 5px 0 0 0;
+    .header-description {
+        color: #64748b;
+        font-size: 1rem;
+        margin-top: 0.5rem;
     }
     
     /* Search Section */
     .search-section {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 25px;
-        margin-bottom: 30px;
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     
     .search-form {
         display: flex;
-        gap: 15px;
+        gap: 1rem;
         flex-wrap: wrap;
     }
     
     .search-input {
         flex: 1;
         min-width: 250px;
-        padding: 12px 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 25px;
-        color: white;
-        font-size: 14px;
+        padding: 0.75rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        background: white;
     }
     
-    .search-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+    .search-input:focus {
+        outline: none;
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
     
     .search-btn {
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
         color: white;
         border: none;
-        padding: 12px 30px;
-        border-radius: 25px;
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .search-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
     
     /* Stats Cards */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
     }
     
     .stat-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 25px;
+        background: white;
+        border-radius: 16px;
+        padding: 1.75rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
     }
     
     .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
     
     .stat-icon {
         width: 50px;
         height: 50px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(248, 113, 113, 0.05) 100%);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 15px;
+        margin-bottom: 1rem;
         font-size: 1.5rem;
+        color: #ef4444;
     }
     
     .stat-value {
-        font-size: 2rem;
+        font-size: 2.25rem;
         font-weight: 700;
-        color: white;
-        margin-bottom: 5px;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
     }
     
     .stat-label {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 0.9rem;
+        color: #64748b;
+        font-size: 0.95rem;
+        font-weight: 500;
     }
     
     .stat-change {
-        margin-top: 10px;
-        font-size: 0.85rem;
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 0.375rem;
     }
     
     .stat-change.positive {
-        color: #4CAF50;
+        color: #22c55e;
     }
     
     .stat-change.negative {
-        color: #f44336;
+        color: #ef4444;
     }
     
     /* Charts Section */
     .charts-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-        gap: 30px;
-        margin-bottom: 30px;
+        gap: 2rem;
+        margin-bottom: 2rem;
     }
     
     .chart-container {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 25px;
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     
     .chart-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 1.5rem;
     }
     
     .chart-title {
-        color: white;
-        font-size: 1.2rem;
+        color: #1e293b;
+        font-size: 1.25rem;
         font-weight: 600;
     }
     
     .chart-controls {
         display: flex;
-        gap: 10px;
+        gap: 0.5rem;
     }
     
     .time-filter {
-        padding: 5px 15px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        color: white;
-        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
     }
     
+    .time-filter:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.05);
+    }
+    
     .time-filter.active {
-        background: rgba(255, 255, 255, 0.3);
+        background: #ef4444;
+        color: white;
+        border-color: #ef4444;
     }
     
     .chart-wrapper {
@@ -211,39 +248,61 @@
     
     /* Market Insights */
     .insights-section {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 30px;
-        margin-bottom: 30px;
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     
     .insights-header {
-        color: white;
+        color: #1e293b;
         font-size: 1.5rem;
-        margin-bottom: 20px;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .new-insights-badge {
+        background: #86efac;
+        color: #166534;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
     }
     
     .insight-item {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 15px;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
         display: flex;
-        align-items: start;
-        gap: 15px;
+        align-items: flex-start;
+        gap: 1rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+    }
+    
+    .insight-item:hover {
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-color: #ef4444;
     }
     
     .insight-icon {
-        width: 40px;
-        height: 40px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(248, 113, 113, 0.05) 100%);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        font-size: 1.25rem;
     }
     
     .insight-content {
@@ -251,95 +310,181 @@
     }
     
     .insight-title {
-        color: white;
+        color: #1e293b;
         font-weight: 600;
-        margin-bottom: 5px;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
     }
     
     .insight-description {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.9rem;
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
     
     /* Comparison Table */
-    .comparison-table {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 25px;
+    .comparison-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         overflow-x: auto;
+    }
+    
+    .comparison-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
     }
     
     .table {
         width: 100%;
-        color: white;
+        border-collapse: collapse;
     }
     
     .table th {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 15px;
+        background: #f8fafc;
+        padding: 1rem;
         text-align: left;
         font-weight: 600;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        color: #475569;
+        border-bottom: 2px solid #e2e8f0;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
     
     .table td {
-        padding: 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        color: #1e293b;
     }
     
     .table tr:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: #f8fafc;
+    }
+    
+    .table .positive {
+        color: #22c55e;
+        font-weight: 600;
+    }
+    
+    .table .negative {
+        color: #ef4444;
+        font-weight: 600;
+    }
+    
+    .inventory-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .inventory-badge.low {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+    
+    .inventory-badge.medium {
+        background: #fef3c7;
+        color: #d97706;
+    }
+    
+    .inventory-badge.high {
+        background: #dcfce7;
+        color: #16a34a;
     }
     
     /* Export Button */
     .export-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
+        background: white;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
-        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .export-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
+        border-color: #ef4444;
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.05);
     }
     
-    /* Loading Spinner */
-    .loading-spinner {
+    /* Loading State */
+    .loading-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.9);
         display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    
+    .loading-content {
         text-align: center;
-        padding: 40px;
-        color: white;
     }
     
     .spinner {
-        border: 3px solid rgba(255, 255, 255, 0.3);
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e2e8f0;
+        border-top: 4px solid #ef4444;
         border-radius: 50%;
-        border-top: 3px solid white;
-        width: 40px;
-        height: 40px;
         animation: spin 1s linear infinite;
-        margin: 0 auto 20px;
+        margin: 0 auto 1rem;
     }
     
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .market-container {
+            padding: 0 0.5rem;
+        }
+        
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .header-content {
+            flex-direction: column;
+        }
+        
+        .search-form {
+            flex-direction: column;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .table {
+            font-size: 0.875rem;
+        }
+    }
 </style>
 
-<div id="market-analysis-page">
+<div class="market-container">
     <!-- Header -->
-    <div class="analysis-header">
+    <div class="market-header">
         <div class="header-content">
-            <div class="header-title">
+            <div>
                 <h1>Market Analysis</h1>
-                <p>Real-time market insights and property value trends</p>
+                <p class="header-description">Real-time market insights and property value trends for informed decision making</p>
             </div>
             <button class="export-btn" onclick="exportReport()">
                 <i class="fas fa-download"></i> Export Report
@@ -366,16 +511,10 @@
         </form>
     </div>
     
-    <!-- Loading Spinner -->
-    <div class="loading-spinner" id="loadingSpinner">
-        <div class="spinner"></div>
-        <p>Analyzing market data...</p>
-    </div>
-    
     <!-- Stats Cards -->
     <div class="stats-grid" id="statsGrid">
         <div class="stat-card">
-            <div class="stat-icon" style="color: #4CAF50;">
+            <div class="stat-icon">
                 <i class="fas fa-home"></i>
             </div>
             <div class="stat-value">$425,000</div>
@@ -387,7 +526,7 @@
         </div>
         
         <div class="stat-card">
-            <div class="stat-icon" style="color: #2196F3;">
+            <div class="stat-icon">
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="stat-value">$285/ft²</div>
@@ -399,7 +538,7 @@
         </div>
         
         <div class="stat-card">
-            <div class="stat-icon" style="color: #FF9800;">
+            <div class="stat-icon">
                 <i class="fas fa-clock"></i>
             </div>
             <div class="stat-value">38 days</div>
@@ -411,7 +550,7 @@
         </div>
         
         <div class="stat-card">
-            <div class="stat-icon" style="color: #9C27B0;">
+            <div class="stat-icon">
                 <i class="fas fa-percentage"></i>
             </div>
             <div class="stat-value">3.2%</div>
@@ -458,23 +597,26 @@
     
     <!-- Market Insights -->
     <div class="insights-section">
-        <h2 class="insights-header">Market Insights for Orlando, FL</h2>
+        <h2 class="insights-header">
+            Market Insights for Orlando, FL
+            <span class="new-insights-badge">New</span>
+        </h2>
         
         <div class="insight-item">
-            <div class="insight-icon" style="color: #4CAF50;">
+            <div class="insight-icon" style="color: #22c55e;">
                 <i class="fas fa-arrow-trend-up"></i>
             </div>
             <div class="insight-content">
                 <div class="insight-title">Strong Seller's Market</div>
                 <div class="insight-description">
                     With average days on market at 38 days and limited inventory, sellers have the advantage. 
-                    Properties priced correctly are receiving multiple offers.
+                    Properties priced correctly are receiving multiple offers within the first week.
                 </div>
             </div>
         </div>
         
         <div class="insight-item">
-            <div class="insight-icon" style="color: #2196F3;">
+            <div class="insight-icon" style="color: #3b82f6;">
                 <i class="fas fa-users"></i>
             </div>
             <div class="insight-content">
@@ -487,7 +629,7 @@
         </div>
         
         <div class="insight-item">
-            <div class="insight-icon" style="color: #FF9800;">
+            <div class="insight-icon" style="color: #f59e0b;">
                 <i class="fas fa-building"></i>
             </div>
             <div class="insight-content">
@@ -500,22 +642,24 @@
         </div>
         
         <div class="insight-item">
-            <div class="insight-icon" style="color: #9C27B0;">
+            <div class="insight-icon" style="color: #ef4444;">
                 <i class="fas fa-dollar-sign"></i>
             </div>
             <div class="insight-content">
                 <div class="insight-title">Investment Opportunity</div>
                 <div class="insight-description">
                     Rental yields remain strong at 5.8% average, with particularly good opportunities 
-                    in neighborhoods near theme parks and downtown.
+                    in neighborhoods near theme parks and downtown Orlando.
                 </div>
             </div>
         </div>
     </div>
     
     <!-- Neighborhood Comparison -->
-    <div class="comparison-table">
-        <h3 class="chart-title" style="margin-bottom: 20px;">Neighborhood Comparison</h3>
+    <div class="comparison-section">
+        <div class="comparison-header">
+            <h3 class="chart-title">Neighborhood Comparison</h3>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -529,47 +673,55 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Winter Park</td>
+                    <td><strong>Winter Park</strong></td>
                     <td>$685,000</td>
                     <td>$385</td>
                     <td class="positive">+12.5%</td>
                     <td>25</td>
-                    <td>Low</td>
+                    <td><span class="inventory-badge low">Low</span></td>
                 </tr>
                 <tr>
-                    <td>Lake Nona</td>
+                    <td><strong>Lake Nona</strong></td>
                     <td>$525,000</td>
                     <td>$295</td>
                     <td class="positive">+9.8%</td>
                     <td>32</td>
-                    <td>Medium</td>
+                    <td><span class="inventory-badge medium">Medium</span></td>
                 </tr>
                 <tr>
-                    <td>Downtown Orlando</td>
+                    <td><strong>Downtown Orlando</strong></td>
                     <td>$450,000</td>
                     <td>$425</td>
                     <td class="positive">+7.2%</td>
                     <td>28</td>
-                    <td>Low</td>
+                    <td><span class="inventory-badge low">Low</span></td>
                 </tr>
                 <tr>
-                    <td>Windermere</td>
+                    <td><strong>Windermere</strong></td>
                     <td>$750,000</td>
                     <td>$325</td>
                     <td class="positive">+15.3%</td>
                     <td>45</td>
-                    <td>Medium</td>
+                    <td><span class="inventory-badge medium">Medium</span></td>
                 </tr>
                 <tr>
-                    <td>College Park</td>
+                    <td><strong>College Park</strong></td>
                     <td>$425,000</td>
                     <td>$310</td>
                     <td class="positive">+6.5%</td>
                     <td>35</td>
-                    <td>Low</td>
+                    <td><span class="inventory-badge low">Low</span></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <p style="color: #64748b; font-weight: 500;">Analyzing market data...</p>
     </div>
 </div>
 
@@ -587,8 +739,8 @@ function initializePriceTrendsChart() {
     const ctx = document.getElementById('priceTrendsChart').getContext('2d');
     
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(102, 126, 234, 0.5)');
-    gradient.addColorStop(1, 'rgba(102, 126, 234, 0.0)');
+    gradient.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
+    gradient.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
     
     priceTrendsChart = new Chart(ctx, {
         type: 'line',
@@ -597,15 +749,16 @@ function initializePriceTrendsChart() {
             datasets: [{
                 label: 'Median Price',
                 data: [395000, 398000, 405000, 412000, 418000, 425000],
-                borderColor: '#667eea',
+                borderColor: '#ef4444',
                 backgroundColor: gradient,
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
                 pointRadius: 5,
-                pointBackgroundColor: '#667eea',
+                pointBackgroundColor: '#ef4444',
                 pointBorderColor: '#fff',
-                pointBorderWidth: 2
+                pointBorderWidth: 2,
+                pointHoverRadius: 7
             }]
         },
         options: {
@@ -616,9 +769,17 @@ function initializePriceTrendsChart() {
                     display: false
                 },
                 tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#64748b',
+                    borderColor: '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: false,
                     callbacks: {
                         label: function(context) {
-                            return '$' + context.parsed.y.toLocaleString();
+                            return 'Median Price: $' + context.parsed.y.toLocaleString();
                         }
                     }
                 }
@@ -626,18 +787,26 @@ function initializePriceTrendsChart() {
             scales: {
                 x: {
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: '#f1f5f9',
+                        drawBorder: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.8)'
+                        color: '#64748b',
+                        font: {
+                            size: 12
+                        }
                     }
                 },
                 y: {
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: '#f1f5f9',
+                        drawBorder: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.8)',
+                        color: '#64748b',
+                        font: {
+                            size: 12
+                        },
                         callback: function(value) {
                             return '$' + (value / 1000) + 'K';
                         }
@@ -658,9 +827,10 @@ function initializeInventoryChart() {
             datasets: [{
                 label: 'Active Listings',
                 data: [125, 287, 356, 198, 89],
-                backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                borderColor: '#667eea',
-                borderWidth: 1
+                backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                borderColor: '#ef4444',
+                borderWidth: 0,
+                borderRadius: 8
             }]
         },
         options: {
@@ -669,23 +839,41 @@ function initializeInventoryChart() {
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#64748b',
+                    borderColor: '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: false
                 }
             },
             scales: {
                 x: {
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        display: false,
+                        drawBorder: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.8)'
+                        color: '#64748b',
+                        font: {
+                            size: 12
+                        }
                     }
                 },
                 y: {
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        color: '#f1f5f9',
+                        drawBorder: false
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.8)'
+                        color: '#64748b',
+                        font: {
+                            size: 12
+                        }
                     }
                 }
             }
@@ -738,15 +926,17 @@ function updateInventoryChart(view) {
         inventoryChart.data.datasets = [{
             label: '2023',
             data: [156, 245, 298, 223, 112],
-            backgroundColor: 'rgba(255, 152, 0, 0.8)',
-            borderColor: '#FF9800',
-            borderWidth: 1
+            backgroundColor: 'rgba(251, 146, 60, 0.8)',
+            borderColor: '#fb923c',
+            borderWidth: 0,
+            borderRadius: 8
         }, {
             label: '2024',
             data: [125, 287, 356, 198, 89],
-            backgroundColor: 'rgba(102, 126, 234, 0.8)',
-            borderColor: '#667eea',
-            borderWidth: 1
+            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+            borderColor: '#ef4444',
+            borderWidth: 0,
+            borderRadius: 8
         }];
         
         inventoryChart.options.plugins.legend.display = true;
@@ -754,9 +944,10 @@ function updateInventoryChart(view) {
         inventoryChart.data.datasets = [{
             label: 'Active Listings',
             data: [125, 287, 356, 198, 89],
-            backgroundColor: 'rgba(102, 126, 234, 0.8)',
-            borderColor: '#667eea',
-            borderWidth: 1
+            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+            borderColor: '#ef4444',
+            borderWidth: 0,
+            borderRadius: 8
         }];
         
         inventoryChart.options.plugins.legend.display = false;
@@ -771,26 +962,26 @@ function searchMarket(event) {
     const location = document.getElementById('locationInput').value;
     const propertyType = document.getElementById('propertyType').value;
     
-    // Show loading spinner
-    document.getElementById('loadingSpinner').style.display = 'block';
-    document.getElementById('statsGrid').style.opacity = '0.5';
+    // Show loading overlay
+    document.getElementById('loadingOverlay').style.display = 'flex';
     
     // Simulate API call
     setTimeout(() => {
-        document.getElementById('loadingSpinner').style.display = 'none';
-        document.getElementById('statsGrid').style.opacity = '1';
+        document.getElementById('loadingOverlay').style.display = 'none';
         
         // Update UI with new data
         updateMarketData(location, propertyType);
+        
+        // Show success message
+        showToast('Market analysis updated successfully!', 'success');
     }, 1500);
 }
 
 function updateMarketData(location, propertyType) {
-    // In production, this would fetch real data from your API
-    // For now, we'll just update the location in the insights header
-    document.querySelector('.insights-header').textContent = `Market Insights for ${location}`;
+    // Update location in the insights header
+    document.querySelector('.insights-header').firstChild.textContent = `Market Insights for ${location} `;
     
-    // Simulate data update
+    // Simulate data update based on property type
     if (propertyType === 'condo') {
         document.querySelectorAll('.stat-value')[0].textContent = '$325,000';
         document.querySelectorAll('.stat-value')[1].textContent = '$425/ft²';
@@ -798,8 +989,59 @@ function updateMarketData(location, propertyType) {
 }
 
 function exportReport() {
-    // In production, this would generate a PDF report
-    alert('Generating market analysis report...\nThis would create a PDF with all charts and data.');
+    // Show loading
+    const btn = event.target.closest('button');
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+        showToast('Market report exported successfully!', 'success');
+    }, 2000);
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? '#22c55e' : '#ef4444'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        animation: slideUp 0.3s ease;
+    `;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideDown 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Add animation styles
+if (!document.getElementById('toast-styles')) {
+    const style = document.createElement('style');
+    style.id = 'toast-styles';
+    style.textContent = `
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
 }
 </script>
 {% endblock %}
