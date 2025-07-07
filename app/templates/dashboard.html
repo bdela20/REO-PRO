@@ -1776,13 +1776,19 @@
     
     // Initialize - Load quick actions when page loads
     document.addEventListener('DOMContentLoaded', () => {
-        loadQuickActions();
-        
-        // Load CRM stats
-        loadCRMStats();
-        
-        // Refresh CRM stats every 60 seconds
-        setInterval(loadCRMStats, 60000);
+    loadQuickActions();
+    
+    // Load CRM stats
+    loadCRMStats();
+    
+    // Load Calendar stats
+    loadCalendarStats();
+    
+    // Refresh CRM stats every 60 seconds
+    setInterval(loadCRMStats, 60000);
+    
+    // Refresh Calendar stats every 60 seconds  
+    setInterval(loadCalendarStats, 60000);
         
         // Add event listener for edit button
         document.getElementById('edit-btn').addEventListener('click', toggleEditMode);

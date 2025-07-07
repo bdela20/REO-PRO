@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from app.models.client import Client
+from app.models.calendar_event import CalendarEvent
 
 load_dotenv() 
 
@@ -152,6 +153,7 @@ def create_app():
     from app.routers.admin_routes import admin_bp
     from app.routers.comparison_routes import comparison_bp
     from app.routers.client_routes import client_bp
+    from app.routers.calendar_routes import calendar_bp
     
     app.register_blueprint(web_bp)
     app.register_blueprint(api_bp)
@@ -159,6 +161,7 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(comparison_bp)
     app.register_blueprint(client_bp)
+    app.register_blueprint(calendar_bp)
     
     print("✅ All blueprints registered")
     
