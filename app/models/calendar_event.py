@@ -58,23 +58,30 @@ class CalendarEvent(db.Model):
         """Convert event to dictionary for JSON response"""
         return {
             'id': self.id,
+            'user_id': self.user_id,
             'title': self.title,
             'type': self.type,
-            'date': self.start_datetime.isoformat(),
-            'startDateTime': self.start_datetime.isoformat(),
+            # Format datetime as ISO string without timezone conversion
+            'date': self.start_datetime.strftime('%Y-%m-%dT%H:%M:%S') if self.start_datetime else None,
+            'start_datetime': self.start_datetime.strftime('%Y-%m-%dT%H:%M:%S') if self.start_datetime else None,
+            'time': self.start_datetime.strftime('%H:%M') if self.start_datetime else None,
             'duration': self.duration,
-            'allDay': self.all_day,
-            'clientId': self.client_id,
-            'clientName': self.client.first_name + ' ' + self.client.last_name if self.client else None,
-            'propertyId': self.property_id,
+            'all_day': self.all_day,
+            'client_id': self.client_id,
+            'client_name': f"{self.client.first_name} {self.client.last_name}" if self.client else None,
+            'property_id': self.property_id,
             'location': self.location,
             'notes': self.notes,
             'reminder': self.reminder,
             'status': self.status,
             'completed': self.completed,
-            'googleEventId': self.google_event_id,
-            'createdAt': self.created_at.isoformat() if self.created_at else None,
-            'updatedAt': self.updated_at.isoformat() if self.updated_at else None
+            # Add Google Calendar sync fields
+            'google_event_id': self.google_event_id,
+            'google_calendar_id': self.google_calendar_id,
+            'last_synced': self.last_synced.isoformat() if self.last_synced else None,
+            # Timestamps
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
     
     def __repr__(self):

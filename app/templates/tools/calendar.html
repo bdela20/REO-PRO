@@ -63,6 +63,27 @@
         background: #1d4ed8;
     }
     
+    /* Create Event Button */
+    .create-event-btn {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.25rem;
+        background: #10b981;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.875rem;
+    }
+    
+    .create-event-btn:hover {
+        background: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
     /* View Toggle */
     .view-toggle {
         display: flex;
@@ -320,6 +341,7 @@
         text-overflow: ellipsis;
         cursor: pointer;
         transition: all 0.3s;
+        position: relative;
     }
     
     .calendar-event:hover {
@@ -351,6 +373,18 @@
         border-left: 3px solid #ec4899;
     }
     
+    /* Google Calendar indicator */
+    .calendar-event.google-synced::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 6px;
+        height: 6px;
+        background: #4285f4;
+        border-radius: 50%;
+    }
+    
     .more-events {
         font-size: 0.75rem;
         color: #2563eb;
@@ -363,9 +397,54 @@
     .week-view {
         display: grid;
         grid-template-columns: 80px repeat(7, 1fr);
+        grid-template-rows: auto repeat(24, 60px);
         height: calc(100vh - 250px);
         min-height: 600px;
         overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    .week-header-spacer {
+        grid-column: 1;
+        grid-row: 1;
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .week-day-header {
+        grid-row: 1;
+        padding: 1rem;
+        text-align: center;
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 2px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .week-day-header .day-name {
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .week-day-header .day-date {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 0.25rem;
+    }
+    
+    .week-day-header.today {
+        background: #eff6ff;
+    }
+    
+    .week-day-header.today .day-date {
+        color: #2563eb;
     }
     
     .time-slot {
@@ -375,28 +454,141 @@
         font-size: 0.75rem;
         color: #64748b;
         border-right: 1px solid #e2e8f0;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid #f3f4f6;
         height: 60px;
-    }
-    
-    .week-day-column {
-        border-right: 1px solid #e2e8f0;
-        position: relative;
+        background: white;
     }
     
     .week-hour-slot {
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 1px solid #f3f4f6;
         height: 60px;
-        border-bottom: 1px solid #e2e8f0;
         position: relative;
+        background: white;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    .week-hour-slot:hover {
+        background: #f8fafc;
+    }
+    
+    .week-hour-slot.current-time {
+        background: #fef3c7;
+    }
+    
+    /* Week view events */
+    .week-event {
+        position: absolute;
+        left: 2px;
+        right: 2px;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        overflow: hidden;
+        cursor: pointer;
+        z-index: 5;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .week-event:hover {
+        z-index: 6;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transform: scale(1.02);
+    }
+    
+    .week-event-time {
+        font-weight: 600;
+        font-size: 0.7rem;
+    }
+    
+    .week-event-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     /* Day View */
     .day-view {
         display: grid;
         grid-template-columns: 80px 1fr;
+        grid-template-rows: repeat(24, 60px);
         height: calc(100vh - 250px);
         min-height: 600px;
         overflow-y: auto;
+        background: white;
+    }
+    
+    .day-hour-slot {
+        grid-column: 2;
+        border-bottom: 1px solid #f3f4f6;
+        height: 60px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    .day-hour-slot:hover {
+        background: #f8fafc;
+    }
+    
+    .day-hour-slot.current-time {
+        background: #fef3c7;
+    }
+    
+    /* Day view events */
+    .day-event {
+        position: absolute;
+        left: 2px;
+        right: 2px;
+        padding: 0.5rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .day-event:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: scale(1.02);
+    }
+    
+    .day-event-time {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    
+    .day-event-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+    
+    .day-event-details {
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
+    
+    /* Current time indicator */
+    .current-time-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #ef4444;
+        z-index: 7;
+        pointer-events: none;
+    }
+    
+    .current-time-line::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: -4px;
+        width: 10px;
+        height: 10px;
+        background: #ef4444;
+        border-radius: 50%;
     }
     
     /* Event Modal */
@@ -522,6 +714,234 @@
         font-weight: 600;
     }
     
+    /* Property Input Group */
+    .property-input-group {
+        display: flex;
+        gap: 0.5rem;
+        position: relative;
+    }
+    
+    .property-search-btn {
+        padding: 0.75rem;
+        background: #f3f4f6;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .property-search-btn:hover {
+        background: #e5e7eb;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+    
+    /* Property Suggestions Dropdown */
+    .property-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-top: 0.25rem;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+    
+    .property-suggestion-item {
+        padding: 0.75rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 0.875rem;
+    }
+    
+    .property-suggestion-item:last-child {
+        border-bottom: none;
+    }
+    
+    .property-suggestion-item:hover {
+        background: #f3f4f6;
+    }
+    
+    .property-suggestion-item.recent {
+        color: #6b7280;
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        background: #f9fafb;
+    }
+    
+    /* Address Autocomplete Styles */
+    .address-autocomplete {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-top: 0.25rem;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: none;
+    }
+    
+    .address-autocomplete.active {
+        display: block;
+    }
+    
+    .address-item {
+        padding: 0.75rem;
+        cursor: pointer;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background 0.2s;
+    }
+    
+    .address-item:hover {
+        background: #f3f4f6;
+    }
+    
+    .address-item:last-child {
+        border-bottom: none;
+    }
+    
+    .address-item .primary {
+        font-weight: 500;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .address-item .secondary {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+    
+    .address-loading {
+        padding: 1rem;
+        text-align: center;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    
+    .powered-by {
+        padding: 0.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #94a3b8;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    /* Event Details Modal Specific Styles */
+    #event-detail-modal .modal {
+        max-width: 500px;
+    }
+    
+    #event-details-content {
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    
+    #event-details-content strong {
+        font-weight: 600;
+    }
+    
+    #event-details-content svg {
+        flex-shrink: 0;
+    }
+    
+    /* Button styles for event detail modal */
+    #event-detail-modal .btn {
+        min-width: 100px;
+    }
+    
+    #event-detail-modal .btn-secondary {
+        background: #64748b;
+        color: white;
+        border: none;
+    }
+    
+    #event-detail-modal .btn-secondary:hover {
+        background: #475569;
+    }
+    
+    #event-detail-modal .btn-secondary[onclick*="deleteEvent"] {
+        background: #ef4444;
+    }
+    
+    #event-detail-modal .btn-secondary[onclick*="deleteEvent"]:hover {
+        background: #dc2626;
+    }
+    
+    /* Google Calendar button in event details */
+    .btn-google {
+        background: #4285f4;
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-google:hover {
+        background: #3b78e7;
+    }
+    
+    /* Event type badge in details */
+    .event-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f1f5f9;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    /* Google sync checkbox */
+    .google-sync-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .google-sync-checkbox:hover {
+        border-color: #4285f4;
+        background: #e8f0fe;
+    }
+    
+    .google-sync-checkbox input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+    }
+    
+    .google-sync-checkbox label {
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+    
     /* Quick Add Button */
     .quick-add-btn {
         position: fixed;
@@ -560,6 +980,12 @@
         
         .calendar-header {
             flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .create-event-btn {
+            width: 100%;
+            justify-content: center;
         }
         
         .month-view {
@@ -574,6 +1000,14 @@
         
         .calendar-event {
             font-size: 0.625rem;
+        }
+        
+        .week-view {
+            grid-template-columns: 60px repeat(7, 1fr);
+        }
+        
+        .day-view {
+            grid-template-columns: 60px 1fr;
         }
     }
 </style>
@@ -595,8 +1029,16 @@
                     <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                 </svg>
             </button>
-            <h2 class="calendar-title" id="calendar-title">January 2024</h2>
+            <h2 class="calendar-title" id="calendar-title">July 2025</h2>
         </div>
+        
+        <!-- New Create Event Button -->
+        <button class="create-event-btn" onclick="showAddEventModal()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            Create Event
+        </button>
         
         <div class="view-toggle">
             <button class="view-btn active" onclick="setView('month')">Month</button>
@@ -748,33 +1190,52 @@
             </div>
             
             <div class="form-group" id="property-select-group">
-                <label class="form-label">Property</label>
-                <select id="event-property" class="form-input">
-                    <option value="">Select a property...</option>
-                    <option value="1">123 Main St, Orlando, FL</option>
-                    <option value="2">456 Oak Ave, Winter Park, FL</option>
-                    <option value="3">789 Lake View Dr, Orlando, FL</option>
-                </select>
+                <label class="form-label">Property Address</label>
+                <div class="property-input-group" style="position: relative;">
+                    <input type="text" 
+                           id="event-property" 
+                           class="form-input" 
+                           placeholder="Start typing an address..."
+                           autocomplete="off">
+                    <div id="property-autocomplete" class="address-autocomplete"></div>
+                </div>
             </div>
             
             <div class="form-group" id="client-select-group">
                 <label class="form-label">Client</label>
                 <select id="event-client" class="form-input">
                     <option value="">Select a client...</option>
-                    <option value="1">John Doe</option>
-                    <option value="2">Jane Smith</option>
-                    <option value="3">Mike Johnson</option>
                 </select>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Location</label>
-                <input type="text" id="event-location" class="form-input" placeholder="e.g., 123 Main St, Orlando, FL">
+                <div style="position: relative;">
+                    <input type="text" 
+                           id="event-location" 
+                           class="form-input" 
+                           placeholder="Start typing an address..."
+                           autocomplete="off">
+                    <div id="location-autocomplete" class="address-autocomplete"></div>
+                </div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Notes</label>
                 <textarea id="event-notes" class="form-input" rows="3" placeholder="Additional notes..."></textarea>
+            </div>
+            
+            <!-- Google Calendar Sync Option -->
+            <div class="form-group">
+                <div class="google-sync-checkbox">
+                    <label>
+                        <input type="checkbox" id="sync-to-google" checked>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="#4285f4">
+                            <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>
+                        </svg>
+                        Add to Google Calendar
+                    </label>
+                </div>
             </div>
             
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
@@ -799,6 +1260,12 @@
         
         <div style="display: flex; gap: 1rem; margin-top: 2rem;">
             <button class="btn btn-secondary" onclick="editEvent()">Edit</button>
+            <button class="btn btn-secondary btn-google" onclick="syncEventToGoogle()" id="sync-single-event-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>
+                </svg>
+                Add to Google
+            </button>
             <button class="btn btn-secondary" onclick="deleteEvent()" style="background: #ef4444; color: white; border-color: #ef4444;">Delete</button>
             <button class="btn btn-primary" onclick="hideDetailModal()">Close</button>
         </div>
@@ -813,70 +1280,602 @@
     let events = [];
     let currentEventId = null;
     
-    // Initialize calendar
-    document.addEventListener('DOMContentLoaded', function() {
-        loadEvents();
+    // Store recent properties in localStorage
+    let recentProperties = JSON.parse(localStorage.getItem('recentProperties') || '[]');
+    
+    // Address Autocomplete functionality
+    let autocompleteTimeout = null;
+    let currentAutocompleteField = null;
+    
+    // Google Calendar integration
+    let userHasGoogleConnected = false;
+    
+    // Initialize autocomplete for address fields
+    function initializeAddressAutocomplete() {
+        const propertyInput = document.getElementById('event-property');
+        const locationInput = document.getElementById('event-location');
+        
+        // Add autocomplete to property field
+        if (propertyInput) {
+            propertyInput.addEventListener('input', (e) => {
+                handleAddressInput(e.target.value, 'property');
+            });
+            
+            propertyInput.addEventListener('focus', () => {
+                currentAutocompleteField = 'property';
+                // Show recent properties if no search
+                if (!propertyInput.value && recentProperties.length > 0) {
+                    showRecentProperties('property');
+                }
+            });
+        }
+        
+        // Add autocomplete to location field
+        if (locationInput) {
+            locationInput.addEventListener('input', (e) => {
+                handleAddressInput(e.target.value, 'location');
+            });
+            
+            locationInput.addEventListener('focus', () => {
+                currentAutocompleteField = 'location';
+            });
+        }
+        
+        // Hide autocomplete when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.property-input-group') && !e.target.closest('#event-location')) {
+                hideAllAutocomplete();
+            }
+        });
+    }
+    
+    // Handle address input with debounce
+    function handleAddressInput(query, fieldType) {
+        clearTimeout(autocompleteTimeout);
+        
+        if (query.length < 3) {
+            hideAutocomplete(fieldType);
+            return;
+        }
+        
+        // Show loading state
+        showAutocompleteLoading(fieldType);
+        
+        // Debounce API calls
+        autocompleteTimeout = setTimeout(() => {
+            searchAddresses(query, fieldType);
+        }, 300);
+    }
+    
+    // Search addresses using Nominatim (OpenStreetMap)
+    async function searchAddresses(query, fieldType) {
+        try {
+            // Add country bias for USA and city bias for Orlando
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?` +
+                `format=json&` +
+                `q=${encodeURIComponent(query)}&` +
+                `countrycodes=us&` +
+                `limit=5&` +
+                `addressdetails=1`
+            );
+            
+            if (!response.ok) throw new Error('Search failed');
+            
+            const results = await response.json();
+            displayAddressResults(results, fieldType);
+            
+        } catch (error) {
+            console.error('Address search error:', error);
+            showAutocompleteError(fieldType);
+        }
+    }
+    
+    // Display address results
+    function displayAddressResults(results, fieldType) {
+        const autocompleteDiv = document.getElementById(`${fieldType}-autocomplete`);
+        
+        if (!results || results.length === 0) {
+            autocompleteDiv.innerHTML = `
+                <div class="address-loading">No addresses found</div>
+                <div class="powered-by">Powered by OpenStreetMap</div>
+            `;
+            autocompleteDiv.classList.add('active');
+            return;
+        }
+        
+        let html = '';
+        
+        results.forEach(place => {
+            // Format the address nicely
+            const parts = [];
+            
+            if (place.address) {
+                if (place.address.house_number) parts.push(place.address.house_number);
+                if (place.address.road) parts.push(place.address.road);
+            }
+            const street = parts.join(' ');
+            
+            const city = place.address?.city || place.address?.town || place.address?.village || '';
+            const state = place.address?.state || '';
+            const zip = place.address?.postcode || '';
+            
+            const primaryText = street || place.display_name.split(',')[0];
+            const secondaryText = [city, state, zip].filter(Boolean).join(', ');
+            
+            html += `
+                <div class="address-item" onclick="selectAddress('${place.display_name.replace(/'/g, "\\'")}', '${fieldType}')">
+                    <div class="primary">${primaryText}</div>
+                    <div class="secondary">${secondaryText}</div>
+                </div>
+            `;
+        });
+        
+        html += '<div class="powered-by">Powered by OpenStreetMap</div>';
+        
+        autocompleteDiv.innerHTML = html;
+        autocompleteDiv.classList.add('active');
+    }
+    
+    // Show recent properties
+    function showRecentProperties(fieldType) {
+        if (fieldType !== 'property' || recentProperties.length === 0) return;
+        
+        const autocompleteDiv = document.getElementById('property-autocomplete');
+        
+        let html = '<div class="address-item secondary" style="background: #f9fafb;">Recent Properties</div>';
+        
+        recentProperties.slice(0, 5).forEach(property => {
+            html += `
+                <div class="address-item" onclick="selectAddress('${property.replace(/'/g, "\\'")}', 'property')">
+                    <div class="primary">${property}</div>
+                </div>
+            `;
+        });
+        
+        autocompleteDiv.innerHTML = html;
+        autocompleteDiv.classList.add('active');
+    }
+    
+    // Select an address
+    function selectAddress(address, fieldType) {
+        const input = document.getElementById(`event-${fieldType}`);
+        input.value = address;
+        
+        // Save to recent properties if it's a property field
+        if (fieldType === 'property' && !recentProperties.includes(address)) {
+            recentProperties.unshift(address);
+            recentProperties = recentProperties.slice(0, 10);
+            localStorage.setItem('recentProperties', JSON.stringify(recentProperties));
+        }
+        
+        hideAutocomplete(fieldType);
+    }
+    
+    // Show loading state
+    function showAutocompleteLoading(fieldType) {
+        const autocompleteDiv = document.getElementById(`${fieldType}-autocomplete`);
+        autocompleteDiv.innerHTML = '<div class="address-loading">Searching addresses...</div>';
+        autocompleteDiv.classList.add('active');
+    }
+    
+    // Show error state
+    function showAutocompleteError(fieldType) {
+        const autocompleteDiv = document.getElementById(`${fieldType}-autocomplete`);
+        autocompleteDiv.innerHTML = '<div class="address-loading">Error searching addresses. Please try again.</div>';
+        autocompleteDiv.classList.add('active');
+    }
+    
+    // Hide autocomplete
+    function hideAutocomplete(fieldType) {
+        const autocompleteDiv = document.getElementById(`${fieldType}-autocomplete`);
+        autocompleteDiv.classList.remove('active');
+    }
+    
+    // Hide all autocomplete dropdowns
+    function hideAllAutocomplete() {
+        hideAutocomplete('property');
+        hideAutocomplete('location');
+    }
+    
+    // View switching function
+    function setView(view) {
+        currentView = view;
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase() === view);
+        });
+        
+        // Hide all views
+        document.getElementById('month-view').style.display = 'none';
+        document.getElementById('week-view').style.display = 'none';
+        document.getElementById('day-view').style.display = 'none';
+        
+        // Show selected view
+        document.getElementById(`${view}-view`).style.display = 
+            view === 'month' ? 'grid' : 
+            view === 'week' ? 'grid' : 
+            'grid';
+        
+        renderCalendar();
+    }
+    
+    // Navigation functions
+    function navigateCalendar(direction) {
+        if (currentView === 'month') {
+            currentDate.setMonth(currentDate.getMonth() + (direction === 'next' ? 1 : -1));
+        } else if (currentView === 'week') {
+            currentDate.setDate(currentDate.getDate() + (direction === 'next' ? 7 : -7));
+        } else {
+            currentDate.setDate(currentDate.getDate() + (direction === 'next' ? 1 : -1));
+        }
         renderCalendar();
         renderMiniCalendar();
-        renderUpcomingEvents();
-        
-        // Set today's date as default
-        document.getElementById('event-date').valueAsDate = new Date();
-    });
+    }
     
-    // Load events (sample data)
-    function loadEvents() {
-        events = [
-            {
-                id: '1',
-                type: 'showing',
-                title: 'Property showing at 123 Main St',
-                date: new Date(2024, 0, 15, 10, 0),
-                duration: 60,
-                property: '123 Main St, Orlando, FL',
-                client: 'John Doe',
-                location: '123 Main St, Orlando, FL',
-                notes: 'First-time buyer, interested in move-in ready homes'
-            },
-            {
-                id: '2',
-                type: 'meeting',
-                title: 'Client consultation - Jane Smith',
-                date: new Date(2024, 0, 15, 14, 0),
-                duration: 90,
-                client: 'Jane Smith',
-                location: 'Office',
-                notes: 'Discuss selling strategy for current home'
-            },
-            {
-                id: '3',
-                type: 'task',
-                title: 'Follow up with Mike Johnson',
-                date: new Date(2024, 0, 16, 9, 0),
-                duration: 30,
-                client: 'Mike Johnson',
-                notes: 'Send new listings in preferred area'
-            },
-            {
-                id: '4',
-                type: 'showing',
-                title: 'Open house - 456 Oak Ave',
-                date: new Date(2024, 0, 20, 13, 0),
-                duration: 180,
-                property: '456 Oak Ave, Winter Park, FL',
-                location: '456 Oak Ave, Winter Park, FL',
-                notes: 'Prepare flyers and refreshments'
-            },
-            {
-                id: '5',
-                type: 'reminder',
-                title: 'Contract deadline - 789 Lake View',
-                date: new Date(2024, 0, 25, 17, 0),
-                duration: 30,
-                property: '789 Lake View Dr, Orlando, FL',
-                notes: 'Inspection contingency expires'
+    function goToToday() {
+        currentDate = new Date();
+        renderCalendar();
+        renderMiniCalendar();
+    }
+    
+    // Event type selection
+    function selectEventType(type) {
+        selectedEventType = type;
+        document.querySelectorAll('.event-type-option').forEach(option => {
+            option.classList.toggle('selected', option.dataset.type === type);
+        });
+        
+        // Show/hide relevant fields
+        const showProperty = type === 'showing';
+        const showClient = type === 'showing' || type === 'meeting';
+        
+        document.getElementById('property-select-group').style.display = showProperty ? 'block' : 'none';
+        document.getElementById('client-select-group').style.display = showClient ? 'block' : 'none';
+        
+        // Clear property field when not showing
+        if (!showProperty) {
+            document.getElementById('event-property').value = '';
+        }
+    }
+    
+    // Modal functions
+    function showAddEventModal(date = null, time = null) {
+        document.getElementById('modal-title').textContent = 'Add New Event';
+        document.getElementById('event-form').reset();
+        
+        if (date) {
+            document.getElementById('event-date').valueAsDate = date;
+        }
+        
+        if (time !== null) {
+            // Format time for input
+            const hours = Math.floor(time);
+            const minutes = Math.round((time - hours) * 60);
+            document.getElementById('event-time').value = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        } else {
+            // Set default time to 9:00 AM if no time specified
+            document.getElementById('event-time').value = '09:00';
+        }
+        
+        selectEventType('showing');
+        currentEventId = null;
+        
+        // Check Google sync checkbox by default
+        document.getElementById('sync-to-google').checked = true;
+        
+        document.getElementById('event-modal').classList.add('active');
+        
+        // Initialize autocomplete when modal opens
+        initializeAddressAutocomplete();
+    }
+    
+    function hideEventModal() {
+        document.getElementById('event-modal').classList.remove('active');
+        hideAllAutocomplete();
+    }
+    
+    function showEventDetail(eventId) {
+        const event = events.find(e => e.id === eventId);
+        if (!event) return;
+        
+        currentEventId = eventId;
+        
+        // Define event type icons and colors
+        const eventTypeInfo = {
+            showing: { icon: '🏠', label: 'Property Showing', color: '#10b981' },
+            meeting: { icon: '👥', label: 'Client Meeting', color: '#3b82f6' },
+            task: { icon: '📋', label: 'Task', color: '#f59e0b' },
+            reminder: { icon: '🔔', label: 'Reminder', color: '#ec4899' }
+        };
+        
+        const typeInfo = eventTypeInfo[event.type] || { icon: '📅', label: event.type, color: '#6b7280' };
+        
+        const content = document.getElementById('event-details-content');
+        content.innerHTML = `
+            <div style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 0.5rem; color: #1e293b;">${event.title}</h3>
+                <p style="color: #64748b;">${formatEventDate(event.date)} at ${formatEventTime(event.date)}</p>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: ${typeInfo.color}20; border-radius: 10px; font-size: 1.5rem;">
+                    ${typeInfo.icon}
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Event Type</div>
+                    <div style="font-weight: 600; color: #1e293b;">${typeInfo.label}</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                    </svg>
+                    <strong style="color: #475569;">Duration:</strong> 
+                    <span>${event.duration === 1440 ? 'All day' : event.duration + ' minutes'}</span>
+                </div>
+                
+                ${event.location ? `
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <svg width="16" height="16" fill="#64748b" viewBox="0 0 16 16" style="flex-shrink: 0; margin-top: 2px;">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                    <div>
+                        <strong style="color: #475569;">${event.type === 'showing' ? 'Property:' : 'Location:'}</strong> 
+                        <span>${event.location}</span>
+                    </div>
+                </div>` : ''}
+                
+                ${event.client_name ? `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
+                    <strong style="color: #475569;">Client:</strong> 
+                    <span>${event.client_name}</span>
+                </div>` : ''}
+                
+                ${event.notes ? `
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <svg width="16" height="16" fill="#64748b" viewBox="0 0 16 16" style="flex-shrink: 0; margin-top: 2px;">
+                        <path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h6.086a1.5 1.5 0 0 0 1.06-.44l4.915-4.914A1.5 1.5 0 0 0 15 8.586V2.5A1.5 1.5 0 0 0 13.5 1h-11zM2 2.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5V8H9.5A1.5 1.5 0 0 0 8 9.5V14H2.5a.5.5 0 0 1-.5-.5v-11zm7 11.293V9.5a.5.5 0 0 1 .5-.5h4.293L9 13.793z"/>
+                    </svg>
+                    <div>
+                        <strong style="color: #475569;">Notes:</strong> 
+                        <div style="margin-top: 0.25rem; color: #1e293b;">${event.notes}</div>
+                    </div>
+                </div>` : ''}
+                
+                ${event.reminder && event.reminder !== -1 ? `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                    </svg>
+                    <strong style="color: #475569;">Reminder:</strong> 
+                    <span>${event.reminder} minutes before</span>
+                </div>` : ''}
+                
+                ${event.google_event_id ? `
+                <div style="display: flex; align-items: center; gap: 0.5rem; color: #4285f4;">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                    </svg>
+                    <span style="font-size: 0.875rem;">Synced to Google Calendar</span>
+                </div>` : ''}
+            </div>
+        `;
+        
+        // Update sync button visibility
+        const syncBtn = document.getElementById('sync-single-event-btn');
+        if (event.google_event_id) {
+            syncBtn.style.display = 'none';
+        } else {
+            syncBtn.style.display = 'flex';
+        }
+        
+        document.getElementById('event-detail-modal').classList.add('active');
+    }
+    
+    function hideDetailModal() {
+        document.getElementById('event-detail-modal').classList.remove('active');
+    }
+    
+    function editEvent() {
+        const event = events.find(e => e.id === currentEventId);
+        if (!event) return;
+        
+        // Populate form
+        document.getElementById('modal-title').textContent = 'Edit Event';
+        document.getElementById('event-title').value = event.title;
+        document.getElementById('event-date').valueAsDate = event.date;
+        document.getElementById('event-time').value = event.date.toTimeString().slice(0, 5);
+        document.getElementById('event-duration').value = event.duration === 1440 ? 'all-day' : event.duration;
+        document.getElementById('event-notes').value = event.notes || '';
+        document.getElementById('event-client').value = event.client_id || '';
+        document.getElementById('event-reminder').value = event.reminder === -1 ? 'none' : event.reminder;
+        
+        // Handle property/location based on event type
+        if (event.type === 'showing' && event.location) {
+            document.getElementById('event-property').value = event.location;
+            document.getElementById('event-location').value = '';
+        } else {
+            document.getElementById('event-property').value = '';
+            document.getElementById('event-location').value = event.location || '';
+        }
+        
+        // Set sync checkbox based on whether event is already synced
+        document.getElementById('sync-to-google').checked = !event.google_event_id;
+        
+        selectEventType(event.type);
+        
+        hideDetailModal();
+        document.getElementById('event-modal').classList.add('active');
+        
+        // Initialize autocomplete when modal opens
+        initializeAddressAutocomplete();
+    }
+    
+    // Helper functions for formatting
+    function formatEventTime(date) {
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+    
+    function formatEventDate(date) {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        if (date.toDateString() === today.toDateString()) {
+            return 'Today';
+        } else if (date.toDateString() === tomorrow.toDateString()) {
+            return 'Tomorrow';
+        } else {
+            return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+    }
+    
+    // Get events for a specific day
+    function getEventsForDay(date) {
+        const visibleTypes = Array.from(document.querySelectorAll('.event-type-checkbox:checked'))
+            .map(cb => cb.value);
+        
+        return events.filter(event => {
+            return event.date.getFullYear() === date.getFullYear() &&
+                   event.date.getMonth() === date.getMonth() &&
+                   event.date.getDate() === date.getDate() &&
+                   visibleTypes.includes(event.type);
+        }).sort((a, b) => a.date - b.date);
+    }
+    
+    // Get events for a specific hour
+    function getEventsForHour(date, hour) {
+        const visibleTypes = Array.from(document.querySelectorAll('.event-type-checkbox:checked'))
+            .map(cb => cb.value);
+        
+        return events.filter(event => {
+            const eventHour = event.date.getHours();
+            const eventEndHour = event.date.getHours() + Math.ceil(event.duration / 60);
+            return event.date.getFullYear() === date.getFullYear() &&
+                   event.date.getMonth() === date.getMonth() &&
+                   event.date.getDate() === date.getDate() &&
+                   eventHour <= hour && hour < eventEndHour &&
+                   visibleTypes.includes(event.type);
+        });
+    }
+    
+    // Update calendar title
+    function updateCalendarTitle() {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        let title = '';
+        if (currentView === 'month') {
+            title = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        } else if (currentView === 'week') {
+            const weekStart = new Date(currentDate);
+            weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            if (weekStart.getMonth() === weekEnd.getMonth()) {
+                title = `${months[weekStart.getMonth()]} ${weekStart.getDate()} - ${weekEnd.getDate()}, ${weekStart.getFullYear()}`;
+            } else if (weekStart.getFullYear() === weekEnd.getFullYear()) {
+                title = `${months[weekStart.getMonth()]} ${weekStart.getDate()} - ${months[weekEnd.getMonth()]} ${weekEnd.getDate()}, ${weekStart.getFullYear()}`;
+            } else {
+                title = `${months[weekStart.getMonth()]} ${weekStart.getDate()}, ${weekStart.getFullYear()} - ${months[weekEnd.getMonth()]} ${weekEnd.getDate()}, ${weekEnd.getFullYear()}`;
             }
-        ];
+        } else {
+            title = `${weekdays[currentDate.getDay()]}, ${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+        }
+        
+        document.getElementById('calendar-title').textContent = title;
+    }
+    
+    // Load events from API
+    function loadEvents() {
+        fetch('/api/calendar/events')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.events) {
+                    // Convert date strings to Date objects properly
+                    events = data.events.map(event => {
+                        // Parse the date string as local time, not UTC
+                        const dateStr = event.date || event.start_datetime;
+                        let eventDate;
+                        
+                        if (dateStr) {
+                            if (dateStr.includes('T')) {
+                                // If it has time component, parse it directly
+                                eventDate = new Date(dateStr);
+                            } else {
+                                // If it's just a date, add the time
+                                const [datePart, timePart] = dateStr.split(' ');
+                                eventDate = new Date(datePart + 'T' + (event.time || '00:00:00'));
+                            }
+                        } else {
+                            eventDate = new Date();
+                        }
+                        
+                        return {
+                            ...event,
+                            date: eventDate
+                        };
+                    });
+                    renderCalendar();
+                    renderUpcomingEvents();
+                } else {
+                    events = [];
+                    renderCalendar();
+                    renderUpcomingEvents();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading events:', error);
+                events = [];
+                renderCalendar();
+            });
+    }
+    
+    // Load clients from CRM
+    async function loadClients() {
+        try {
+            const response = await fetch('/api/calendar/clients');
+            if (!response.ok) throw new Error('Failed to fetch clients');
+            
+            const data = await response.json();
+            console.log('Client data received:', data);
+            
+            const clientSelect = document.getElementById('event-client');
+            
+            // Clear existing options except the first one
+            clientSelect.innerHTML = '<option value="">Select a client...</option>';
+            
+            // Check if we have the right structure
+            if (data.success && data.clients && data.clients.length > 0) {
+                console.log('First client:', data.clients[0]);
+                
+                data.clients.forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.id;
+                    option.textContent = client.name;
+                    clientSelect.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No clients found';
+                option.disabled = true;
+                clientSelect.appendChild(option);
+            }
+        } catch (error) {
+            console.error('Error loading clients:', error);
+            const clientSelect = document.getElementById('event-client');
+            clientSelect.innerHTML = '<option value="">Error loading clients</option>';
+        }
     }
     
     // Render calendar based on current view
@@ -890,27 +1889,6 @@
         } else if (currentView === 'day') {
             renderDayView();
         }
-    }
-    
-    // Update calendar title
-    function updateCalendarTitle() {
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                       'July', 'August', 'September', 'October', 'November', 'December'];
-        
-        let title = '';
-        if (currentView === 'month') {
-            title = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-        } else if (currentView === 'week') {
-            const weekStart = new Date(currentDate);
-            weekStart.setDate(currentDate.getDate() - currentDate.getDay());
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            title = `${months[weekStart.getMonth()]} ${weekStart.getDate()} - ${weekEnd.getDate()}, ${weekStart.getFullYear()}`;
-        } else {
-            title = `${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
-        }
-        
-        document.getElementById('calendar-title').textContent = title;
     }
     
     // Render month view
@@ -972,6 +1950,9 @@
                 dayEvents.slice(0, maxVisible).forEach(event => {
                     const eventEl = document.createElement('div');
                     eventEl.className = `calendar-event event-${event.type}`;
+                    if (event.google_event_id) {
+                        eventEl.classList.add('google-synced');
+                    }
                     eventEl.textContent = formatEventTime(event.date) + ' ' + event.title;
                     eventEl.onclick = (e) => {
                         e.stopPropagation();
@@ -1005,6 +1986,212 @@
             emptyDay.className = 'calendar-day other-month';
             emptyDay.innerHTML = `<div class="day-number">${i}</div>`;
             monthView.appendChild(emptyDay);
+        }
+    }
+    
+    // Render week view
+    function renderWeekView() {
+        const weekView = document.getElementById('week-view');
+        weekView.innerHTML = '';
+        
+        const today = new Date();
+        const weekStart = new Date(currentDate);
+        weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+        
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        // Add header spacer
+        const headerSpacer = document.createElement('div');
+        headerSpacer.className = 'week-header-spacer';
+        weekView.appendChild(headerSpacer);
+        
+        // Add day headers
+        for (let i = 0; i < 7; i++) {
+            const dayDate = new Date(weekStart);
+            dayDate.setDate(weekStart.getDate() + i);
+            
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'week-day-header';
+            dayHeader.style.gridColumn = i + 2;
+            
+            if (dayDate.toDateString() === today.toDateString()) {
+                dayHeader.classList.add('today');
+            }
+            
+            dayHeader.innerHTML = `
+                <div class="day-name">${weekdays[i]}</div>
+                <div class="day-date">${dayDate.getDate()}</div>
+            `;
+            
+            weekView.appendChild(dayHeader);
+        }
+        
+        // Add time slots and hour slots
+        for (let hour = 0; hour < 24; hour++) {
+            // Time label
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.style.gridRow = hour + 2;
+            
+            const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+            const ampm = hour < 12 ? 'AM' : 'PM';
+            timeSlot.textContent = `${displayHour} ${ampm}`;
+            
+            weekView.appendChild(timeSlot);
+            
+            // Hour slots for each day
+            for (let day = 0; day < 7; day++) {
+                const hourSlot = document.createElement('div');
+                hourSlot.className = 'week-hour-slot';
+                hourSlot.style.gridColumn = day + 2;
+                hourSlot.style.gridRow = hour + 2;
+                
+                const slotDate = new Date(weekStart);
+                slotDate.setDate(weekStart.getDate() + day);
+                slotDate.setHours(hour, 0, 0, 0);
+                
+                // Check if this is the current hour
+                if (slotDate.toDateString() === today.toDateString() && 
+                    hour === today.getHours()) {
+                    hourSlot.classList.add('current-time');
+                }
+                
+                hourSlot.onclick = () => showAddEventModal(slotDate, hour);
+                
+                weekView.appendChild(hourSlot);
+                
+                // Add events for this hour
+                const hourEvents = getEventsForHour(slotDate, hour);
+                hourEvents.forEach(event => {
+                    const eventEl = document.createElement('div');
+                    eventEl.className = `week-event event-${event.type}`;
+                    
+                    // Calculate position and height
+                    const startMinutes = event.date.getMinutes();
+                    const durationHours = event.duration / 60;
+                    const top = (startMinutes / 60) * 60;
+                    const height = Math.min(durationHours * 60, (24 - hour) * 60);
+                    
+                    eventEl.style.top = `${top}px`;
+                    eventEl.style.height = `${height - 4}px`;
+                    
+                    eventEl.innerHTML = `
+                        <div class="week-event-time">${formatEventTime(event.date)}</div>
+                        <div class="week-event-title">${event.title}</div>
+                    `;
+                    
+                    eventEl.onclick = (e) => {
+                        e.stopPropagation();
+                        showEventDetail(event.id);
+                    };
+                    
+                    hourSlot.appendChild(eventEl);
+                });
+            }
+        }
+        
+        // Add current time line if viewing current week
+        const now = new Date();
+        if (now >= weekStart && now < new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+            const currentHour = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentDay = now.getDay();
+            
+            const currentTimeLine = document.createElement('div');
+            currentTimeLine.className = 'current-time-line';
+            currentTimeLine.style.gridColumn = currentDay + 2;
+            currentTimeLine.style.gridRow = currentHour + 2;
+            currentTimeLine.style.top = `${(currentMinutes / 60) * 60}px`;
+            
+            weekView.appendChild(currentTimeLine);
+        }
+    }
+    
+    // Render day view
+    function renderDayView() {
+        const dayView = document.getElementById('day-view');
+        dayView.innerHTML = '';
+        
+        const today = new Date();
+        
+        // Add time slots and hour slots
+        for (let hour = 0; hour < 24; hour++) {
+            // Time label
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.style.gridRow = hour + 1;
+            
+            const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+            const ampm = hour < 12 ? 'AM' : 'PM';
+            timeSlot.textContent = `${displayHour} ${ampm}`;
+            
+            dayView.appendChild(timeSlot);
+            
+            // Hour slot
+            const hourSlot = document.createElement('div');
+            hourSlot.className = 'day-hour-slot';
+            hourSlot.style.gridRow = hour + 1;
+            
+            const slotDate = new Date(currentDate);
+            slotDate.setHours(hour, 0, 0, 0);
+            
+            // Check if this is the current hour
+            if (currentDate.toDateString() === today.toDateString() && 
+                hour === today.getHours()) {
+                hourSlot.classList.add('current-time');
+            }
+            
+            hourSlot.onclick = () => showAddEventModal(currentDate, hour);
+            
+            dayView.appendChild(hourSlot);
+            
+            // Add events for this hour
+            const hourEvents = getEventsForHour(currentDate, hour);
+            hourEvents.forEach(event => {
+                const eventEl = document.createElement('div');
+                eventEl.className = `day-event event-${event.type}`;
+                
+                // Calculate position and height
+                const startMinutes = event.date.getMinutes();
+                const durationHours = event.duration / 60;
+                const top = (startMinutes / 60) * 60;
+                const height = Math.min(durationHours * 60, (24 - hour) * 60);
+                
+                eventEl.style.top = `${top}px`;
+                eventEl.style.height = `${height - 4}px`;
+                
+                const clientInfo = event.client_name ? `<div class="day-event-details">Client: ${event.client_name}</div>` : '';
+                const locationInfo = event.location ? `<div class="day-event-details">${event.location}</div>` : '';
+                
+                eventEl.innerHTML = `
+                    <div class="day-event-time">${formatEventTime(event.date)}</div>
+                    <div class="day-event-title">${event.title}</div>
+                    ${clientInfo}
+                    ${locationInfo}
+                `;
+                
+                eventEl.onclick = (e) => {
+                    e.stopPropagation();
+                    showEventDetail(event.id);
+                };
+                
+                hourSlot.appendChild(eventEl);
+            });
+        }
+        
+        // Add current time line if viewing today
+        if (currentDate.toDateString() === today.toDateString()) {
+            const currentHour = today.getHours();
+            const currentMinutes = today.getMinutes();
+            
+            const currentTimeLine = document.createElement('div');
+            currentTimeLine.className = 'current-time-line';
+            currentTimeLine.style.gridColumn = 2;
+            currentTimeLine.style.gridRow = currentHour + 1;
+            currentTimeLine.style.top = `${(currentMinutes / 60) * 60}px`;
+            
+            dayView.appendChild(currentTimeLine);
         }
     }
     
@@ -1082,210 +2269,187 @@
         `).join('');
     }
     
-    // Get events for a specific day
-    function getEventsForDay(date) {
-        const visibleTypes = Array.from(document.querySelectorAll('.event-type-checkbox:checked'))
-            .map(cb => cb.value);
-        
-        return events.filter(event => {
-            return event.date.getFullYear() === date.getFullYear() &&
-                   event.date.getMonth() === date.getMonth() &&
-                   event.date.getDate() === date.getDate() &&
-                   visibleTypes.includes(event.type);
-        }).sort((a, b) => a.date - b.date);
-    }
-    
-    // Format event time
-    function formatEventTime(date) {
-        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-    }
-    
-    // Format event date
-    function formatEventDate(date) {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        if (date.toDateString() === today.toDateString()) {
-            return 'Today';
-        } else if (date.toDateString() === tomorrow.toDateString()) {
-            return 'Tomorrow';
-        } else {
-            return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-        }
-    }
-    
-    // Navigation
-    function navigateCalendar(direction) {
-        if (currentView === 'month') {
-            currentDate.setMonth(currentDate.getMonth() + (direction === 'next' ? 1 : -1));
-        } else if (currentView === 'week') {
-            currentDate.setDate(currentDate.getDate() + (direction === 'next' ? 7 : -7));
-        } else {
-            currentDate.setDate(currentDate.getDate() + (direction === 'next' ? 1 : -1));
-        }
-        renderCalendar();
-        renderMiniCalendar();
-    }
-    
-    function goToToday() {
-        currentDate = new Date();
-        renderCalendar();
-        renderMiniCalendar();
-    }
-    
-    // View switching
-    function setView(view) {
-        currentView = view;
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent.toLowerCase() === view);
-        });
-        
-        // Hide all views
-        document.getElementById('month-view').style.display = 'none';
-        document.getElementById('week-view').style.display = 'none';
-        document.getElementById('day-view').style.display = 'none';
-        
-        // Show selected view
-        document.getElementById(`${view}-view`).style.display = view === 'month' ? 'grid' : 'grid';
-        
-        renderCalendar();
-    }
-    
-    // Event type selection
-    function selectEventType(type) {
-        selectedEventType = type;
-        document.querySelectorAll('.event-type-option').forEach(option => {
-            option.classList.toggle('selected', option.dataset.type === type);
-        });
-        
-        // Show/hide relevant fields
-        const showProperty = type === 'showing';
-        const showClient = type === 'showing' || type === 'meeting';
-        
-        document.getElementById('property-select-group').style.display = showProperty ? 'block' : 'none';
-        document.getElementById('client-select-group').style.display = showClient ? 'block' : 'none';
-    }
-    
-    // Modal functions
-    function showAddEventModal(date = null) {
-        document.getElementById('modal-title').textContent = 'Add New Event';
-        document.getElementById('event-form').reset();
-        
-        if (date) {
-            document.getElementById('event-date').valueAsDate = date;
-        }
-        
-        selectEventType('showing');
-        currentEventId = null;
-        
-        document.getElementById('event-modal').classList.add('active');
-    }
-    
-    function hideEventModal() {
-        document.getElementById('event-modal').classList.remove('active');
-    }
-    
-    function showEventDetail(eventId) {
-        const event = events.find(e => e.id === eventId);
-        if (!event) return;
-        
-        currentEventId = eventId;
-        
-        const content = document.getElementById('event-details-content');
-        content.innerHTML = `
-            <div style="margin-bottom: 1.5rem;">
-                <h3 style="margin-bottom: 0.5rem; color: #1e293b;">${event.title}</h3>
-                <p style="color: #64748b;">${formatEventDate(event.date)} at ${formatEventTime(event.date)}</p>
-            </div>
-            
-            <div style="display: grid; gap: 1rem;">
-                <div>
-                    <strong>Type:</strong> ${event.type.charAt(0).toUpperCase() + event.type.slice(1)}
-                </div>
-                <div>
-                    <strong>Duration:</strong> ${event.duration} minutes
-                </div>
-                ${event.property ? `<div><strong>Property:</strong> ${event.property}</div>` : ''}
-                ${event.client ? `<div><strong>Client:</strong> ${event.client}</div>` : ''}
-                ${event.location ? `<div><strong>Location:</strong> ${event.location}</div>` : ''}
-                ${event.notes ? `<div><strong>Notes:</strong> ${event.notes}</div>` : ''}
-            </div>
-        `;
-        
-        document.getElementById('event-detail-modal').classList.add('active');
-    }
-    
-    function hideDetailModal() {
-        document.getElementById('event-detail-modal').classList.remove('active');
-    }
-    
-    function editEvent() {
-        const event = events.find(e => e.id === currentEventId);
-        if (!event) return;
-        
-        // Populate form
-        document.getElementById('modal-title').textContent = 'Edit Event';
-        document.getElementById('event-title').value = event.title;
-        document.getElementById('event-date').valueAsDate = event.date;
-        document.getElementById('event-time').value = event.date.toTimeString().slice(0, 5);
-        document.getElementById('event-duration').value = event.duration;
-        document.getElementById('event-location').value = event.location || '';
-        document.getElementById('event-notes').value = event.notes || '';
-        
-        selectEventType(event.type);
-        
-        hideDetailModal();
-        document.getElementById('event-modal').classList.add('active');
-    }
-    
-    function deleteEvent() {
+    async function deleteEvent() {
         if (confirm('Are you sure you want to delete this event?')) {
-            events = events.filter(e => e.id !== currentEventId);
-            hideDetailModal();
-            renderCalendar();
-            renderUpcomingEvents();
+            try {
+                const response = await fetch(`/api/calendar/events/${currentEventId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    hideDetailModal();
+                    loadEvents(); // Reload events from API
+                    alert('Event deleted successfully!');
+                } else {
+                    alert('Error deleting event: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error deleting event:', error);
+                alert('Error deleting event. Please try again.');
+            }
         }
     }
+    
+    // Google Calendar Integration Functions
+    
+    // Check if user has Google Calendar connected
+    async function checkGoogleConnection() {
+        try {
+            const response = await fetch('/api/calendar/google/status');
+            const data = await response.json();
+            userHasGoogleConnected = data.connected || false;
+        } catch (error) {
+            console.error('Error checking Google connection:', error);
+            userHasGoogleConnected = false;
+        }
+    }
+    
+    // Connect to Google Calendar (first time only)
+    async function connectToGoogle() {
+        window.location.href = '/auth/google';
+    }
+    
+    // Sync single event to Google Calendar
+    async function syncEventToGoogle(eventId = null) {
+        eventId = eventId || currentEventId;
+        
+        if (!userHasGoogleConnected) {
+            if (confirm('Connect your Google Calendar to sync this event?')) {
+                // Store the event ID to sync after connection
+                localStorage.setItem('pendingGoogleSync', eventId);
+                connectToGoogle();
+            }
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/api/calendar/events/${eventId}/sync-to-google`, {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Event added to Google Calendar!');
+                hideDetailModal();
+                loadEvents(); // Reload to show sync status
+            } else {
+                alert('Error syncing to Google Calendar: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error syncing:', error);
+            alert('Error syncing to Google Calendar. Please try again.');
+        }
+    }
+    
+    // Initialize calendar
+    document.addEventListener('DOMContentLoaded', function() {
+        loadEvents();
+        loadClients();
+        renderMiniCalendar();
+        checkGoogleConnection();
+        
+        // Set today's date as default
+        document.getElementById('event-date').valueAsDate = new Date();
+        
+        // Set default time to 9:00 AM
+        document.getElementById('event-time').value = '09:00';
+        
+        // Initialize autocomplete
+        initializeAddressAutocomplete();
+        
+        // Check if we just connected Google and have a pending sync
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('connected') === 'true') {
+            userHasGoogleConnected = true;
+            const pendingSync = localStorage.getItem('pendingGoogleSync');
+            if (pendingSync) {
+                localStorage.removeItem('pendingGoogleSync');
+                syncEventToGoogle(pendingSync);
+            }
+            // Remove the parameter from URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
     
     // Handle form submission
-    document.getElementById('event-form').addEventListener('submit', (e) => {
+    document.getElementById('event-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const date = new Date(document.getElementById('event-date').value);
-        const time = document.getElementById('event-time').value.split(':');
-        date.setHours(parseInt(time[0]), parseInt(time[1]));
+        // Get the date and time values
+        const dateValue = document.getElementById('event-date').value; // YYYY-MM-DD
+        const timeValue = document.getElementById('event-time').value; // HH:MM
         
-        const eventData = {
-            id: currentEventId || Date.now().toString(),
-            type: selectedEventType,
-            title: document.getElementById('event-title').value,
-            date: date,
-            duration: parseInt(document.getElementById('event-duration').value),
-            property: document.getElementById('event-property').value,
-            client: document.getElementById('event-client').value,
-            location: document.getElementById('event-location').value,
-            notes: document.getElementById('event-notes').value,
-            reminder: document.getElementById('event-reminder').value
-        };
+        // Format as ISO string but keep local timezone
+        const dateString = `${dateValue}T${timeValue}:00`;
         
-        if (currentEventId) {
-            // Update existing event
-            const index = events.findIndex(e => e.id === currentEventId);
-            if (index !== -1) {
-                events[index] = eventData;
+        // Handle property field for showings
+        const propertyValue = document.getElementById('event-property').value.trim();
+        const locationValue = document.getElementById('event-location').value.trim();
+        
+        // Save property to recent if it's a showing
+        if (propertyValue && selectedEventType === 'showing') {
+            if (!recentProperties.includes(propertyValue)) {
+                recentProperties.unshift(propertyValue);
+                recentProperties = recentProperties.slice(0, 10); // Keep only last 10
+                localStorage.setItem('recentProperties', JSON.stringify(recentProperties));
             }
-        } else {
-            // Add new event
-            events.push(eventData);
         }
         
-        hideEventModal();
-        renderCalendar();
-        renderUpcomingEvents();
+        const eventData = {
+            type: selectedEventType,
+            title: document.getElementById('event-title').value,
+            date: dateString,  // Send as local time string, not UTC
+            time: timeValue,
+            duration: document.getElementById('event-duration').value,
+            property: propertyValue || null,
+            client_id: document.getElementById('event-client').value || null,
+            location: (selectedEventType === 'showing' && propertyValue) ? null : locationValue,
+            notes: document.getElementById('event-notes').value || null,
+            reminder: document.getElementById('event-reminder').value,
+            sync_to_google: document.getElementById('sync-to-google').checked
+        };
         
-        // Show success message
-        alert(currentEventId ? 'Event updated successfully!' : 'Event added successfully!');
+        try {
+            let response;
+            if (currentEventId) {
+                // Update existing event
+                response = await fetch(`/api/calendar/events/${currentEventId}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(eventData)
+                });
+            } else {
+                // Create new event
+                response = await fetch('/api/calendar/events', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(eventData)
+                });
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                hideEventModal();
+                
+                // Check if user wants to sync to Google
+                if (eventData.sync_to_google && result.event_id && !currentEventId) {
+                    await syncEventToGoogle(result.event_id);
+                }
+                
+                loadEvents(); // Reload events from API
+                if (!eventData.sync_to_google || currentEventId) {
+                    alert(currentEventId ? 'Event updated successfully!' : 'Event added successfully!');
+                }
+            } else {
+                alert('Error saving event: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving event:', error);
+            alert('Error saving event. Please try again.');
+        }
     });
     
     // Event type filter change

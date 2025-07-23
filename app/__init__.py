@@ -12,8 +12,8 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     
-    # Configuration
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', 'sqlite:///reo_pro.db')
+    # Configuration - FIXED: Using propinsight.db
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', 'sqlite:///propinsight.db')
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     
@@ -91,13 +91,13 @@ def create_app():
         
         # Build Google OAuth configuration
         google_config = {
-        'client_id': app.config['GOOGLE_CLIENT_ID'],
-        'client_secret': app.config['GOOGLE_CLIENT_SECRET'],
-        'server_metadata_url': 'https://accounts.google.com/.well-known/openid-configuration',
-        'client_kwargs': {
-            'scope': 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+            'client_id': app.config['GOOGLE_CLIENT_ID'],
+            'client_secret': app.config['GOOGLE_CLIENT_SECRET'],
+            'server_metadata_url': 'https://accounts.google.com/.well-known/openid-configuration',
+            'client_kwargs': {
+                'scope': 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+            }
         }
-    }
         
         # In production, use explicit redirect URI
         if app.config['GOOGLE_REDIRECT_URI']:
@@ -151,19 +151,31 @@ def create_app():
     from app.routers.web_routes import web_bp
     from app.routers.auth_routes import auth_bp
     from app.routers.admin_routes import admin_bp
-    from app.routers.comparison_routes import comparison_bp
     from app.routers.client_routes import client_bp
     from app.routers.calendar_routes import calendar_bp
     
-    app.register_blueprint(web_bp)
-    app.register_blueprint(api_bp)
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(admin_bp)
-    app.register_blueprint(comparison_bp)
-    app.register_blueprint(client_bp)
-    app.register_blueprint(calendar_bp)
-    
-    print("✅ All blueprints registered")
+    # FIXED: Correct import for Google Calendar
+    try:
+        from app.google_calendar import google_calendar_bp
+        app.register_blueprint(web_bp)
+        app.register_blueprint(api_bp)
+        app.register_blueprint(auth_bp)
+        app.register_blueprint(admin_bp)
+        app.register_blueprint(client_bp)
+        app.register_blueprint(calendar_bp)
+        app.register_blueprint(google_calendar_bp)  # FIXED: Use correct blueprint name
+        print("✅ All blueprints registered including Google Calendar")
+    except ImportError as e:
+        print(f"⚠️  Could not import Google Calendar module: {e}")
+        print("   Make sure app/google_calendar.py exists and has no syntax errors")
+        # Register other blueprints anyway
+        app.register_blueprint(web_bp)
+        app.register_blueprint(api_bp)
+        app.register_blueprint(auth_bp)
+        app.register_blueprint(admin_bp)
+        app.register_blueprint(client_bp)
+        app.register_blueprint(calendar_bp)
+        print("✅ All blueprints registered (except Google Calendar)")
     
     # Setup logging
     logging.basicConfig(level=logging.INFO)

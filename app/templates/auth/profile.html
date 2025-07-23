@@ -23,8 +23,8 @@
     
     .profile-header h1 {
         color: #1e293b;
-        font-size: 2.5rem;
-        margin-bottom: 3rem;
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
         font-weight: 700;
     }
     
@@ -45,7 +45,7 @@
     }
     
     .profile-name {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 700;
         color: #1e293b;
         margin-bottom: 0.5rem;
@@ -62,6 +62,7 @@
         justify-content: center;
         gap: 1rem;
         margin-bottom: 2rem;
+        flex-wrap: wrap;
     }
     
     /* Role Badge Styles */
@@ -113,13 +114,13 @@
         border: none;
     }
     
-    /* Stats Grid */
+    /* Stats Grid - Now with only 2 items */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-        padding: 2rem 0;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+        margin-bottom: 2.5rem;
+        padding: 2rem 3rem;
         border-top: 1px solid #e2e8f0;
         border-bottom: 1px solid #e2e8f0;
     }
@@ -155,7 +156,7 @@
     .settings-section {
         background: white;
         border-radius: 16px;
-        padding: 2rem;
+        padding: 3rem;
         border: 1px solid #e2e8f0;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
@@ -163,14 +164,14 @@
     .settings-section h2 {
         color: #1e293b;
         font-size: 1.75rem;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
         font-weight: 700;
         text-align: center;
     }
     
     .settings-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 2rem;
     }
     
@@ -181,29 +182,38 @@
         text-align: center;
         transition: all 0.3s;
         border: 1px solid #e2e8f0;
+        cursor: pointer;
     }
     
     .settings-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         background: white;
+        border-color: #6366f1;
     }
     
     .settings-icon {
-        width: 48px;
-        height: 48px;
-        margin: 0 auto 1rem;
-        background: #e0e7ff;
-        border-radius: 12px;
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 1.25rem;
+        background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #6366f1;
+        transition: all 0.3s;
+    }
+    
+    .settings-card:hover .settings-icon {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        transform: scale(1.1);
     }
     
     .settings-card h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
         color: #1e293b;
         font-weight: 600;
     }
@@ -212,7 +222,7 @@
         color: #64748b;
         font-size: 0.875rem;
         margin-bottom: 1.5rem;
-        line-height: 1.5;
+        line-height: 1.6;
     }
     
     /* Edit Profile Modal */
@@ -222,7 +232,8 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
         display: none;
         align-items: center;
         justify-content: center;
@@ -237,17 +248,18 @@
     .modal {
         background: white;
         border-radius: 16px;
-        padding: 2rem;
+        padding: 2.5rem;
         max-width: 500px;
         width: 100%;
         position: relative;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     }
     
     .modal h3 {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         color: #1e293b;
-        text-align: center;
+        font-weight: 700;
     }
     
     .form-group {
@@ -264,17 +276,19 @@
     
     .form-input {
         width: 100%;
-        padding: 0.75rem;
+        padding: 0.875rem 1rem;
         border: 2px solid #e2e8f0;
-        border-radius: 8px;
+        border-radius: 10px;
         font-size: 1rem;
         transition: all 0.3s;
+        background: #f8fafc;
     }
     
     .form-input:focus {
         outline: none;
         border-color: #6366f1;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        background: white;
     }
     
     .form-actions {
@@ -287,23 +301,24 @@
         position: absolute;
         top: 1.5rem;
         right: 1.5rem;
-        background: none;
+        background: #f1f5f9;
         border: none;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         cursor: pointer;
         color: #64748b;
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 8px;
+        border-radius: 10px;
         transition: all 0.3s;
     }
     
     .close-modal:hover {
-        background: #f1f5f9;
+        background: #e2e8f0;
         color: #1e293b;
+        transform: rotate(90deg);
     }
     
     /* Success Message */
@@ -314,8 +329,8 @@
         background: #10b981;
         color: white;
         padding: 1rem 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
         display: none;
         align-items: center;
         gap: 0.75rem;
@@ -340,13 +355,16 @@
     
     /* Button Styles */
     .btn {
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
         font-weight: 600;
         border: none;
         cursor: pointer;
         transition: all 0.3s;
-        font-size: 1rem;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .btn-primary {
@@ -356,7 +374,7 @@
     
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
     }
     
     .btn-secondary {
@@ -368,6 +386,7 @@
     .btn-secondary:hover {
         background: #f0f9ff;
         border-color: #6366f1;
+        transform: translateY(-1px);
     }
     
     .btn-outline {
@@ -379,17 +398,27 @@
     .btn-outline:hover {
         background: #6366f1;
         color: white;
+        transform: translateY(-2px);
     }
     
     /* Responsive */
     @media (max-width: 768px) {
         .stats-grid {
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 1.5rem;
+            padding: 1.5rem;
         }
         
         .settings-grid {
             grid-template-columns: 1fr;
+        }
+        
+        .profile-header {
+            padding: 2rem;
+        }
+        
+        .settings-section {
+            padding: 2rem;
         }
     }
 </style>
@@ -441,24 +470,23 @@
                 </div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">Searches Remaining</div>
-                <div class="stat-value">{{ user.searches_remaining|default(999999) }}</div>
-            </div>
-            <div class="stat-item">
                 <div class="stat-label">Member Since</div>
-                <div class="stat-value">{{ user.created_at.strftime('%b %d, %Y') if user.created_at else 'Unknown' }}</div>
+                <div class="stat-value">{{ user.created_at.strftime('%b %Y') if user.created_at else 'New' }}</div>
             </div>
         </div>
         
         <div class="profile-actions">
             <button class="btn btn-primary" onclick="showEditModal()">
-                <svg width="16" height="16" fill="currentColor" style="display: inline-block; margin-right: 0.5rem;" viewBox="0 0 16 16">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 </svg>
                 Edit Profile
             </button>
             {% if user.plan == 'free' %}
             <button class="btn btn-outline" onclick="window.location.href='/pricing'">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M4.5 12h3.5a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1 0-1zm2.667-7h1.166c.554 0 .844.392.776.914L8.111 10.916a.731.731 0 0 1-.728.584h-.857a.5.5 0 0 1-.502-.648l.5-2.425a.394.394 0 0 0-.394-.478H4.5a.5.5 0 0 1 0-1h2.563l.632-3.158A.5.5 0 0 1 8.197 3.5h1.292a.5.5 0 0 1 0 1H8.197l-.516 2.5H7.5z"/>
+                </svg>
                 Upgrade Plan
             </button>
             {% endif %}
@@ -469,37 +497,37 @@
     <div class="settings-section">
         <h2>Account Settings</h2>
         <div class="settings-grid">
-            <div class="settings-card">
+            <div class="settings-card" onclick="showChangePasswordModal()">
                 <div class="settings-icon">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
                     </svg>
                 </div>
                 <h3>Security</h3>
                 <p>Keep your account secure with a strong password</p>
-                <button class="btn btn-secondary" onclick="showChangePasswordModal()">Change Password</button>
+                <button class="btn btn-secondary">Change Password</button>
             </div>
             
-            <div class="settings-card">
+            <div class="settings-card" onclick="showEmailPreferencesModal()">
                 <div class="settings-icon">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
                     </svg>
                 </div>
                 <h3>Email Preferences</h3>
                 <p>Manage your email notifications and updates</p>
-                <button class="btn btn-secondary" onclick="alert('Email preferences coming soon!')">Email Settings</button>
+                <button class="btn btn-secondary">Email Settings</button>
             </div>
             
-            <div class="settings-card">
+            <div class="settings-card" onclick="showPrivacyModal()">
                 <div class="settings-icon">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
                     </svg>
                 </div>
                 <h3>Privacy</h3>
                 <p>Control your data and privacy preferences</p>
-                <button class="btn btn-secondary" onclick="alert('Privacy settings coming soon!')">Privacy Settings</button>
+                <button class="btn btn-secondary">Privacy Settings</button>
             </div>
         </div>
     </div>
@@ -555,6 +583,78 @@
     </div>
 </div>
 
+<!-- Email Preferences Modal -->
+<div class="modal-overlay" id="email-preferences-modal">
+    <div class="modal">
+        <button class="close-modal" onclick="hideEmailPreferencesModal()">×</button>
+        <h3>Email Preferences</h3>
+        
+        <form id="email-preferences-form">
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="marketing-emails" checked style="margin-right: 0.5rem;">
+                    Marketing emails and promotions
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="notification-emails" checked style="margin-right: 0.5rem;">
+                    System notifications and updates
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="newsletter" checked style="margin-right: 0.5rem;">
+                    Weekly newsletter
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideEmailPreferencesModal()" style="flex: 1;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Preferences</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Privacy Settings Modal -->
+<div class="modal-overlay" id="privacy-modal">
+    <div class="modal">
+        <button class="close-modal" onclick="hidePrivacyModal()">×</button>
+        <h3>Privacy Settings</h3>
+        
+        <form id="privacy-form">
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="profile-visibility" checked style="margin-right: 0.5rem;">
+                    Make my profile visible to team members
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="activity-tracking" checked style="margin-right: 0.5rem;">
+                    Allow activity tracking for analytics
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="data-sharing" style="margin-right: 0.5rem;">
+                    Share data with third-party integrations
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hidePrivacyModal()" style="flex: 1;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Success Message -->
 <div class="success-message" id="success-message">
     <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -579,6 +679,22 @@ function showChangePasswordModal() {
 
 function hidePasswordModal() {
     document.getElementById('password-modal').classList.remove('active');
+}
+
+function showEmailPreferencesModal() {
+    document.getElementById('email-preferences-modal').classList.add('active');
+}
+
+function hideEmailPreferencesModal() {
+    document.getElementById('email-preferences-modal').classList.remove('active');
+}
+
+function showPrivacyModal() {
+    document.getElementById('privacy-modal').classList.add('active');
+}
+
+function hidePrivacyModal() {
+    document.getElementById('privacy-modal').classList.remove('active');
 }
 
 // Show success message
@@ -722,6 +838,82 @@ document.getElementById('change-password-form').addEventListener('submit', async
         // Restore button state
         const submitBtn = e.target.querySelector('button[type="submit"]');
         submitBtn.textContent = 'Update Password';
+        submitBtn.disabled = false;
+    }
+});
+
+// Handle email preferences form
+document.getElementById('email-preferences-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const preferences = {
+        marketing_emails: document.getElementById('marketing-emails').checked,
+        notification_emails: document.getElementById('notification-emails').checked,
+        newsletter: document.getElementById('newsletter').checked
+    };
+    
+    try {
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Saving...';
+        submitBtn.disabled = true;
+        
+        // Simulate API call (replace with actual endpoint)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        hideEmailPreferencesModal();
+        showSuccess('Email preferences updated successfully!');
+        
+        // Restore button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
+    } catch (error) {
+        console.error('Email preferences error:', error);
+        showError('Failed to update email preferences. Please try again.');
+        
+        // Restore button state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Save Preferences';
+        submitBtn.disabled = false;
+    }
+});
+
+// Handle privacy settings form
+document.getElementById('privacy-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const settings = {
+        profile_visibility: document.getElementById('profile-visibility').checked,
+        activity_tracking: document.getElementById('activity-tracking').checked,
+        data_sharing: document.getElementById('data-sharing').checked
+    };
+    
+    try {
+        // Show loading state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Saving...';
+        submitBtn.disabled = true;
+        
+        // Simulate API call (replace with actual endpoint)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        hidePrivacyModal();
+        showSuccess('Privacy settings updated successfully!');
+        
+        // Restore button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
+    } catch (error) {
+        console.error('Privacy settings error:', error);
+        showError('Failed to update privacy settings. Please try again.');
+        
+        // Restore button state
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Save Settings';
         submitBtn.disabled = false;
     }
 });

@@ -945,7 +945,7 @@
             <div class="stat-change">Active</div>
         </div>
         <div class="stat-card">
-            <h3>CRM Client Searches</h3>
+            <h3>CRM Client Count</h3>
             <div class="stat-value" id="client-searches">UNLIMITED</div>
             <div class="stat-change">Full Access</div>
         </div>
@@ -1753,6 +1753,162 @@
             console.error('Error loading CRM stats:', error);
         }
     }
+
+    // Calendar Stats Loading Function
+// Fixed Calendar Stats Loading Function
+async function loadCalendarStats() {
+    try {
+        const response = await fetch('/api/calendar/stats', {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        console.log('Calendar stats data:', data); // Debug log
+        
+        if (data.success || data.stats) {
+            // Find the Calendar preview card
+            const calendarCard = document.querySelector('.feature-preview-card:has(.calendar-icon)');
+            
+            if (calendarCard) {
+                // Get stats object - handle different response structures
+                const stats = data.stats || data;
+                
+                // Update Today's Events
+                const todayElement = calendarCard.querySelector('.stat-item:nth-child(1) .stat-number');
+                if (todayElement) {
+                    const todayCount = parseInt(stats.today_events || stats.today || stats.events_today || 0);
+                    if (!isNaN(todayCount)) {
+                        animateNumber(todayElement, 0, todayCount);
+                    } else {
+                        todayElement.textContent = '0';
+                    }
+                }
+                
+                // Update This Week
+                const weekElement = calendarCard.querySelector('.stat-item:nth-child(2) .stat-number');
+                if (weekElement) {
+                    const weekCount = parseInt(stats.week_events || stats.this_week || stats.events_this_week || 0);
+                    if (!isNaN(weekCount)) {
+                        animateNumber(weekElement, 0, weekCount);
+                    } else {
+                        weekElement.textContent = '0';
+                    }
+                }
+                
+                // Update Total This Month
+                const monthElement = calendarCard.querySelector('.stat-item:nth-child(3) .stat-number');
+                if (monthElement) {
+                    const monthCount = parseInt(stats.month_events || stats.this_month || stats.events_this_month || stats.total_month || 0);
+                    if (!isNaN(monthCount)) {
+                        animateNumber(monthElement, 0, monthCount);
+                    } else {
+                        monthElement.textContent = '0';
+                    }
+                }
+                
+                // Update trend to show status
+                const trendElement = calendarCard.querySelector('.feature-preview-trend');
+                if (trendElement) {
+                    const todayCount = parseInt(stats.today_events || stats.today || 0);
+                    const upcomingCount = parseInt(stats.upcoming_24h || stats.upcoming || 0);
+                    
+                    if (upcomingCount > 0) {
+                        trendElement.className = 'feature-preview-trend up';
+                        trendElement.textContent = `${upcomingCount} upcoming`;
+                    } else if (todayCount > 0) {
+                        trendElement.className = 'feature-preview-trend neutral';
+                        trendElement.textContent = `${todayCount} today`;
+                    } else {
+                        trendElement.className = 'feature-preview-trend neutral';
+                        trendElement.textContent = 'No events today';
+                    }
+                }
+                
+                // Update labels
+                const statLabels = calendarCard.querySelectorAll('.stat-label');
+                if (statLabels.length >= 3) {
+                    statLabels[0].textContent = "Today's Events";
+                    statLabels[1].textContent = "This Week";
+                    statLabels[2].textContent = "Total This Month";
+                }
+            }
+        } else {
+            console.error('Invalid calendar stats response:', data);
+            // Set all values to 0 if there's an error
+            setCalendarStatsToZero();
+        }
+    } catch (error) {
+        console.error('Error loading calendar stats:', error);
+        setCalendarStatsToZero();
+    }
+}
+
+// Helper function to set all stats to 0
+function setCalendarStatsToZero() {
+    const calendarCard = document.querySelector('.feature-preview-card:has(.calendar-icon)');
+    if (calendarCard) {
+        const statNumbers = calendarCard.querySelectorAll('.stat-number');
+        statNumbers.forEach(el => el.textContent = '0');
+        
+        const trendElement = calendarCard.querySelector('.feature-preview-trend');
+        if (trendElement) {
+            trendElement.className = 'feature-preview-trend neutral';
+            trendElement.textContent = 'No events today';
+        }
+    }
+}
+
+// Simple test function to check if the API is working
+async function testCalendarAPI() {
+    console.log('Testing Calendar API...');
+    
+    // Test stats endpoint
+    try {
+        const statsResponse = await fetch('/api/calendar/stats');
+        const statsData = await statsResponse.json();
+        console.log('Stats endpoint response:', statsData);
+    } catch (error) {
+        console.error('Stats endpoint error:', error);
+    }
+    
+    // Test events endpoint
+    try {
+        const eventsResponse = await fetch('/api/calendar/events');
+        const eventsData = await eventsResponse.json();
+        console.log('Events endpoint response:', eventsData);
+        console.log('Number of events:', eventsData.events ? eventsData.events.length : 0);
+    } catch (error) {
+        console.error('Events endpoint error:', error);
+    }
+}
+
+// Optional: Add a more detailed calendar widget to dashboard
+function addCalendarWidget() {
+    // This function could add a mini calendar or upcoming events list to the dashboard
+    // For now, we'll just ensure the stats are loaded
+    console.log('Calendar widget ready for future implementation');
+}
+
+// Enhanced upcoming events display (optional)
+async function loadUpcomingEventsForDashboard() {
+    try {
+        const response = await fetch('/api/calendar/events/upcoming?limit=5');
+        const data = await response.json();
+        
+        if (data.success && data.events && data.events.length > 0) {
+            // You could add a small upcoming events section to the dashboard
+            // This is just a placeholder for future enhancement
+            console.log('Upcoming events loaded:', data.events.length);
+        }
+    } catch (error) {
+        console.error('Error loading upcoming events:', error);
+    }
+}
     
     // Animate number changes
     function animateNumber(element, start, end) {
