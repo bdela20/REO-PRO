@@ -13,3 +13,4 @@ newenv
 .env.*
 *.env
 newenv
+client_secrets.json
