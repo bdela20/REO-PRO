@@ -878,6 +878,98 @@
         padding: 0.5rem 1rem;
         font-size: 0.875rem;
     }
+
+    /* Welcome Modal Styles for Dashboard */
+    .welcome-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    .welcome-overlay.show {
+        display: flex !important;
+    }
+    
+    .welcome-modal {
+        background: white;
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        animation: slideUp 0.3s ease-out;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .welcome-icon {
+        margin-bottom: 1.5rem;
+        animation: bounce 0.5s ease-out 0.3s;
+    }
+    
+    .welcome-modal h2 {
+        color: #1e293b;
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    
+    .welcome-modal p {
+        color: #64748b;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .welcome-subtitle {
+        color: #6366f1;
+        font-weight: 600;
+        margin-bottom: 2rem !important;
+    }
+    
+    .btn-welcome {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.875rem 2.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-welcome:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
     
     /* Responsive */
     @media (max-width: 768px) {
@@ -1124,6 +1216,21 @@
         <a href="#" class="btn" style="background: white; color: #f59e0b; font-weight: 600;" onclick="showPricingModal(); return false;">View Plans & Pricing</a>
     </div>
     {% endif %}
+</div>
+
+<!-- Welcome Modal for New Google Users -->
+<div class="welcome-overlay" id="welcome-modal">
+    <div class="welcome-modal">
+        <div class="welcome-icon">
+            <svg width="60" height="60" fill="#10b981" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+        </div>
+        <h2>Welcome to Real Estate Office Pro! 🎉</h2>
+        <p>Your account has been created successfully.</p>
+        <p class="welcome-subtitle">Get ready to discover amazing office software!</p>
+        <button class="btn-welcome" onclick="closeWelcome()">Let's Get Started</button>
+    </div>
 </div>
 
 <!-- Pricing Modal -->
@@ -1755,366 +1862,389 @@
     }
 
     // Calendar Stats Loading Function
-// Fixed Calendar Stats Loading Function
-async function loadCalendarStats() {
-    try {
-        const response = await fetch('/api/calendar/stats', {
-            method: 'GET',
-            credentials: 'same-origin',
+    // Fixed Calendar Stats Loading Function
+    async function loadCalendarStats() {
+        try {
+            const response = await fetch('/api/calendar/stats', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            console.log('Calendar stats data:', data); // Debug log
+            
+            if (data.success || data.stats) {
+                // Find the Calendar preview card
+                const calendarCard = document.querySelector('.feature-preview-card:has(.calendar-icon)');
+                
+                if (calendarCard) {
+                    // Get stats object - handle different response structures
+                    const stats = data.stats || data;
+                    
+                    // Update Today's Events
+                    const todayElement = calendarCard.querySelector('.stat-item:nth-child(1) .stat-number');
+                    if (todayElement) {
+                        const todayCount = parseInt(stats.today_events || stats.today || stats.events_today || 0);
+                        if (!isNaN(todayCount)) {
+                            animateNumber(todayElement, 0, todayCount);
+                        } else {
+                            todayElement.textContent = '0';
+                        }
+                    }
+                    
+                    // Update This Week
+                    const weekElement = calendarCard.querySelector('.stat-item:nth-child(2) .stat-number');
+                    if (weekElement) {
+                        const weekCount = parseInt(stats.week_events || stats.this_week || stats.events_this_week || 0);
+                        if (!isNaN(weekCount)) {
+                            animateNumber(weekElement, 0, weekCount);
+                        } else {
+                            weekElement.textContent = '0';
+                        }
+                    }
+                    
+                    // Update Total This Month
+                    const monthElement = calendarCard.querySelector('.stat-item:nth-child(3) .stat-number');
+                    if (monthElement) {
+                        const monthCount = parseInt(stats.month_events || stats.this_month || stats.events_this_month || stats.total_month || 0);
+                        if (!isNaN(monthCount)) {
+                            animateNumber(monthElement, 0, monthCount);
+                        } else {
+                            monthElement.textContent = '0';
+                        }
+                    }
+                    
+                    // Update trend to show status
+                    const trendElement = calendarCard.querySelector('.feature-preview-trend');
+                    if (trendElement) {
+                        const todayCount = parseInt(stats.today_events || stats.today || 0);
+                        const upcomingCount = parseInt(stats.upcoming_24h || stats.upcoming || 0);
+                        
+                        if (upcomingCount > 0) {
+                            trendElement.className = 'feature-preview-trend up';
+                            trendElement.textContent = `${upcomingCount} upcoming`;
+                        } else if (todayCount > 0) {
+                            trendElement.className = 'feature-preview-trend neutral';
+                            trendElement.textContent = `${todayCount} today`;
+                        } else {
+                            trendElement.className = 'feature-preview-trend neutral';
+                            trendElement.textContent = 'No events today';
+                        }
+                    }
+                    
+                    // Update labels
+                    const statLabels = calendarCard.querySelectorAll('.stat-label');
+                    if (statLabels.length >= 3) {
+                        statLabels[0].textContent = "Today's Events";
+                        statLabels[1].textContent = "This Week";
+                        statLabels[2].textContent = "Total This Month";
+                    }
+                }
+            } else {
+                console.error('Invalid calendar stats response:', data);
+                // Set all values to 0 if there's an error
+                setCalendarStatsToZero();
+            }
+        } catch (error) {
+            console.error('Error loading calendar stats:', error);
+            setCalendarStatsToZero();
+        }
+    }
+
+    // Helper function to set all stats to 0
+    function setCalendarStatsToZero() {
+        const calendarCard = document.querySelector('.feature-preview-card:has(.calendar-icon)');
+        if (calendarCard) {
+            const statNumbers = calendarCard.querySelectorAll('.stat-number');
+            statNumbers.forEach(el => el.textContent = '0');
+            
+            const trendElement = calendarCard.querySelector('.feature-preview-trend');
+            if (trendElement) {
+                trendElement.className = 'feature-preview-trend neutral';
+                trendElement.textContent = 'No events today';
+            }
+        }
+    }
+
+    // Simple test function to check if the API is working
+    async function testCalendarAPI() {
+        console.log('Testing Calendar API...');
+        
+        // Test stats endpoint
+        try {
+            const statsResponse = await fetch('/api/calendar/stats');
+            const statsData = await statsResponse.json();
+            console.log('Stats endpoint response:', statsData);
+        } catch (error) {
+            console.error('Stats endpoint error:', error);
+        }
+        
+        // Test events endpoint
+        try {
+            const eventsResponse = await fetch('/api/calendar/events');
+            const eventsData = await eventsResponse.json();
+            console.log('Events endpoint response:', eventsData);
+            console.log('Number of events:', eventsData.events ? eventsData.events.length : 0);
+        } catch (error) {
+            console.error('Events endpoint error:', error);
+        }
+    }
+
+    // Optional: Add a more detailed calendar widget to dashboard
+    function addCalendarWidget() {
+        // This function could add a mini calendar or upcoming events list to the dashboard
+        // For now, we'll just ensure the stats are loaded
+        console.log('Calendar widget ready for future implementation');
+    }
+
+    // Enhanced upcoming events display (optional)
+    async function loadUpcomingEventsForDashboard() {
+        try {
+            const response = await fetch('/api/calendar/events/upcoming?limit=5');
+            const data = await response.json();
+            
+            if (data.success && data.events && data.events.length > 0) {
+                // You could add a small upcoming events section to the dashboard
+                // This is just a placeholder for future enhancement
+                console.log('Upcoming events loaded:', data.events.length);
+            }
+        } catch (error) {
+            console.error('Error loading upcoming events:', error);
+        }
+    }
+        
+        // Animate number changes
+        function animateNumber(element, start, end) {
+            const duration = 500; // ms
+            const startTime = performance.now();
+            
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+
+    // Welcome Modal Functions for Google Users
+    function closeWelcome() {
+        document.getElementById('welcome-modal').classList.remove('show');
+    }
+
+    // Show welcome modal for new Google users only
+    {% if session.get('show_welcome') %}
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🎉 Showing welcome modal for new Google user!');
+        
+        // Show welcome modal
+        document.getElementById('welcome-modal').classList.add('show');
+        
+        // Clear the session flag so it only shows once
+        fetch('/auth/clear-welcome-flag', { 
+            method: 'POST',
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json'
+            }
+        }).catch(e => console.log('Welcome flag clear failed:', e));
+    });
+    {% endif %}
+        
+        // Initialize - Load quick actions when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+        loadQuickActions();
+        
+        // Load CRM stats
+        loadCRMStats();
+        
+        // Load Calendar stats
+        loadCalendarStats();
+        
+        // Refresh CRM stats every 60 seconds
+        setInterval(loadCRMStats, 60000);
+        
+        // Refresh Calendar stats every 60 seconds  
+        setInterval(loadCalendarStats, 60000);
+            
+            // Add event listener for edit button
+            document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
+        });
+        
+        // Pricing Modal Functions
+        let selectedPlan = null;
+        
+        window.showPricingModal = function() {
+            document.getElementById('pricing-modal').classList.add('active');
+        }
+        
+        window.hidePricingModal = function() {
+            document.getElementById('pricing-modal').classList.remove('active');
+        }
+        
+        window.showPaymentModal = function() {
+            document.getElementById('payment-modal').classList.add('active');
+        }
+        
+        window.hidePaymentModal = function() {
+            document.getElementById('payment-modal').classList.remove('active');
+            document.getElementById('payment-form').reset();
+        }
+        
+        window.selectPlan = function(plan) {
+            selectedPlan = plan;
+            
+            // Update payment modal with selected plan
+            const planDetails = {
+                starter: {
+                    name: 'Starter Plan',
+                    price: '$29/month'
+                },
+                professional: {
+                    name: 'Professional Plan',
+                    price: '$79/month'
+                },
+                enterprise: {
+                    name: 'Enterprise Plan',
+                    price: '$149/month'
+                }
+            };
+            
+            document.getElementById('selected-plan-name').textContent = planDetails[plan].name;
+            document.getElementById('selected-plan-price').textContent = planDetails[plan].price;
+            
+            // Hide pricing modal and show payment modal
+            hidePricingModal();
+            showPaymentModal();
+        }
+        
+        // Close modals on overlay click
+        document.getElementById('pricing-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'pricing-modal') {
+                hidePricingModal();
             }
         });
         
-        const data = await response.json();
-        console.log('Calendar stats data:', data); // Debug log
-        
-        if (data.success || data.stats) {
-            // Find the Calendar preview card
-            const calendarCard = document.querySelector('.feature-preview-card:has(.calendar-icon)');
-            
-            if (calendarCard) {
-                // Get stats object - handle different response structures
-                const stats = data.stats || data;
-                
-                // Update Today's Events
-                const todayElement = calendarCard.querySelector('.stat-item:nth-child(1) .stat-number');
-                if (todayElement) {
-                    const todayCount = parseInt(stats.today_events || stats.today || stats.events_today || 0);
-                    if (!isNaN(todayCount)) {
-                        animateNumber(todayElement, 0, todayCount);
-                    } else {
-                        todayElement.textContent = '0';
-                    }
-                }
-                
-                // Update This Week
-                const weekElement = calendarCard.querySelector('.stat-item:nth-child(2) .stat-number');
-                if (weekElement) {
-                    const weekCount = parseInt(stats.week_events || stats.this_week || stats.events_this_week || 0);
-                    if (!isNaN(weekCount)) {
-                        animateNumber(weekElement, 0, weekCount);
-                    } else {
-                        weekElement.textContent = '0';
-                    }
-                }
-                
-                // Update Total This Month
-                const monthElement = calendarCard.querySelector('.stat-item:nth-child(3) .stat-number');
-                if (monthElement) {
-                    const monthCount = parseInt(stats.month_events || stats.this_month || stats.events_this_month || stats.total_month || 0);
-                    if (!isNaN(monthCount)) {
-                        animateNumber(monthElement, 0, monthCount);
-                    } else {
-                        monthElement.textContent = '0';
-                    }
-                }
-                
-                // Update trend to show status
-                const trendElement = calendarCard.querySelector('.feature-preview-trend');
-                if (trendElement) {
-                    const todayCount = parseInt(stats.today_events || stats.today || 0);
-                    const upcomingCount = parseInt(stats.upcoming_24h || stats.upcoming || 0);
-                    
-                    if (upcomingCount > 0) {
-                        trendElement.className = 'feature-preview-trend up';
-                        trendElement.textContent = `${upcomingCount} upcoming`;
-                    } else if (todayCount > 0) {
-                        trendElement.className = 'feature-preview-trend neutral';
-                        trendElement.textContent = `${todayCount} today`;
-                    } else {
-                        trendElement.className = 'feature-preview-trend neutral';
-                        trendElement.textContent = 'No events today';
-                    }
-                }
-                
-                // Update labels
-                const statLabels = calendarCard.querySelectorAll('.stat-label');
-                if (statLabels.length >= 3) {
-                    statLabels[0].textContent = "Today's Events";
-                    statLabels[1].textContent = "This Week";
-                    statLabels[2].textContent = "Total This Month";
-                }
+        document.getElementById('payment-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'payment-modal') {
+                hidePaymentModal();
             }
-        } else {
-            console.error('Invalid calendar stats response:', data);
-            // Set all values to 0 if there's an error
-            setCalendarStatsToZero();
-        }
-    } catch (error) {
-        console.error('Error loading calendar stats:', error);
-        setCalendarStatsToZero();
-    }
-}
-
-// Helper function to set all stats to 0
-function setCalendarStatsToZero() {
-    const calendarCard = document.querySelector('.feature-preview-card:has(.calendar-icon)');
-    if (calendarCard) {
-        const statNumbers = calendarCard.querySelectorAll('.stat-number');
-        statNumbers.forEach(el => el.textContent = '0');
+        });
         
-        const trendElement = calendarCard.querySelector('.feature-preview-trend');
-        if (trendElement) {
-            trendElement.className = 'feature-preview-trend neutral';
-            trendElement.textContent = 'No events today';
-        }
-    }
-}
-
-// Simple test function to check if the API is working
-async function testCalendarAPI() {
-    console.log('Testing Calendar API...');
-    
-    // Test stats endpoint
-    try {
-        const statsResponse = await fetch('/api/calendar/stats');
-        const statsData = await statsResponse.json();
-        console.log('Stats endpoint response:', statsData);
-    } catch (error) {
-        console.error('Stats endpoint error:', error);
-    }
-    
-    // Test events endpoint
-    try {
-        const eventsResponse = await fetch('/api/calendar/events');
-        const eventsData = await eventsResponse.json();
-        console.log('Events endpoint response:', eventsData);
-        console.log('Number of events:', eventsData.events ? eventsData.events.length : 0);
-    } catch (error) {
-        console.error('Events endpoint error:', error);
-    }
-}
-
-// Optional: Add a more detailed calendar widget to dashboard
-function addCalendarWidget() {
-    // This function could add a mini calendar or upcoming events list to the dashboard
-    // For now, we'll just ensure the stats are loaded
-    console.log('Calendar widget ready for future implementation');
-}
-
-// Enhanced upcoming events display (optional)
-async function loadUpcomingEventsForDashboard() {
-    try {
-        const response = await fetch('/api/calendar/events/upcoming?limit=5');
-        const data = await response.json();
+        // Format card number input
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
         
-        if (data.success && data.events && data.events.length > 0) {
-            // You could add a small upcoming events section to the dashboard
-            // This is just a placeholder for future enhancement
-            console.log('Upcoming events loaded:', data.events.length);
-        }
-    } catch (error) {
-        console.error('Error loading upcoming events:', error);
-    }
-}
-    
-    // Animate number changes
-    function animateNumber(element, start, end) {
-        const duration = 500; // ms
-        const startTime = performance.now();
-        
-        const animate = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const current = Math.floor(start + (end - start) * progress);
-            element.textContent = current;
-            
-            if (progress < 1) {
-                requestAnimationFrame(animate);
+        // Format expiry date input
+        document.getElementById('card-expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
             }
-        };
+            e.target.value = value;
+        });
         
-        requestAnimationFrame(animate);
-    }
-    
-    // Initialize - Load quick actions when page loads
-    document.addEventListener('DOMContentLoaded', () => {
-    loadQuickActions();
-    
-    // Load CRM stats
-    loadCRMStats();
-    
-    // Load Calendar stats
-    loadCalendarStats();
-    
-    // Refresh CRM stats every 60 seconds
-    setInterval(loadCRMStats, 60000);
-    
-    // Refresh Calendar stats every 60 seconds  
-    setInterval(loadCalendarStats, 60000);
+        // Only allow numbers for CVV
+        document.getElementById('card-cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
         
-        // Add event listener for edit button
-        document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
-    });
-    
-    // Pricing Modal Functions
-    let selectedPlan = null;
-    
-    window.showPricingModal = function() {
-        document.getElementById('pricing-modal').classList.add('active');
-    }
-    
-    window.hidePricingModal = function() {
-        document.getElementById('pricing-modal').classList.remove('active');
-    }
-    
-    window.showPaymentModal = function() {
-        document.getElementById('payment-modal').classList.add('active');
-    }
-    
-    window.hidePaymentModal = function() {
-        document.getElementById('payment-modal').classList.remove('active');
-        document.getElementById('payment-form').reset();
-    }
-    
-    window.selectPlan = function(plan) {
-        selectedPlan = plan;
-        
-        // Update payment modal with selected plan
-        const planDetails = {
-            starter: {
-                name: 'Starter Plan',
-                price: '$29/month'
-            },
-            professional: {
-                name: 'Professional Plan',
-                price: '$79/month'
-            },
-            enterprise: {
-                name: 'Enterprise Plan',
-                price: '$149/month'
-            }
-        };
-        
-        document.getElementById('selected-plan-name').textContent = planDetails[plan].name;
-        document.getElementById('selected-plan-price').textContent = planDetails[plan].price;
-        
-        // Hide pricing modal and show payment modal
-        hidePricingModal();
-        showPaymentModal();
-    }
-    
-    // Close modals on overlay click
-    document.getElementById('pricing-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'pricing-modal') {
-            hidePricingModal();
-        }
-    });
-    
-    document.getElementById('payment-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'payment-modal') {
-            hidePaymentModal();
-        }
-    });
-    
-    // Format card number input
-    document.getElementById('card-number').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\s/g, '');
-        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-        e.target.value = formattedValue;
-    });
-    
-    // Format expiry date input
-    document.getElementById('card-expiry').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length >= 2) {
-            value = value.substring(0, 2) + '/' + value.substring(2, 4);
-        }
-        e.target.value = value;
-    });
-    
-    // Only allow numbers for CVV
-    document.getElementById('card-cvv').addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/\D/g, '');
-    });
-    
-    // Handle payment form submission
-    document.getElementById('payment-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Show loading state
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Processing...';
-        submitBtn.disabled = true;
-        
-        // Simulate payment processing
-        setTimeout(() => {
-            // Show success message
-            hidePaymentModal();
+        // Handle payment form submission
+        document.getElementById('payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            // Create success notification
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 2rem;
-                right: 2rem;
-                background: #10b981;
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                z-index: 10000;
-                animation: slideIn 0.3s ease-out;
-            `;
-            notification.innerHTML = `
-                <strong>🎉 Upgrade Successful!</strong><br>
-                <span style="font-size: 0.875rem;">Your account has been upgraded to ${selectedPlan === 'professional' ? 'Professional' : 'Enterprise'} plan.</span>
-            `;
-            document.body.appendChild(notification);
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
             
-            // Remove notification after 5 seconds
+            // Simulate payment processing
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-out';
-                setTimeout(() => notification.remove(), 300);
-            }, 5000);
-            
-            // Update UI to reflect new plan
-            const planUpgradeSection = document.querySelector('.plan-upgrade');
-            if (planUpgradeSection) {
-                planUpgradeSection.style.display = 'none';
-            }
-            
-            // Update stats to show new plan
-            const planStat = document.querySelector('.stat-value');
-            if (planStat && planStat.parentElement.querySelector('h3').textContent === 'Current Plan') {
-                planStat.textContent = selectedPlan.toUpperCase();
-            }
-            
-            // Reset button
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
-    });
-    
-    // Add animations
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+                // Show success message
+                hidePaymentModal();
+                
+                // Create success notification
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 2rem;
+                    right: 2rem;
+                    background: #10b981;
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                notification.innerHTML = `
+                    <strong>🎉 Upgrade Successful!</strong><br>
+                    <span style="font-size: 0.875rem;">Your account has been upgraded to ${selectedPlan === 'professional' ? 'Professional' : 'Enterprise'} plan.</span>
+                `;
+                document.body.appendChild(notification);
+                
+                // Remove notification after 5 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-out';
+                    setTimeout(() => notification.remove(), 300);
+                }, 5000);
+                
+                // Update UI to reflect new plan
+                const planUpgradeSection = document.querySelector('.plan-upgrade');
+                if (planUpgradeSection) {
+                    planUpgradeSection.style.display = 'none';
+                }
+                
+                // Update stats to show new plan
+                const planStat = document.querySelector('.stat-value');
+                if (planStat && planStat.parentElement.querySelector('h3').textContent === 'Current Plan') {
+                    planStat.textContent = selectedPlan.toUpperCase();
+                }
+                
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
         
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
             }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
             }
-        }
-    `;
-    document.head.appendChild(style);
+        `;
+        document.head.appendChild(style);
 </script>
 {% endblock %}

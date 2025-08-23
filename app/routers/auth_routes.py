@@ -235,7 +235,6 @@ def google_login():
         print(f"   Error details: {str(e)}")
         flash('Failed to redirect to Google login', 'error')
         return redirect(url_for('auth.login'))
-
 @auth_bp.route('/google/callback')
 def google_callback():
     """Handle Google OAuth callback"""
@@ -320,6 +319,9 @@ def google_callback():
         
         print(f"Processing user: {email}")
         
+        # 🎉 NEW USER DETECTION FLAG
+        is_new_user = False
+        
         # Check if user exists by Google ID
         user = User.query.filter_by(google_id=google_id).first()
         
@@ -351,6 +353,18 @@ def google_callback():
                     is_verified=True
                 )
                 print(f"Created new user: {email}")
+                
+                # 🎉 FLAG THIS AS A NEW USER
+                is_new_user = True
+                
+                # 📧 SEND WELCOME EMAIL FOR NEW GOOGLE USERS
+                try:
+                    from app.email_utils import send_welcome_email
+                    send_welcome_email(user.email, user.full_name or user.username)
+                    print(f"✅ Welcome email sent to: {email}")
+                except Exception as e:
+                    logger.error(f"Failed to send welcome email to Google user: {e}")
+                    # Don't fail the signup if email fails
         
         # Update last login
         user.last_login = db.func.now()
@@ -363,13 +377,22 @@ def google_callback():
         session['user_name'] = user.username
         session['user_plan'] = user.plan
         
+        # 🎉 SET WELCOME FLAG FOR NEW USERS
+        if is_new_user:
+            session['show_welcome'] = True
+            print(f"🎉 Setting welcome flag for new user: {email}")
+        
         # CRITICAL: Login with Flask-Login
         login_user(user)
         
         print(f"User logged in successfully: {email}")
         print("="*50 + "\n")
         
-        flash('Successfully logged in with Google!', 'success')
+        if is_new_user:
+            flash('Welcome to Real Estate Office Pro! Your account has been created successfully.', 'success')
+        else:
+            flash('Successfully logged in with Google!', 'success')
+            
         return redirect(url_for('web.dashboard'))
         
     except Exception as e:
@@ -388,6 +411,13 @@ def google_callback():
         else:
             flash(f'Google login failed: {str(e)}', 'error')
         return redirect(url_for('auth.login'))
+
+# 🎉 ADD THIS NEW ROUTE FOR CLEARING WELCOME FLAG
+@auth_bp.route('/clear-welcome-flag', methods=['POST'])
+def clear_welcome_flag():
+    """Clear the welcome flag from session"""
+    session.pop('show_welcome', None)
+    return jsonify({'success': True})
     
 @auth_bp.route('/logout')
 def logout():
@@ -740,3 +770,13 @@ def get_property_details(property_id):
     except Exception as e:
         logger.error(f"Error loading property details: {e}")
         return jsonify({'error': 'Failed to load property details'}), 500
+    
+    # Add this temporary route to your auth_routes.py for testing
+@auth_bp.route('/debug-session')
+def debug_session():
+    """Temporary debug route - REMOVE AFTER TESTING"""
+    return jsonify({
+        'show_welcome': session.get('show_welcome'),
+        'user_id': session.get('user_id'),
+        'all_session_keys': list(session.keys())
+    })
