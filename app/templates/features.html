@@ -26,17 +26,23 @@
         margin: 0 auto;
     }
     
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: auto auto;
-        gap: 2rem;
-        margin-bottom: 4rem;
-        max-width: 1400px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 2rem;
-    }
+   .features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 4rem;
+    max-width: 1200px; /* Slightly smaller max-width */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+}
+
+.feature-card {
+    flex: 0 1 300px; /* Flexible width with 300px base */
+    max-width: 350px;
+    /* rest of your existing styles... */
+}
     
     /* First row - 3 cards */
     .feature-card:nth-child(1) {
@@ -55,15 +61,15 @@
     }
     
     /* Second row - 2 cards centered */
-    .feature-card:nth-child(4) {
-        grid-column: 1;
-        grid-row: 2;
-    }
-    
-    .feature-card:nth-child(5) {
-        grid-column: 2;
-        grid-row: 2;
-    }
+.feature-card:nth-child(4) {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.feature-card:nth-child(5) {
+    grid-column: 3;
+    grid-row: 2;
+}
     
     .feature-card {
         background: white;
