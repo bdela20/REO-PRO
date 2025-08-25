@@ -153,6 +153,10 @@ def create_app():
     from app.routers.admin_routes import admin_bp
     from app.routers.client_routes import client_bp
     from app.routers.calendar_routes import calendar_bp
+    from app.routers.education_routes import education_bp
+   
+
+
     
     # FIXED: Correct import for Google Calendar
     try:
@@ -163,7 +167,8 @@ def create_app():
         app.register_blueprint(admin_bp)
         app.register_blueprint(client_bp)
         app.register_blueprint(calendar_bp)
-        app.register_blueprint(google_calendar_bp)  # FIXED: Use correct blueprint name
+        app.register_blueprint(google_calendar_bp) 
+        app.register_blueprint(education_bp) 
         print("✅ All blueprints registered including Google Calendar")
     except ImportError as e:
         print(f"⚠️  Could not import Google Calendar module: {e}")

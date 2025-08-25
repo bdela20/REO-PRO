@@ -203,6 +203,7 @@
         align-items: center;
         font-size: 0.75rem;
         color: #94a3b8;
+        margin-bottom: 1rem;
     }
     
     .video-badge {
@@ -217,6 +218,39 @@
     .video-badge.new {
         background: #86efac;
         color: #166534;
+    }
+    
+    .video-badge.completed {
+        background: #22c55e;
+        color: white;
+    }
+    
+    /* Mark Complete Button */
+    .mark-complete-btn {
+        width: 100%;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 0.5rem;
+    }
+    
+    .mark-complete-btn:not(.completed) {
+        background: #7c3aed;
+        color: white;
+    }
+    
+    .mark-complete-btn:not(.completed):hover {
+        background: #6b21a8;
+    }
+    
+    .mark-complete-btn.completed {
+        background: #22c55e;
+        color: white;
+        cursor: default;
     }
     
     /* Course Section */
@@ -327,7 +361,7 @@
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 3rem;
+        font-size: 2rem;
         font-weight: bold;
         box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
     }
@@ -452,6 +486,23 @@
         background: #6b21a8;
     }
     
+    /* Loading states */
+    .loading {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
         .education-hero h1 {
@@ -484,9 +535,9 @@
 <div class="education-container">
     <!-- Hero Section -->
     <div class="education-hero">
-        <h1>Education Center</h1>
-        <p>Master the art of real estate with our comprehensive video courses and resources</p>
-        <span class="new-badge">+2 New</span>
+        <h1>Professional Education Center</h1>
+        <p>Advanced training for experienced real estate professionals</p>
+        <span class="new-badge" id="new-courses-badge">Loading...</span>
     </div>
     
     <!-- Progress Tracking -->
@@ -495,172 +546,58 @@
             <h3>Your Learning Progress</h3>
             <div class="progress-stats">
                 <div class="stat-item">
-                    <div class="stat-value">12</div>
+                    <div class="stat-value" id="courses-completed">-</div>
                     <div class="stat-label">Courses Completed</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">78%</div>
+                    <div class="stat-value" id="progress-percentage">-</div>
                     <div class="stat-label">Progress Rate</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">4.2h</div>
+                    <div class="stat-value" id="learning-time">-</div>
                     <div class="stat-label">Learning Time</div>
                 </div>
             </div>
-            <button class="continue-btn">
+            <button class="continue-btn" id="continue-learning-btn" onclick="scrollToCourses()">
                 Continue Learning →
             </button>
         </div>
-        <div class="achievement-badge">🎓</div>
+        <div class="achievement-badge">CERT</div>
     </div>
     
     <!-- Category Tabs -->
-    <div class="category-tabs">
-        <button class="category-tab active" onclick="filterVideos('all')">All Courses</button>
-        <button class="category-tab" onclick="filterVideos('getting-started')">Getting Started</button>
-        <button class="category-tab" onclick="filterVideos('marketing')">Marketing & Branding</button>
-        <button class="category-tab" onclick="filterVideos('sales')">Sales Techniques</button>
-        <button class="category-tab" onclick="filterVideos('technology')">Technology & Tools</button>
-        <button class="category-tab" onclick="filterVideos('legal')">Legal & Contracts</button>
-        <button class="category-tab" onclick="filterVideos('investment')">Investment Strategies</button>
+    <div class="category-tabs" id="category-tabs">
+        <button class="category-tab active" data-category="all" onclick="filterVideos('all')">All Courses</button>
+        <!-- Dynamic categories will be loaded here -->
     </div>
     
     <!-- Featured Videos Section -->
     <div class="course-section">
         <div class="course-header">
-            <h2>Featured Courses</h2>
-            <a href="#" class="view-all-btn">View All <span>→</span></a>
+            <h2>Professional Courses</h2>
+            <a href="#" class="view-all-btn" onclick="showAllCourses(); return false;">View All <span>→</span></a>
         </div>
         
-        <div class="videos-grid">
-            <!-- Video 1 - Real Estate License -->
-            <div class="video-card" onclick="playVideo('_285-2-HGIo')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/_285-2-HGIo/maxresdefault.jpg" alt="Real Estate License">
-                    <div class="video-duration">12:47</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">How to Get Your Real Estate License (Step by Step)</h3>
-                    <p class="video-description">Complete guide to getting your real estate license, requirements, and exam preparation tips.</p>
-                    <div class="video-meta">
-                        <span>Beginner</span>
-                        <span class="video-badge new">New</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 2 - Marketing Strategies -->
-            <div class="video-card" onclick="playVideo('STyI3P7orEY')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/STyI3P7orEY/maxresdefault.jpg" alt="Marketing Strategies">
-                    <div class="video-duration">28:15</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">Real Estate Marketing Strategies That Actually Work</h3>
-                    <p class="video-description">Learn proven marketing strategies to generate more leads and grow your real estate business.</p>
-                    <div class="video-meta">
-                        <span>Intermediate</span>
-                        <span class="video-badge">Pro</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 3 - First Year Success -->
-            <div class="video-card" onclick="playVideo('SLh0Ma5NI0A')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/SLh0Ma5NI0A/maxresdefault.jpg" alt="First Year Success">
-                    <div class="video-duration">15:22</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">New Real Estate Agent? Do These 5 Things Your First Year</h3>
-                    <p class="video-description">Essential tips and strategies for new agents to succeed in their first year.</p>
-                    <div class="video-meta">
-                        <span>Beginner</span>
-                        <span class="video-badge">Free</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 4 - Investment Properties -->
-            <div class="video-card" onclick="playVideo('41vMAGXQj_s')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/41vMAGXQj_s/maxresdefault.jpg" alt="Investment Properties">
-                    <div class="video-duration">19:30</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">Real Estate Investing for Beginners</h3>
-                    <p class="video-description">Learn the fundamentals of real estate investing and how to analyze investment properties.</p>
-                    <div class="video-meta">
-                        <span>Intermediate</span>
-                        <span class="video-badge new">New</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 5 - Social Media Marketing -->
-            <div class="video-card" onclick="playVideo('C3L-I_g9lTU')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/C3L-I_g9lTU/maxresdefault.jpg" alt="Social Media Marketing">
-                    <div class="video-duration">24:18</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">Social Media Marketing for Real Estate Agents</h3>
-                    <p class="video-description">Master Instagram, Facebook, and TikTok to attract more clients and listings.</p>
-                    <div class="video-meta">
-                        <span>Intermediate</span>
-                        <span class="video-badge">Pro</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Video 6 - Lead Generation -->
-            <div class="video-card" onclick="playVideo('dLotwE5tyPU')">
-                <div class="video-thumbnail">
-                    <img src="https://img.youtube.com/vi/dLotwE5tyPU/maxresdefault.jpg" alt="Lead Generation">
-                    <div class="video-duration">31:45</div>
-                    <div class="play-overlay">
-                        <div class="play-icon"></div>
-                    </div>
-                </div>
-                <div class="video-content">
-                    <h3 class="video-title">Lead Generation Strategies for Real Estate Agents</h3>
-                    <p class="video-description">Discover multiple ways to generate high-quality leads consistently.</p>
-                    <div class="video-meta">
-                        <span>Advanced</span>
-                        <span class="video-badge">Pro</span>
-                    </div>
-                </div>
-            </div>
+        <div class="videos-grid" id="videos-grid">
+            <!-- Dynamic courses will be loaded here -->
+            <div class="skeleton" style="height: 300px; border-radius: 12px;"></div>
+            <div class="skeleton" style="height: 300px; border-radius: 12px;"></div>
+            <div class="skeleton" style="height: 300px; border-radius: 12px;"></div>
         </div>
     </div>
     
     <!-- Resources Section -->
     <div class="resources-section">
-        <h2 style="font-size: 1.75rem; color: #1e293b; margin-bottom: 1rem;">Downloadable Resources</h2>
-        <p style="color: #64748b;">Templates, guides, and tools to support your learning journey</p>
+        <h2 style="font-size: 1.75rem; color: #1e293b; margin-bottom: 1rem;">Professional Resources</h2>
+        <p style="color: #64748b;">Templates, guides, and tools for experienced agents</p>
         
         <div class="resource-list">
             <div class="resource-item">
                 <div class="resource-info">
-                    <div class="resource-icon">📄</div>
+                    <div class="resource-icon">DOC</div>
                     <div>
-                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Listing Presentation Template</h4>
-                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Professional PowerPoint template</p>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Commercial Listing Presentation</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Advanced PowerPoint template for commercial properties</p>
                     </div>
                 </div>
                 <button class="download-btn">Download</button>
@@ -668,10 +605,10 @@
             
             <div class="resource-item">
                 <div class="resource-info">
-                    <div class="resource-icon">📊</div>
+                    <div class="resource-icon">XLS</div>
                     <div>
-                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">CMA Worksheet</h4>
-                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Comparative Market Analysis Excel template</p>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Investment Analysis Spreadsheet</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">DCF and cap rate analysis Excel template</p>
                     </div>
                 </div>
                 <button class="download-btn">Download</button>
@@ -679,10 +616,10 @@
             
             <div class="resource-item">
                 <div class="resource-info">
-                    <div class="resource-icon">📋</div>
+                    <div class="resource-icon">PDF</div>
                     <div>
-                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Buyer's Guide PDF</h4>
-                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Comprehensive guide for first-time buyers</p>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Team Management Guide</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Comprehensive guide for leading real estate teams</p>
                     </div>
                 </div>
                 <button class="download-btn">Download</button>
@@ -690,10 +627,10 @@
             
             <div class="resource-item">
                 <div class="resource-info">
-                    <div class="resource-icon">📝</div>
+                    <div class="resource-icon">CHK</div>
                     <div>
-                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Contract Checklist</h4>
-                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Never miss important contract details</p>
+                        <h4 style="margin: 0; font-size: 1rem; color: #1e293b;">Legal Compliance Checklist</h4>
+                        <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Risk mitigation and compliance tracking</p>
                     </div>
                 </div>
                 <button class="download-btn">Download</button>
@@ -711,26 +648,292 @@
 </div>
 
 <script>
+    // Global state
     let currentCategory = 'all';
+    let courses = [];
+    let categories = [];
+    let userStats = null;
     
-    // Filter videos by category
-    function filterVideos(category) {
-        currentCategory = category;
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadUserStats();
+        loadCategories();
+        loadCourses();
+    });
+    
+    // Load user statistics from API
+    async function loadUserStats() {
+        try {
+            const response = await fetch('/api/education/progress/stats');
+            const data = await response.json();
+            
+            if (data.success) {
+                userStats = data.stats;
+                updateProgressDisplay();
+            } else {
+                console.error('Failed to load user stats:', data.error);
+                // Show default values for non-logged-in users
+                showGuestProgress();
+            }
+        } catch (error) {
+            console.error('Error loading user stats:', error);
+            showGuestProgress();
+        }
+    }
+    
+    // Update progress display with real data
+    function updateProgressDisplay() {
+        if (!userStats) return;
+        
+        document.getElementById('courses-completed').textContent = userStats.total_courses_completed;
+        document.getElementById('progress-percentage').textContent = userStats.overall_progress_percentage + '%';
+        document.getElementById('learning-time').textContent = userStats.total_learning_time_hours + 'h';
+        
+        // Update new courses badge
+        const newCoursesCount = courses.filter(course => {
+            const createdDate = new Date(course.created_at);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            return createdDate > thirtyDaysAgo;
+        }).length;
+        
+        document.getElementById('new-courses-badge').textContent = `+${newCoursesCount} New`;
+    }
+    
+    // Show default progress for guests
+    function showGuestProgress() {
+        document.getElementById('courses-completed').textContent = '0';
+        document.getElementById('progress-percentage').textContent = '0%';
+        document.getElementById('learning-time').textContent = '0h';
+        document.getElementById('new-courses-badge').textContent = 'Sign In';
+    }
+    
+    // Load categories from API
+    async function loadCategories() {
+        try {
+            const response = await fetch('/api/education/categories');
+            const data = await response.json();
+            
+            if (data.success) {
+                categories = data.categories;
+                renderCategories();
+            }
+        } catch (error) {
+            console.error('Error loading categories:', error);
+        }
+    }
+    
+    // Render category tabs
+    function renderCategories() {
+        const tabsContainer = document.getElementById('category-tabs');
+        
+        // Keep "All Courses" tab and add dynamic categories after it
+        const allTab = tabsContainer.querySelector('[data-category="all"]');
+        
+        // Remove any existing dynamic category tabs
+        const existingTabs = tabsContainer.querySelectorAll('[data-category]:not([data-category="all"])');
+        existingTabs.forEach(tab => tab.remove());
+        
+        // Add new category tabs
+        categories.forEach(category => {
+            const tab = document.createElement('button');
+            tab.className = 'category-tab';
+            tab.setAttribute('data-category', category.id);
+            tab.textContent = category.name;
+            tab.onclick = () => filterVideos(category.id);
+            tabsContainer.appendChild(tab);
+        });
+        
+        console.log('Rendered categories:', categories.length); // Debug log
+    }
+    
+    // Load courses from API
+    async function loadCourses(categoryId = null) {
+        try {
+            let url = '/api/education/courses';
+            if (categoryId) {
+                url += `?category_id=${categoryId}`;
+            }
+            
+            console.log('Loading courses from:', url); // Debug log
+            
+            const response = await fetch(url);
+            console.log('Courses response status:', response.status); // Debug log
+            
+            const data = await response.json();
+            console.log('Courses data:', data); // Debug log
+            
+            if (data.success) {
+                courses = data.courses;
+                console.log('Loaded courses count:', courses.length); // Debug log
+                renderCourses();
+            } else {
+                console.error('Failed to load courses:', data.error);
+            }
+        } catch (error) {
+            console.error('Error loading courses:', error);
+        }
+    }
+    
+    // Render courses grid
+    function renderCourses() {
+        const grid = document.getElementById('videos-grid');
+        grid.innerHTML = '';
+        
+        if (courses.length === 0) {
+            grid.innerHTML = '<p style="text-align: center; color: #64748b; grid-column: 1 / -1;">No courses found in this category.</p>';
+            return;
+        }
+        
+        courses.forEach(course => {
+            const courseCard = createCourseCard(course);
+            grid.appendChild(courseCard);
+        });
+    }
+    
+    // Create course card element
+    function createCourseCard(course) {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        
+        const isCompleted = course.user_progress && course.user_progress.completed;
+        const completedBadge = isCompleted ? '<span class="video-badge completed">Completed</span>' : '';
+        const buttonText = isCompleted ? 'Completed' : 'Mark Complete';
+        const buttonClass = isCompleted ? 'mark-complete-btn completed' : 'mark-complete-btn';
+        
+        card.innerHTML = `
+            <div class="video-thumbnail" onclick="playVideo('${course.youtube_video_id}')">
+                <img src="${course.thumbnail_url}" alt="${course.title}">
+                <div class="video-duration">${course.duration_minutes}min</div>
+                <div class="play-overlay">
+                    <div class="play-icon"></div>
+                </div>
+            </div>
+            <div class="video-content">
+                <h3 class="video-title">${course.title}</h3>
+                <p class="video-description">${course.description}</p>
+                <div class="video-meta">
+                    <span>${course.difficulty_level}</span>
+                    <div>
+                        ${course.cpe_credits > 0 ? `<span class="video-badge">${course.cpe_credits} CPE</span>` : ''}
+                        ${completedBadge}
+                    </div>
+                </div>
+                <button class="${buttonClass}" onclick="toggleCourseCompletion(${course.id}, this)" ${isCompleted ? 'disabled' : ''}>
+                    ${buttonText}
+                </button>
+            </div>
+        `;
+        
+        return card;
+    }
+    
+    // Scroll to courses section
+    function scrollToCourses() {
+        document.querySelector('.videos-grid').scrollIntoView({ 
+            behavior: 'smooth' 
+        });
+    }
+    
+    // Show all courses (reset filters)
+    function showAllCourses() {
+        currentCategory = 'all';
         
         // Update active tab
         document.querySelectorAll('.category-tab').forEach(tab => {
             tab.classList.remove('active');
         });
-        event.target.classList.add('active');
+        document.querySelector('[data-category="all"]').classList.add('active');
         
-        // Here you would filter the videos based on category
-        // For now, we'll just show a loading animation
-        const videosGrid = document.querySelector('.videos-grid');
-        videosGrid.style.opacity = '0.5';
+        // Load all courses
+        loadCourses();
+    }
+    
+    // Filter videos by category
+    function filterVideos(categoryId) {
+        console.log('Filtering by category:', categoryId); // Debug log
         
-        setTimeout(() => {
-            videosGrid.style.opacity = '1';
-        }, 300);
+        currentCategory = categoryId;
+        
+        // Update active tab
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        const activeTab = document.querySelector(`[data-category="${categoryId}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+            console.log('Set active tab:', activeTab.textContent); // Debug log
+        } else {
+            console.warn('Could not find tab for category:', categoryId); // Debug log
+        }
+        
+        // Show loading
+        const grid = document.getElementById('videos-grid');
+        grid.classList.add('loading');
+        
+        // Load courses for category
+        const apiCategoryId = categoryId === 'all' ? null : categoryId;
+        console.log('API category ID:', apiCategoryId); // Debug log
+        
+        loadCourses(apiCategoryId).then(() => {
+            grid.classList.remove('loading');
+            console.log('Finished loading courses for category'); // Debug log
+        }).catch(error => {
+            grid.classList.remove('loading');
+            console.error('Error in filterVideos:', error); // Debug log
+        });
+    }
+    
+    // Toggle course completion
+    async function toggleCourseCompletion(courseId, button) {
+        if (button.classList.contains('completed')) return;
+        
+        console.log('Attempting to mark course complete:', courseId); // Debug log
+        
+        try {
+            button.textContent = 'Marking...';
+            button.disabled = true;
+            
+            const response = await fetch('/api/education/progress/mark-complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    course_id: courseId,
+                    watch_time_minutes: 5 // Assuming some watch time
+                })
+            });
+            
+            console.log('Response status:', response.status); // Debug log
+            
+            const data = await response.json();
+            console.log('Response data:', data); // Debug log
+            
+            if (data.success) {
+                button.textContent = 'Completed';
+                button.classList.add('completed');
+                
+                // Refresh user stats
+                await loadUserStats();
+                
+                // Show CPE credits earned if any
+                if (data.cpe_credits_earned > 0) {
+                    alert(`Congratulations! You earned ${data.cpe_credits_earned} CPE credits.`);
+                }
+            } else {
+                console.error('API error:', data.error); // Debug log
+                button.textContent = 'Mark Complete';
+                button.disabled = false;
+                alert(`Failed: ${data.error || 'Please try again.'}`);
+            }
+        } catch (error) {
+            console.error('Network error:', error); // Debug log
+            button.textContent = 'Mark Complete';
+            button.disabled = false;
+            alert(`Network error: ${error.message}`);
+        }
     }
     
     // Play video in modal
@@ -738,14 +941,34 @@
         const modal = document.getElementById('video-modal');
         const iframe = document.getElementById('video-frame');
         
-        // Set YouTube video URL
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        
-        // Show modal
         modal.classList.add('active');
-        
-        // Prevent body scroll
         document.body.style.overflow = 'hidden';
+        
+        // Track watch time (simplified)
+        setTimeout(() => updateWatchTime(videoId, 2), 10000); // After 10 seconds
+    }
+    
+    // Update watch time
+    async function updateWatchTime(videoId, minutes) {
+        try {
+            // Find course by video ID
+            const course = courses.find(c => c.youtube_video_id === videoId);
+            if (!course) return;
+            
+            await fetch('/api/education/progress/update-watch-time', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    course_id: course.id,
+                    watch_time_minutes: minutes
+                })
+            });
+        } catch (error) {
+            console.error('Error updating watch time:', error);
+        }
     }
     
     // Close video modal
@@ -753,13 +976,8 @@
         const modal = document.getElementById('video-modal');
         const iframe = document.getElementById('video-frame');
         
-        // Hide modal
         modal.classList.remove('active');
-        
-        // Stop video
         iframe.src = '';
-        
-        // Restore body scroll
         document.body.style.overflow = 'auto';
     }
     
@@ -773,7 +991,6 @@
     // Handle resource downloads
     document.querySelectorAll('.download-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            // Simulate download
             const originalText = this.textContent;
             this.textContent = 'Downloading...';
             this.disabled = true;
@@ -790,14 +1007,5 @@
             }, 1500);
         });
     });
-    
-    // Update progress as videos are watched
-    function updateProgress() {
-        // This would be connected to your backend to track actual progress
-        const progressFill = document.querySelector('.progress-fill');
-        const currentWidth = parseInt(progressFill.style.width) || 0;
-        const newWidth = Math.min(currentWidth + 5, 100);
-        progressFill.style.width = newWidth + '%';
-    }
 </script>
 {% endblock %}
