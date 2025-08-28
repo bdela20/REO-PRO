@@ -130,7 +130,7 @@ class UserCourseProgress(db.Model):
         self.completed = True
         self.completed_at = datetime.utcnow()
         self.last_accessed = datetime.utcnow()
-        db.session.commit()
+        # db.session.commit()
     
     def to_dict(self):
         return {

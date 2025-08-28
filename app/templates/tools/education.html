@@ -366,7 +366,7 @@
         box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
     }
     
-    /* Video Modal */
+    /* Fixed Video Modal */
     .video-modal {
         position: fixed;
         top: 0;
@@ -380,47 +380,94 @@
         z-index: 10000;
         padding: 2rem;
     }
-    
+
     .video-modal.active {
         display: flex;
     }
-    
-    .video-container {
+
+    .video-modal-wrapper {
         position: relative;
-        width: 100%;
-        max-width: 900px;
-        padding-bottom: 56.25%;
+        width: 90%;
+        max-width: 800px;
     }
-    
-    .video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
+
+    .video-container {
         width: 100%;
-        height: 100%;
+        background: #000;
         border-radius: 12px;
+        overflow: hidden;
     }
-    
+
+    .video-container iframe {
+        width: 100%;
+        height: 450px;
+        border: none;
+        display: block;
+    }
+
     .close-video {
         position: absolute;
-        top: -40px;
-        right: 0;
+        top: -50px;
+        right: -10px;
         background: white;
         border: none;
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        font-size: 1.5rem;
+        font-size: 16px;
+        line-height: 1;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
+        color: #333;
+        font-weight: bold;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        z-index: 10001;
     }
-    
+
     .close-video:hover {
-        background: #f3e8ff;
+        background: #f0f0f0;
         transform: scale(1.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .video-container {
+            width: 95%;
+            margin: 0 auto;
+        }
+        
+        .video-container iframe {
+            height: 250px;
+        }
+        
+        .video-modal {
+            padding: 1rem;
+        }
+        
+        .education-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .videos-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .category-tabs {
+            overflow-x: scroll;
+        }
+        
+        .progress-card {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+        
+        .progress-stats {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
     }
     
     /* Resource Downloads */
@@ -501,32 +548,6 @@
     @keyframes loading {
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .education-hero h1 {
-            font-size: 2rem;
-        }
-        
-        .videos-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .category-tabs {
-            overflow-x: scroll;
-        }
-        
-        .progress-card {
-            flex-direction: column;
-            text-align: center;
-            gap: 1.5rem;
-        }
-        
-        .progress-stats {
-            flex-direction: column;
-            gap: 1.5rem;
-        }
     }
 </style>
 {% endblock %}
@@ -641,9 +662,11 @@
 
 <!-- Video Modal -->
 <div class="video-modal" id="video-modal">
-    <div class="video-container">
+    <div class="video-modal-wrapper">
         <button class="close-video" onclick="closeVideo()">×</button>
-        <iframe id="video-frame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-container">
+            <iframe id="video-frame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
     </div>
 </div>
 
@@ -672,7 +695,6 @@
                 updateProgressDisplay();
             } else {
                 console.error('Failed to load user stats:', data.error);
-                // Show default values for non-logged-in users
                 showGuestProgress();
             }
         } catch (error) {
@@ -681,21 +703,27 @@
         }
     }
     
-    // Update progress display with real data
+    // Enhanced function to update progress display with better error handling
     function updateProgressDisplay() {
         if (!userStats) return;
         
-        document.getElementById('courses-completed').textContent = userStats.total_courses_completed;
-        document.getElementById('progress-percentage').textContent = userStats.overall_progress_percentage + '%';
-        document.getElementById('learning-time').textContent = userStats.total_learning_time_hours + 'h';
+        console.log('Updating progress display with:', userStats);
+        
+        // Update the display values
+        document.getElementById('courses-completed').textContent = userStats.total_courses_completed || 0;
+        document.getElementById('progress-percentage').textContent = (userStats.overall_progress_percentage || 0) + '%';
+        document.getElementById('learning-time').textContent = (userStats.total_learning_time_hours || 0) + 'h';
         
         // Update new courses badge
-        const newCoursesCount = courses.filter(course => {
-            const createdDate = new Date(course.created_at);
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            return createdDate > thirtyDaysAgo;
-        }).length;
+        let newCoursesCount = 0;
+        if (courses.length > 0) {
+            newCoursesCount = courses.filter(course => {
+                const createdDate = new Date(course.created_at);
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                return createdDate > thirtyDaysAgo;
+            }).length;
+        }
         
         document.getElementById('new-courses-badge').textContent = `+${newCoursesCount} New`;
     }
@@ -744,7 +772,7 @@
             tabsContainer.appendChild(tab);
         });
         
-        console.log('Rendered categories:', categories.length); // Debug log
+        console.log('Rendered categories:', categories.length);
     }
     
     // Load courses from API
@@ -755,17 +783,17 @@
                 url += `?category_id=${categoryId}`;
             }
             
-            console.log('Loading courses from:', url); // Debug log
+            console.log('Loading courses from:', url);
             
             const response = await fetch(url);
-            console.log('Courses response status:', response.status); // Debug log
+            console.log('Courses response status:', response.status);
             
             const data = await response.json();
-            console.log('Courses data:', data); // Debug log
+            console.log('Courses data:', data);
             
             if (data.success) {
                 courses = data.courses;
-                console.log('Loaded courses count:', courses.length); // Debug log
+                console.log('Loaded courses count:', courses.length);
                 renderCourses();
             } else {
                 console.error('Failed to load courses:', data.error);
@@ -791,12 +819,13 @@
         });
     }
     
-    // Create course card element
+    // Create course card element (updated)
     function createCourseCard(course) {
         const card = document.createElement('div');
         card.className = 'video-card';
         
-        const isCompleted = course.user_progress && course.user_progress.completed;
+        // More robust check for completion status
+        const isCompleted = course.user_progress && course.user_progress.completed === true;
         const completedBadge = isCompleted ? '<span class="video-badge completed">Completed</span>' : '';
         const buttonText = isCompleted ? 'Completed' : 'Mark Complete';
         const buttonClass = isCompleted ? 'mark-complete-btn completed' : 'mark-complete-btn';
@@ -828,6 +857,79 @@
         return card;
     }
     
+    // Toggle course completion
+    async function toggleCourseCompletion(courseId, button) {
+        if (button.classList.contains('completed')) return;
+        
+        console.log('Attempting to mark course complete:', courseId);
+        
+        try {
+            button.textContent = 'Marking...';
+            button.disabled = true;
+            
+            const response = await fetch('/api/education/progress/mark-complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    course_id: courseId,
+                    watch_time_minutes: 5
+                })
+            });
+            
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.success) {
+                // Update button immediately
+                button.textContent = 'Completed';
+                button.classList.add('completed');
+                button.disabled = true;
+                
+                // Add completed badge to the course card
+                const courseCard = button.closest('.video-card');
+                const videoMeta = courseCard.querySelector('.video-meta div');
+                if (!videoMeta.querySelector('.completed')) {
+                    videoMeta.innerHTML += '<span class="video-badge completed">Completed</span>';
+                }
+                
+                // Update course data locally to persist on refresh
+                const course = courses.find(c => c.id === courseId);
+                if (course) {
+                    course.user_progress = {
+                        completed: true,
+                        completed_at: new Date().toISOString(),
+                        watch_time_minutes: 5
+                    };
+                }
+                
+                // Update progress stats immediately
+                if (data.new_stats) {
+                    document.getElementById('courses-completed').textContent = data.new_stats.total_completed;
+                    document.getElementById('progress-percentage').textContent = data.new_stats.progress_percentage + '%';
+                }
+                
+                // Reload user stats to get accurate data
+                await loadUserStats();
+                
+                if (data.cpe_credits_earned > 0) {
+                    alert(`Congratulations! You earned ${data.cpe_credits_earned} CPE credits.`);
+                }
+            } else {
+                console.error('API error:', data.error);
+                button.textContent = 'Mark Complete';
+                button.disabled = false;
+                alert(`Failed: ${data.error || 'Please try again.'}`);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+            button.textContent = 'Mark Complete';
+            button.disabled = false;
+            alert(`Network error: ${error.message}`);
+        }
+    }
+    
     // Scroll to courses section
     function scrollToCourses() {
         document.querySelector('.videos-grid').scrollIntoView({ 
@@ -851,7 +953,7 @@
     
     // Filter videos by category
     function filterVideos(categoryId) {
-        console.log('Filtering by category:', categoryId); // Debug log
+        console.log('Filtering by category:', categoryId);
         
         currentCategory = categoryId;
         
@@ -863,9 +965,9 @@
         const activeTab = document.querySelector(`[data-category="${categoryId}"]`);
         if (activeTab) {
             activeTab.classList.add('active');
-            console.log('Set active tab:', activeTab.textContent); // Debug log
+            console.log('Set active tab:', activeTab.textContent);
         } else {
-            console.warn('Could not find tab for category:', categoryId); // Debug log
+            console.warn('Could not find tab for category:', categoryId);
         }
         
         // Show loading
@@ -874,66 +976,15 @@
         
         // Load courses for category
         const apiCategoryId = categoryId === 'all' ? null : categoryId;
-        console.log('API category ID:', apiCategoryId); // Debug log
+        console.log('API category ID:', apiCategoryId);
         
         loadCourses(apiCategoryId).then(() => {
             grid.classList.remove('loading');
-            console.log('Finished loading courses for category'); // Debug log
+            console.log('Finished loading courses for category');
         }).catch(error => {
             grid.classList.remove('loading');
-            console.error('Error in filterVideos:', error); // Debug log
+            console.error('Error in filterVideos:', error);
         });
-    }
-    
-    // Toggle course completion
-    async function toggleCourseCompletion(courseId, button) {
-        if (button.classList.contains('completed')) return;
-        
-        console.log('Attempting to mark course complete:', courseId); // Debug log
-        
-        try {
-            button.textContent = 'Marking...';
-            button.disabled = true;
-            
-            const response = await fetch('/api/education/progress/mark-complete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    course_id: courseId,
-                    watch_time_minutes: 5 // Assuming some watch time
-                })
-            });
-            
-            console.log('Response status:', response.status); // Debug log
-            
-            const data = await response.json();
-            console.log('Response data:', data); // Debug log
-            
-            if (data.success) {
-                button.textContent = 'Completed';
-                button.classList.add('completed');
-                
-                // Refresh user stats
-                await loadUserStats();
-                
-                // Show CPE credits earned if any
-                if (data.cpe_credits_earned > 0) {
-                    alert(`Congratulations! You earned ${data.cpe_credits_earned} CPE credits.`);
-                }
-            } else {
-                console.error('API error:', data.error); // Debug log
-                button.textContent = 'Mark Complete';
-                button.disabled = false;
-                alert(`Failed: ${data.error || 'Please try again.'}`);
-            }
-        } catch (error) {
-            console.error('Network error:', error); // Debug log
-            button.textContent = 'Mark Complete';
-            button.disabled = false;
-            alert(`Network error: ${error.message}`);
-        }
     }
     
     // Play video in modal
